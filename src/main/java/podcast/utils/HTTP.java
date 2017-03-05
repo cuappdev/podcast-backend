@@ -1,6 +1,7 @@
 package podcast.utils;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -39,6 +40,11 @@ public class HTTP {
       /* Make the request */
       HttpResponse response = client.execute(request);
 
+      /* If this is bad */
+      if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+        throw new Exception();
+      }
+
       /* Stream */
       BufferedReader rd = new BufferedReader(
         new InputStreamReader(response.getEntity().getContent()));
@@ -55,7 +61,6 @@ public class HTTP {
       return mapper.readTree(result.toString());
 
     } catch (Exception e) {
-      e.printStackTrace();
       return null;
     }
   }
