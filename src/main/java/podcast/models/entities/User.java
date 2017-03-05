@@ -14,35 +14,38 @@ public class User extends Entity {
   @Getter private UUID uuid;
   @Getter private String googleID;
   @Getter private String email;
-  @Getter private String name;
+  @Getter private String firstName;
+  @Getter private String lastName;
   @Getter private String imageURL;
   @Getter private String username;
   @Getter private Integer numberFollowers;
   @Getter private Integer numberFollowing;
+  @Getter private Boolean isFollowing; // TODO
   @Getter private Session session;
 
   /**
    * Creation constructor
-   * @param googleCreds - JSON response from token req to Google
-   * @param username - Username String
-   * @param session - Session
+   * @param builder - UserBuilder
    */
-  public User(JsonNode googleCreds, String username, Session session) {
+  public User(UserBuilder builder) {
     // ID
     this.uuid = Generators.timeBasedGenerator().generate();
 
     // Google credentials
-    this.googleID = googleCreds.get("sub").asText();
-    this.email = googleCreds.get("email").asText().toLowerCase();
-    this.name = googleCreds.get("given_name").asText().toLowerCase() +
-      googleCreds.get("family_name").asText().toLowerCase();
-    this.imageURL = googleCreds.get("picture").asText();
+    this.googleID = builder.googleCreds.get("sub").asText();
+    this.email = builder.googleCreds.get("email").asText().toLowerCase();
+    this.firstName = builder.googleCreds.get("given_name") != null ?
+      builder.googleCreds.get("given_name").asText() : null;
+    this.lastName = builder.googleCreds.get("family_name") != null ?
+      builder.googleCreds.get("family_name").asText() : null;
+    this.imageURL = builder.googleCreds.get("picture").asText();
 
     // Other fields
-    this.username = username;
+    this.username = builder.username;
+    this.session = builder.session;
     this.numberFollowers = 0; // FOR NOW
     this.numberFollowing = 0; // FOR NOW
-    this.session = session;
+    this.isFollowing = false; // FOR NOW
   }
 
   /**
@@ -51,6 +54,34 @@ public class User extends Entity {
   public JsonObject toJsonObject() {
     // TODO
     return null;
+  }
+
+  public static class UserBuilder {
+
+    private JsonNode googleCreds;
+    private String username;
+    private Session session;
+
+    /**
+     * Constructor required fields
+     * @param googleCreds - JsonNode
+     */
+    public UserBuilder(JsonNode googleCreds) {
+      this.googleCreds = googleCreds;
+    }
+
+    /** Add username **/
+    public UserBuilder username(String username) {
+      this.username = username;
+      return this;
+    }
+
+    /** Add session **/
+    public UserBuilder session(Session session) {
+      this.session = session;
+      return this;
+    }
+
   }
 
 }
