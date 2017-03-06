@@ -3,6 +3,7 @@ package podcast.models.entities;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.fasterxml.uuid.Generators;
 import lombok.Getter;
+import lombok.Setter;
 import org.codehaus.jackson.JsonNode;
 import java.util.UUID;
 
@@ -11,20 +12,21 @@ import java.util.UUID;
  */
 public class User extends Entity {
 
+
   @Getter private UUID uuid;
   @Getter private String googleID;
   @Getter private String email;
   @Getter private String firstName;
   @Getter private String lastName;
   @Getter private String imageURL;
-  @Getter private String username;
   @Getter private Integer numberFollowers;
   @Getter private Integer numberFollowing;
-  @Getter private Boolean isFollowing; // TODO
+  @Getter private Boolean isFollowing;
   @Getter private Session session;
+  @Setter @Getter private String username;
 
   /**
-   * Creation constructor
+   * Constructor from builder
    * @param builder - UserBuilder
    */
   public User(UserBuilder builder) {
@@ -41,25 +43,58 @@ public class User extends Entity {
     this.imageURL = builder.googleCreds.get("picture").asText();
 
     // Other fields
-    this.username = builder.username;
     this.session = builder.session;
     this.numberFollowers = 0; // FOR NOW
     this.numberFollowing = 0; // FOR NOW
     this.isFollowing = false; // FOR NOW
+
+    // Generate
+    this.username = "user-" + this.uuid;
   }
+
+
+  /**
+   * Constructor from Couchbase JsonObject
+   * @param object - JsonObject from Couchbase
+   */
+  public User(JsonObject object) {
+    this.uuid = UUID.fromString(object.getString("uuid"));
+    this.googleID = object.getString("googleID");
+    this.email = object.getString("email");
+    this.firstName = object.getString("firstName");
+    this.lastName = object.getString("lastName");
+    this.imageURL = object.getString("imageURL");
+    this.session = new Session(object.getObject("session"));
+    this.numberFollowers = object.getInt("numberFollowers");
+    this.numberFollowing = object.getInt("numberFollowing");
+    this.isFollowing = object.getBoolean("isFollowing");
+    this.username = object.getString("username");
+  }
+
 
   /**
    * See {@link Entity#toJsonObject()}
    */
   public JsonObject toJsonObject() {
-    // TODO
-    return null;
+    JsonObject result = JsonObject.create();
+    result.put("uuid", uuid);
+    result.put("googleID", googleID);
+    result.put("email", email);
+    result.put("firstName", firstName);
+    result.put("lastName", lastName);
+    result.put("imageURL", imageURL);
+    result.put("username", username);
+    result.put("session", session.toJsonObject());
+    result.put("numberFollowers", numberFollowers);
+    result.put("numberFollowing", numberFollowing);
+    result.put("isFollowing", isFollowing);
+    return result;
   }
+
 
   public static class UserBuilder {
 
     private JsonNode googleCreds;
-    private String username;
     private Session session;
 
     /**
@@ -68,12 +103,6 @@ public class User extends Entity {
      */
     public UserBuilder(JsonNode googleCreds) {
       this.googleCreds = googleCreds;
-    }
-
-    /** Add username **/
-    public UserBuilder username(String username) {
-      this.username = username;
-      return this;
     }
 
     /** Add session **/
