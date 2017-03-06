@@ -12,7 +12,6 @@ import java.util.UUID;
  */
 public class User extends Entity {
 
-
   @Getter private UUID uuid;
   @Getter private String googleID;
   @Getter private String email;
@@ -21,34 +20,32 @@ public class User extends Entity {
   @Getter private String imageURL;
   @Getter private Integer numberFollowers;
   @Getter private Integer numberFollowing;
-  @Getter private Boolean isFollowing;
-  @Getter private Session session;
+  @Setter @Getter private Session session;
   @Setter @Getter private String username;
 
   /**
-   * Constructor from builder
-   * @param builder - UserBuilder
+   * Constructor from Google Sign In credentials
+   * @param googleCreds - JSON from Google
    */
-  public User(UserBuilder builder) {
-    // ID
+  public User(JsonNode googleCreds) {
+    /* ID */
     this.uuid = Generators.timeBasedGenerator().generate();
 
-    // Google credentials
-    this.googleID = builder.googleCreds.get("sub").asText();
-    this.email = builder.googleCreds.get("email").asText().toLowerCase();
-    this.firstName = builder.googleCreds.get("given_name") != null ?
-      builder.googleCreds.get("given_name").asText() : null;
-    this.lastName = builder.googleCreds.get("family_name") != null ?
-      builder.googleCreds.get("family_name").asText() : null;
-    this.imageURL = builder.googleCreds.get("picture").asText();
+    /* Google credentials */
+    this.googleID = googleCreds.get("sub").asText();
+    this.email = googleCreds.get("email").asText().toLowerCase();
+    this.firstName = googleCreds.get("given_name") != null ?
+      googleCreds.get("given_name").asText() : null;
+    this.lastName = googleCreds.get("family_name") != null ?
+      googleCreds.get("family_name").asText() : null;
+    this.imageURL = googleCreds.get("picture").asText();
 
-    // Other fields
-    this.session = builder.session;
-    this.numberFollowers = 0; // FOR NOW
-    this.numberFollowing = 0; // FOR NOW
-    this.isFollowing = false; // FOR NOW
+    /* Other fields */
+    this.session = null;
+    this.numberFollowers = 0;
+    this.numberFollowing = 0;
 
-    // Generate
+    /* Generate */
     this.username = "user-" + this.uuid;
   }
 
@@ -67,7 +64,6 @@ public class User extends Entity {
     this.session = new Session(object.getObject("session"));
     this.numberFollowers = object.getInt("numberFollowers");
     this.numberFollowing = object.getInt("numberFollowing");
-    this.isFollowing = object.getBoolean("isFollowing");
     this.username = object.getString("username");
   }
 
@@ -87,30 +83,7 @@ public class User extends Entity {
     result.put("session", session.toJsonObject());
     result.put("numberFollowers", numberFollowers);
     result.put("numberFollowing", numberFollowing);
-    result.put("isFollowing", isFollowing);
     return result;
-  }
-
-
-  public static class UserBuilder {
-
-    private JsonNode googleCreds;
-    private Session session;
-
-    /**
-     * Constructor required fields
-     * @param googleCreds - JsonNode
-     */
-    public UserBuilder(JsonNode googleCreds) {
-      this.googleCreds = googleCreds;
-    }
-
-    /** Add session **/
-    public UserBuilder session(Session session) {
-      this.session = session;
-      return this;
-    }
-
   }
 
 }

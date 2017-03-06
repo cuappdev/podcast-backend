@@ -20,13 +20,13 @@ public class UsersController {
   /**
    * Google Sign In Endpoint
    * @param idToken - Google ID
-   * @return - TODO
+   * @return - Response
    */
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
   public Response googleSignIn(@RequestParam(value="id_token", required = true) String idToken) {
-    // TODO - deal with actual user logistics here
+    // Grab google
     JsonNode result = googleService.googleAuthentication(idToken);
-    User user = new User(new User.UserBuilder(result));
+    User user = new User(result);
     return new Response(true, "user", user);
   }
 
