@@ -20,8 +20,8 @@ public class Session {
 
 
   /**
-   * Standard constructor
-   * @param user - The owning user of this session
+   * Constructor from owning user
+   * @param user - owning user 
    */
   public Session(User user) {
 
@@ -41,8 +41,8 @@ public class Session {
 
 
   /**
-   * Constructor from owning User and JsonObject
-   * @param object - JsonObject
+   * Constructor from Couchbase JsonObject
+   * @param object - JsonObject from Couchbase
    */
   public Session(JsonObject object) {
     this.sessionToken = object.getString("sessionToken");
@@ -52,8 +52,7 @@ public class Session {
 
 
   /**
-   * Convert this user into a JsonObject
-   * @return JsonObject
+   * See {@link Entity#toJsonObject()}
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
