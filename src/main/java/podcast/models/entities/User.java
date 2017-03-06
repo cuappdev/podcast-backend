@@ -5,7 +5,6 @@ import com.fasterxml.uuid.Generators;
 import lombok.Getter;
 import lombok.Setter;
 import org.codehaus.jackson.JsonNode;
-import java.util.UUID;
 
 /**
  * App user (w/Google credentials)

@@ -41,21 +41,27 @@ public class UsersController {
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
   public Response googleSignIn(@RequestParam(value="id_token", required = true) String idToken) {
     // Grab google
-    JsonNode result = googleService.googleAuthentication(idToken);
-    String googleID = googleService.googleIDFromResponse(result);
+    JsonNode response = googleService.googleAuthentication(idToken);
+    String googleID = googleService.googleIDFromResponse(response);
 
     // Check if user exists
     Optional<User> possUser = usersService.getUserByGoogleID(bucket, googleID);
 
     // If exists, return, else make new user
+    Response r;
     if (possUser.isPresent()) {
-      return new Response(true, "user", possUser.get());
+      r = new Response(true, "user", possUser.get());
+      r.addField("newUser", false);
+      return r;
     } else {
-      User user = new User(result);
-      user.setSession(new Session(user));
-      usersService.storeUser(bucket, user);
-      return new Response(true, "user", user);
+      User user = usersService.createUser(bucket, response);
+      r = new Response(true, "user", user);
+      r.addField("newUser", true);
+      return r;
     }
   }
+
+
+  // TODO - More user endpoints
 
 }

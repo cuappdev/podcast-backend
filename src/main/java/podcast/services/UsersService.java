@@ -5,7 +5,9 @@ import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryRow;
+import org.codehaus.jackson.JsonNode;
 import org.springframework.stereotype.Service;
+import podcast.models.entities.Session;
 import podcast.models.entities.User;
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +24,23 @@ public class UsersService {
    * @param bucket - Bucket
    * @param user - User
    */
-  public void storeUser(Bucket bucket, User user) {
+  private void storeUser(Bucket bucket, User user) {
     bucket.upsert(JsonDocument.create(user.getUuid(), user.toJsonObject()));
   }
+
+
+  /**
+   * Create a user based on a response from Google Sign In
+   * @param bucket - Bucket
+   * @param response - JsonNode
+   */
+  public User createUser(Bucket bucket, JsonNode response) {
+    User user = new User(response);
+    user.setSession(new Session(user));
+    storeUser(bucket, user);
+    return user;
+  }
+
 
   /**
    * Get User by Google ID
@@ -37,7 +53,7 @@ public class UsersService {
     // Prepare and execute N1QL query
 
     JsonObject placeholderValues = JsonObject.create().put("googleID", googleID);
-    N1qlQuery q = N1qlQuery.simple("SELECT * FROM `users` where googleID=\"" + googleID + "\"");
+    N1qlQuery q = N1qlQuery.simple("SELECT * FROM `users` where googleID='" + googleID + "'");
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     // If empty
@@ -46,7 +62,7 @@ public class UsersService {
     }
 
     // Grab the user accordingly
-    return Optional.of(new User(rows.get(0).value()));
+    return Optional.of(new User(rows.get(0).value().getObject("users")));
   }
 
 

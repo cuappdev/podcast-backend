@@ -44,9 +44,9 @@ public class Session {
    * @param object - JsonObject
    */
   public Session(JsonObject object) {
-    this.sessionToken = object.getString("session_token");
-    this.expiresAt = new Date(object.getLong("expires_at"));
-    this.updateToken = object.getString("update_token");
+    this.sessionToken = object.getString("sessionToken");
+    this.expiresAt = new Date(object.getLong("expiresAt"));
+    this.updateToken = object.getString("updateToken");
   }
 
   /**
@@ -55,11 +55,10 @@ public class Session {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
-    result.put("session_token", sessionToken);
-    result.put("expires_at", expiresAt.getTime()); // Store long
-    result.put("update_token", updateToken);
+    result.put("sessionToken", sessionToken);
+    result.put("expiresAt", expiresAt.getTime()); // Store long
+    result.put("updateToken", updateToken);
     return result;
   }
-
 
 }
