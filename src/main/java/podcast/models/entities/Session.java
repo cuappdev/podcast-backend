@@ -18,6 +18,7 @@ public class Session {
   @Getter private Date expiresAt;
   @Getter private String updateToken;
 
+
   /**
    * Standard constructor
    * @param user - The owning user of this session
@@ -36,8 +37,8 @@ public class Session {
 
     /* Update Token */
     this.updateToken = TokenGenerator.urlSafeRandomToken();
-
   }
+
 
   /**
    * Constructor from owning User and JsonObject
@@ -48,6 +49,7 @@ public class Session {
     this.expiresAt = new Date(object.getLong("expiresAt"));
     this.updateToken = object.getString("updateToken");
   }
+
 
   /**
    * Convert this user into a JsonObject
@@ -60,5 +62,6 @@ public class Session {
     result.put("updateToken", updateToken);
     return result;
   }
+
 
 }

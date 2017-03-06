@@ -8,13 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import podcast.models.entities.Session;
 import podcast.models.entities.User;
 import podcast.models.utils.Response;
 import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import java.util.Optional;
 
+
+/**
+ * Users REST API controller
+ */
 @RestController
 @RequestMapping("/api/v1/users")
 public class UsersController {
@@ -33,21 +36,17 @@ public class UsersController {
   }
 
 
-  /**
-   * Google Sign In Endpoint
-   * @param idToken - Google ID
-   * @return - Response
-   */
+  /** Google Sign In endpoint **/
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
   public Response googleSignIn(@RequestParam(value="id_token", required = true) String idToken) {
-    // Grab google
+    /* Grab Google API response */
     JsonNode response = googleService.googleAuthentication(idToken);
     String googleID = googleService.googleIDFromResponse(response);
 
-    // Check if user exists
+    /* Check if user exists */
     Optional<User> possUser = usersService.getUserByGoogleID(bucket, googleID);
 
-    // If exists, return, else make new user
+    /* If exists, return, else make new user */
     Response r;
     if (possUser.isPresent()) {
       r = new Response(true, "user", possUser.get());
