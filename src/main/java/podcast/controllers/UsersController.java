@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import podcast.models.entities.Session;
 import podcast.models.entities.User;
 import podcast.models.utils.Response;
 import podcast.services.GoogleService;
@@ -51,6 +52,8 @@ public class UsersController {
       return new Response(true, "user", possUser.get());
     } else {
       User user = new User(result);
+      user.setSession(new Session(user));
+      usersService.storeUser(bucket, user);
       return new Response(true, "user", user);
     }
   }

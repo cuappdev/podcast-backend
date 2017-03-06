@@ -1,12 +1,10 @@
 package podcast.services;
 
 import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryRow;
-import com.couchbase.client.java.query.Statement;
-import static com.couchbase.client.java.query.Select.select;
-import static com.couchbase.client.java.query.dsl.Expression.*;
 import org.springframework.stereotype.Service;
 import podcast.models.entities.User;
 import java.util.List;
@@ -20,6 +18,15 @@ import java.util.Optional;
 public class UsersService {
 
   /**
+   * Store a user
+   * @param bucket - Bucket
+   * @param user - User
+   */
+  public void storeUser(Bucket bucket, User user) {
+    bucket.upsert(JsonDocument.create(user.getUuid(), user.toJsonObject()));
+  }
+
+  /**
    * Get User by Google ID
    * @param bucket - Bucket
    * @param googleID - String
@@ -28,19 +35,14 @@ public class UsersService {
    */
   public Optional<User> getUserByGoogleID(Bucket bucket, String googleID) {
     // Prepare and execute N1QL query
-    Statement statement = select("*").where(x("googleID").eq(x("$googleID")));
+
     JsonObject placeholderValues = JsonObject.create().put("googleID", googleID);
-    N1qlQuery q = N1qlQuery.parameterized(statement, placeholderValues);
+    N1qlQuery q = N1qlQuery.simple("SELECT * FROM `users` where googleID=\"" + googleID + "\"");
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     // If empty
     if (rows.size() == 0) {
       return Optional.empty();
-    }
-
-    // This should never happen
-    if (rows.size() > 1) {
-      // TODO
     }
 
     // Grab the user accordingly

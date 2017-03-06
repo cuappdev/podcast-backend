@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public class User extends Entity {
 
-  @Getter private UUID uuid;
+  @Getter private String uuid;
   @Getter private String googleID;
   @Getter private String email;
   @Getter private String firstName;
@@ -29,7 +29,7 @@ public class User extends Entity {
    */
   public User(JsonNode googleCreds) {
     /* ID */
-    this.uuid = Generators.timeBasedGenerator().generate();
+    this.uuid = Generators.timeBasedGenerator().generate().toString();
 
     /* Google credentials */
     this.googleID = googleCreds.get("sub").asText();
@@ -38,7 +38,8 @@ public class User extends Entity {
       googleCreds.get("given_name").asText() : null;
     this.lastName = googleCreds.get("family_name") != null ?
       googleCreds.get("family_name").asText() : null;
-    this.imageURL = googleCreds.get("picture").asText();
+    this.imageURL = googleCreds.get("picture") != null ?
+      googleCreds.get("picture").asText() : null;
 
     /* Other fields */
     this.session = null;
@@ -55,7 +56,7 @@ public class User extends Entity {
    * @param object - JsonObject from Couchbase
    */
   public User(JsonObject object) {
-    this.uuid = UUID.fromString(object.getString("uuid"));
+    this.uuid = object.getString("uuid");
     this.googleID = object.getString("googleID");
     this.email = object.getString("email");
     this.firstName = object.getString("firstName");

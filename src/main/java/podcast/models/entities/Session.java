@@ -35,7 +35,7 @@ public class Session {
     this.expiresAt = java.sql.Date.valueOf(nextWeek);
 
     /* Update Token */
-    this.sessionToken = TokenGenerator.urlSafeRandomToken();
+    this.updateToken = TokenGenerator.urlSafeRandomToken();
 
   }
 

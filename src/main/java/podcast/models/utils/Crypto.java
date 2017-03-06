@@ -23,8 +23,8 @@ public class Crypto {
     if (cipher == null) {
       try {
         Cipher newCipher = Cipher.getInstance("AES");
-        cipher.init(mode, Crypto.aesKey);
-        return cipher;
+        newCipher.init(mode, Crypto.aesKey);
+        return newCipher;
       } catch (Exception e) {
         e.printStackTrace();
         return null;
@@ -56,9 +56,9 @@ public class Crypto {
    * Encrypt UUID to String
    * @return - String
    */
-  public static String encryptUUID(UUID uuid) {
+  public static String encryptUUID(String uuid) {
     try {
-      byte[] encrypted = getEncryptionCipher().doFinal(uuid.toString().getBytes());
+      byte[] encrypted = getEncryptionCipher().doFinal(uuid.getBytes());
       return new String(encrypted);
     } catch (Exception e) {
       e.printStackTrace();
