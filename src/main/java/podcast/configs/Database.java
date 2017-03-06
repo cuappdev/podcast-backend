@@ -2,6 +2,7 @@ package podcast.configs;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
+import com.couchbase.client.java.CouchbaseCluster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,17 +26,29 @@ public class Database {
   @Value("${storage.podcastsBucketPassword}")
   private String podcastsBucketPassword;
 
-  @Autowired
   private Cluster couchbaseCluster;
+
+  @Autowired
+  public Database(@Value("${storage.cluster.host}") String clusterHost) {
+    this.couchbaseCluster = CouchbaseCluster.create(clusterHost);
+  }
 
   @Bean
   public Bucket usersBucket() {
-    return couchbaseCluster.openBucket(usersBucket, usersBucketPassword);
+    if (usersBucketPassword == null || usersBucketPassword.length() == 0) {
+      return couchbaseCluster.openBucket(usersBucket);
+    } else {
+      return couchbaseCluster.openBucket(usersBucket, usersBucketPassword);
+    }
   }
 
   @Bean
   public Bucket podcastsBucket() {
-    return couchbaseCluster.openBucket(podcastsBucket, podcastsBucketPassword);
+    if (podcastsBucketPassword == null || podcastsBucketPassword.length() == 0) {
+      return couchbaseCluster.openBucket(podcastsBucket);
+    } else {
+      return couchbaseCluster.openBucket(podcastsBucket, podcastsBucketPassword);
+    }
   }
 
 }

@@ -18,4 +18,13 @@ public class GoogleService {
     return HTTP.get(uri);
   }
 
+  /**
+   * Google ID from response from Google authentication API
+   * @param googleResp - JsonNode
+   * @return - String (googleID)
+   */
+  public String googleIDFromResponse(JsonNode googleResp) {
+    return googleResp.get("sub").asText();
+  }
+
 }
