@@ -3,54 +3,87 @@ package podcast.models.entities;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.fasterxml.uuid.Generators;
 import lombok.Getter;
+import lombok.Setter;
 import org.codehaus.jackson.JsonNode;
-import java.util.UUID;
 
 /**
  * App user (w/Google credentials)
  */
 public class User extends Entity {
 
-  @Getter private UUID uuid;
-  @Getter private String googleID;
+  @Getter private String uuid;
+  @Getter private String googleId;
   @Getter private String email;
-  @Getter private String name;
-  @Getter private String imageURL;
-  @Getter private String username;
+  @Getter private String firstName;
+  @Getter private String lastName;
+  @Getter private String imageUrl;
   @Getter private Integer numberFollowers;
   @Getter private Integer numberFollowing;
-  @Getter private Session session;
+  @Setter @Getter private Session session;
+  @Setter @Getter private String username;
 
   /**
-   * Creation constructor
-   * @param googleCreds - JSON response from token req to Google
-   * @param username - Username String
-   * @param session - Session
+   * Constructor from Google Sign In credentials
+   * @param googleCreds - JSON from Google
    */
-  public User(JsonNode googleCreds, String username, Session session) {
-    // ID
-    this.uuid = Generators.timeBasedGenerator().generate();
+  public User(JsonNode googleCreds) {
+    /* ID */
+    this.uuid = Generators.timeBasedGenerator().generate().toString();
 
-    // Google credentials
-    this.googleID = googleCreds.get("sub").asText();
+    /* Google credentials */
+    this.googleId = googleCreds.get("sub").asText();
     this.email = googleCreds.get("email").asText().toLowerCase();
-    this.name = googleCreds.get("given_name").asText().toLowerCase() +
-      googleCreds.get("family_name").asText().toLowerCase();
-    this.imageURL = googleCreds.get("picture").asText();
+    this.firstName = googleCreds.get("given_name") != null ?
+      googleCreds.get("given_name").asText() : null;
+    this.lastName = googleCreds.get("family_name") != null ?
+      googleCreds.get("family_name").asText() : null;
+    this.imageUrl = googleCreds.get("picture") != null ?
+      googleCreds.get("picture").asText() : null;
 
-    // Other fields
-    this.username = username;
-    this.numberFollowers = 0; // FOR NOW
-    this.numberFollowing = 0; // FOR NOW
-    this.session = session;
+    /* Other fields */
+    this.session = null;
+    this.numberFollowers = 0;
+    this.numberFollowing = 0;
+
+    /* Generate */
+    this.username = "user-" + this.uuid;
   }
+
+
+  /**
+   * Constructor from Couchbase JsonObject
+   * @param object - JsonObject from Couchbase
+   */
+  public User(JsonObject object) {
+    this.uuid = object.getString("uuid");
+    this.googleId = object.getString("googleID");
+    this.email = object.getString("email");
+    this.firstName = object.getString("firstName");
+    this.lastName = object.getString("lastName");
+    this.imageUrl = object.getString("imageUrl");
+    this.session = new Session(object.getObject("session"));
+    this.numberFollowers = object.getInt("numberFollowers");
+    this.numberFollowing = object.getInt("numberFollowing");
+    this.username = object.getString("username");
+  }
+
 
   /**
    * See {@link Entity#toJsonObject()}
    */
   public JsonObject toJsonObject() {
-    // TODO
-    return null;
+    JsonObject result = JsonObject.create();
+    result.put("uuid", uuid);
+    result.put("googleID", googleId);
+    result.put("email", email);
+    result.put("firstName", firstName);
+    result.put("lastName", lastName);
+    result.put("imageUrl", imageUrl);
+    result.put("username", username);
+    result.put("session", session.toJsonObject());
+    result.put("numberFollowers", numberFollowers);
+    result.put("numberFollowing", numberFollowing);
+    return result;
   }
 
 }

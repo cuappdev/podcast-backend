@@ -61,6 +61,7 @@ public class HTTP {
       return mapper.readTree(result.toString());
 
     } catch (Exception e) {
+      e.printStackTrace();
       return null;
     }
   }
