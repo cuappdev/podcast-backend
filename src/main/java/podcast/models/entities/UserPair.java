@@ -1,5 +1,9 @@
 package podcast.models.entities;
 
+import com.couchbase.client.java.document.json.JsonObject;
+import lombok.Getter;
+import java.util.UUID;
+
 public class UserPair extends Entity {
     @Getter private UUID id1;
     @Getter private UUID id2;
