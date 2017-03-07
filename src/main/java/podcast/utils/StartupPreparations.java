@@ -49,7 +49,7 @@ public class StartupPreparations implements InitializingBean {
   /** Overall index function **/
   private void ensureIndexes() throws Exception {
     // User indexes
-    ArrayList<String> usersIndexes = new ArrayList<String>(Arrays.asList("def_googleID"));
+    ArrayList<String> usersIndexes = new ArrayList<String>(Arrays.asList("def_googleId"));
     ensureBucketIndexes(usersBucket, usersIndexes);
   }
 

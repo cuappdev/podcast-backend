@@ -12,11 +12,11 @@ import org.codehaus.jackson.JsonNode;
 public class User extends Entity {
 
   @Getter private String uuid;
-  @Getter private String googleID;
+  @Getter private String googleId;
   @Getter private String email;
   @Getter private String firstName;
   @Getter private String lastName;
-  @Getter private String imageURL;
+  @Getter private String imageUrl;
   @Getter private Integer numberFollowers;
   @Getter private Integer numberFollowing;
   @Setter @Getter private Session session;
@@ -31,13 +31,13 @@ public class User extends Entity {
     this.uuid = Generators.timeBasedGenerator().generate().toString();
 
     /* Google credentials */
-    this.googleID = googleCreds.get("sub").asText();
+    this.googleId = googleCreds.get("sub").asText();
     this.email = googleCreds.get("email").asText().toLowerCase();
     this.firstName = googleCreds.get("given_name") != null ?
       googleCreds.get("given_name").asText() : null;
     this.lastName = googleCreds.get("family_name") != null ?
       googleCreds.get("family_name").asText() : null;
-    this.imageURL = googleCreds.get("picture") != null ?
+    this.imageUrl = googleCreds.get("picture") != null ?
       googleCreds.get("picture").asText() : null;
 
     /* Other fields */
@@ -56,11 +56,11 @@ public class User extends Entity {
    */
   public User(JsonObject object) {
     this.uuid = object.getString("uuid");
-    this.googleID = object.getString("googleID");
+    this.googleId = object.getString("googleID");
     this.email = object.getString("email");
     this.firstName = object.getString("firstName");
     this.lastName = object.getString("lastName");
-    this.imageURL = object.getString("imageURL");
+    this.imageUrl = object.getString("imageUrl");
     this.session = new Session(object.getObject("session"));
     this.numberFollowers = object.getInt("numberFollowers");
     this.numberFollowing = object.getInt("numberFollowing");
@@ -74,11 +74,11 @@ public class User extends Entity {
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
     result.put("uuid", uuid);
-    result.put("googleID", googleID);
+    result.put("googleID", googleId);
     result.put("email", email);
     result.put("firstName", firstName);
     result.put("lastName", lastName);
-    result.put("imageURL", imageURL);
+    result.put("imageUrl", imageUrl);
     result.put("username", username);
     result.put("session", session.toJsonObject());
     result.put("numberFollowers", numberFollowers);
