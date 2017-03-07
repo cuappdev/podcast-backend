@@ -21,7 +21,7 @@ public class Session {
 
   /**
    * Constructor from owning user
-   * @param user - owning user 
+   * @param user - owning user
    */
   public Session(User user) {
 
