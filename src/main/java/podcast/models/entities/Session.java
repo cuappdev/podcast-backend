@@ -7,6 +7,7 @@ import podcast.models.utils.Crypto;
 import podcast.models.utils.TokenGenerator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -21,6 +22,22 @@ public class Session extends Entity {
   @Getter private String updateToken;
 
 
+  /** Generate a pseudo-random token from user **/
+  private static String tokenFromUser(User user) {
+    StringBuilder SB = new StringBuilder();
+    SB.append(user.getId());
+    SB.append(TokenGenerator.urlSafeRandomToken());
+    return Crypto.encrypt(SB.toString());
+  }
+
+
+  /** Get user ID from token **/
+  public static String tokenToUserId(String token) {
+    String decrypted = Crypto.decrypt(token);
+    return new String(Arrays.copyOfRange(decrypted.getBytes(), 0, Constants.UUID_BYTES));
+  }
+
+
   /**
    * Constructor from owning user
    * @param user - owning user
@@ -28,17 +45,14 @@ public class Session extends Entity {
   public Session(User user) {
 
     /* Session Token */
-    StringBuilder SB = new StringBuilder();
-    SB.append(Crypto.encryptUUID(user.getId()));
-    SB.append(TokenGenerator.urlSafeRandomToken());
-    this.sessionToken = SB.toString();
+    this.sessionToken = Session.tokenFromUser(user);
 
     /* Expires At */
     LocalDate nextWeek = LocalDate.now().plus(1, ChronoUnit.WEEKS);
     this.expiresAt = java.sql.Date.valueOf(nextWeek);
 
     /* Update Token */
-    this.updateToken = TokenGenerator.urlSafeRandomToken();
+    this.updateToken = Session.tokenFromUser(user);
   }
 
 
@@ -64,6 +78,5 @@ public class Session extends Entity {
     result.put("updateToken", updateToken);
     return result;
   }
-
 
 }

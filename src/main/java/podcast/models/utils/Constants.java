@@ -4,8 +4,11 @@ package podcast.models.utils;
 public class Constants {
 
   /* Secret encryption key */
-  public static final String SECRET_KEY = System.getenv("SECRET_KEY");
+  // public static final String SECRET_KEY = System.getenv("SECRET_KEY");
+  public static final String SECRET_KEY = "abcdefghijklmnop";
 
+  /* Number of bytes in a UUID */
+  public static final Integer UUID_BYTES = 36;
 
   /** Types of various entities **/
   public static enum Type {

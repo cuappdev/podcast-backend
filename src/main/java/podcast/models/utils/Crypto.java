@@ -3,7 +3,7 @@ package podcast.models.utils;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
-import java.util.UUID;
+import java.util.Base64;
 
 public class Crypto {
 
@@ -19,7 +19,7 @@ public class Crypto {
    * @param mode - int
    * @return - Cipher
    */
-  private static Cipher getCipher (Cipher cipher, int mode) {
+  private static Cipher getCipher(Cipher cipher, int mode) {
     if (cipher == null) {
       try {
         Cipher newCipher = Cipher.getInstance("AES");
@@ -53,13 +53,14 @@ public class Crypto {
   }
 
   /**
-   * Encrypt UUID to String
+   * Encrypt
+   * @param s - String
    * @return - String
    */
-  public static String encryptUUID(String uuid) {
+  public static String encrypt(String s) {
     try {
-      byte[] encrypted = getEncryptionCipher().doFinal(uuid.getBytes());
-      return new String(encrypted);
+      byte[] encrypted = getEncryptionCipher().doFinal(s.getBytes());
+      return Base64.getEncoder().encodeToString(encrypted);
     } catch (Exception e) {
       e.printStackTrace();
       return null;
@@ -67,14 +68,14 @@ public class Crypto {
   }
 
   /**
-   * Decrypt String to UUID
-   * @param uuidS - String
-   * @return - UUID
+   * Decrypt
+   * @param s - String
+   * @return - String
    */
-  public static UUID decryptUUID(String uuidS) {
+  public static String decrypt(String s) {
     try {
-      String decrypted = new String(getDecryptionCipher().doFinal(uuidS.getBytes()));
-      return UUID.fromString(decrypted);
+      byte[] base64crypt = Base64.getDecoder().decode(s);
+      return new String(getDecryptionCipher().doFinal(base64crypt));
     } catch (Exception e) {
       e.printStackTrace();
       return null;
