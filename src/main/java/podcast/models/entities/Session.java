@@ -2,6 +2,7 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+import podcast.models.utils.Constants;
 import podcast.models.utils.Crypto;
 import podcast.models.utils.TokenGenerator;
 import java.time.LocalDate;
@@ -11,9 +12,10 @@ import java.util.Date;
 /**
  * Session used to authenticate users on REST API calls
  */
-public class Session {
+public class Session extends Entity {
 
   /* Fields */
+  @Getter private Constants.Type type = Constants.Type.SESSION;
   @Getter private String sessionToken;
   @Getter private Date expiresAt;
   @Getter private String updateToken;
@@ -27,7 +29,7 @@ public class Session {
 
     /* Session Token */
     StringBuilder SB = new StringBuilder();
-    SB.append(Crypto.encryptUUID(user.getUuid()));
+    SB.append(Crypto.encryptUUID(user.getId()));
     SB.append(TokenGenerator.urlSafeRandomToken());
     this.sessionToken = SB.toString();
 
@@ -56,6 +58,7 @@ public class Session {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
+    result.put("type", type.toString());
     result.put("sessionToken", sessionToken);
     result.put("expiresAt", expiresAt.getTime()); // Store long
     result.put("updateToken", updateToken);

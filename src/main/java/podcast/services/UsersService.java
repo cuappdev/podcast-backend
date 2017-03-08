@@ -20,7 +20,7 @@ public class UsersService {
 
   /** Helper function to store a user (w/key generation logic) **/
   private void storeUser(Bucket bucket, User user) {
-    bucket.upsert(JsonDocument.create(user.getUuid(), user.toJsonObject()));
+    bucket.upsert(JsonDocument.create(user.getId(), user.toJsonObject()));
   }
 
 

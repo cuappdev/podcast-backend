@@ -5,13 +5,15 @@ import com.fasterxml.uuid.Generators;
 import lombok.Getter;
 import lombok.Setter;
 import org.codehaus.jackson.JsonNode;
+import podcast.models.utils.Constants;
 
 /**
  * App user (w/Google credentials)
  */
 public class User extends Entity {
 
-  @Getter private String uuid;
+  @Getter private Constants.Type type = Constants.Type.USER;
+  @Getter private String id;
   @Getter private String googleId;
   @Getter private String email;
   @Getter private String firstName;
@@ -28,7 +30,7 @@ public class User extends Entity {
    */
   public User(JsonNode googleCreds) {
     /* ID */
-    this.uuid = Generators.timeBasedGenerator().generate().toString();
+    this.id = Generators.timeBasedGenerator().generate().toString();
 
     /* Google credentials */
     this.googleId = googleCreds.get("sub").asText();
@@ -46,7 +48,7 @@ public class User extends Entity {
     this.numberFollowing = 0;
 
     /* Generate */
-    this.username = "user-" + this.uuid;
+    this.username = "user-" + this.id;
   }
 
 
@@ -55,7 +57,7 @@ public class User extends Entity {
    * @param object - JsonObject from Couchbase
    */
   public User(JsonObject object) {
-    this.uuid = object.getString("uuid");
+    this.id = object.getString("id");
     this.googleId = object.getString("googleID");
     this.email = object.getString("email");
     this.firstName = object.getString("firstName");
@@ -73,7 +75,8 @@ public class User extends Entity {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
-    result.put("uuid", uuid);
+    result.put("type", type.toString());
+    result.put("id", id);
     result.put("googleID", googleId);
     result.put("email", email);
     result.put("firstName", firstName);

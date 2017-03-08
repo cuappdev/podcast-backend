@@ -2,12 +2,14 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+import podcast.models.utils.Constants;
 
 /**
  * New podcast episode release feed element
  */
 public class ReleaseFeedElement extends FeedElement {
 
+  @Getter private Constants.Type type = Constants.Type.RELEASE;
   @Getter private Episode episode;
 
   /**
@@ -15,7 +17,6 @@ public class ReleaseFeedElement extends FeedElement {
    * @param episode - Episode
    */
   public ReleaseFeedElement(Episode episode) {
-    this.type = FeedElementType.RELEASE;
     this.episode = episode;
   }
 

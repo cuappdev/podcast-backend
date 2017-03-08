@@ -7,8 +7,6 @@ import com.couchbase.client.java.document.json.JsonObject;
  */
 public class Episode extends Entity {
 
-  
-
   /**
    * See {@link Entity#toJsonObject()}
    */
@@ -16,4 +14,5 @@ public class Episode extends Entity {
     // TODO
     return null;
   }
+
 }
