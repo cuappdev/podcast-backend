@@ -24,7 +24,12 @@ public class Constants {
   public static final String LAST_NAME = "lastName";
   public static final String IMAGE_URL = "imageUrl";
   public static final String NUMBER_FOLLOWERS = "numberFollowers";
-  public static final String NUMBER_FOLLOWINGS = "numberFollowing";
+  public static final String NUMBER_FOLLOWING = "numberFollowing";
+  public static final String USERNAME = "username";
+  public static final String SESSION_TOKEN = "sessionToken";
+  public static final String EXPIRES_AT = "expiresAt";
+  public static final String UPDATE_TOKEN = "updateToken";
+
   // TODO - more
 
 
@@ -63,6 +68,6 @@ public class Constants {
       }
     }
   }
-  
+
 
 }

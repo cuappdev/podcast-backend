@@ -57,16 +57,16 @@ public class User extends Entity {
    * @param object - JsonObject from Couchbase
    */
   public User(JsonObject object) {
-    this.id = object.getString("id");
-    this.googleId = object.getString("googleID");
-    this.email = object.getString("email");
-    this.firstName = object.getString("firstName");
-    this.lastName = object.getString("lastName");
-    this.imageUrl = object.getString("imageUrl");
-    this.session = new Session(object.getObject("session"));
-    this.numberFollowers = object.getInt("numberFollowers");
-    this.numberFollowing = object.getInt("numberFollowing");
-    this.username = object.getString("username");
+    this.id = object.getString(Constants.ID);
+    this.googleId = object.getString(Constants.GOOGLE_ID);
+    this.email = object.getString(Constants.EMAIL);
+    this.firstName = object.getString(Constants.FIRST_NAME);
+    this.lastName = object.getString(Constants.LAST_NAME);
+    this.imageUrl = object.getString(Constants.IMAGE_URL);
+    this.session = new Session(object.getObject(Constants.SESSION));
+    this.numberFollowers = object.getInt(Constants.NUMBER_FOLLOWERS);
+    this.numberFollowing = object.getInt(Constants.NUMBER_FOLLOWING);
+    this.username = object.getString(Constants.USERNAME);
   }
 
 
@@ -75,17 +75,17 @@ public class User extends Entity {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
-    result.put("type", type.toString());
-    result.put("id", id);
-    result.put("googleID", googleId);
-    result.put("email", email);
-    result.put("firstName", firstName);
-    result.put("lastName", lastName);
-    result.put("imageUrl", imageUrl);
-    result.put("username", username);
-    result.put("session", session.toJsonObject());
-    result.put("numberFollowers", numberFollowers);
-    result.put("numberFollowing", numberFollowing);
+    result.put(Constants.TYPE, type.toString());
+    result.put(Constants.ID, id);
+    result.put(Constants.GOOGLE_ID, googleId);
+    result.put(Constants.EMAIL, email);
+    result.put(Constants.FIRST_NAME, firstName);
+    result.put(Constants.LAST_NAME, lastName);
+    result.put(Constants.IMAGE_URL, imageUrl);
+    result.put(Constants.USERNAME, username);
+    result.put(Constants.SESSION, session.toJsonObject());
+    result.put(Constants.NUMBER_FOLLOWERS, numberFollowers);
+    result.put(Constants.NUMBER_FOLLOWING, numberFollowing);
     return result;
   }
 
