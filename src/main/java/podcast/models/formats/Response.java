@@ -1,4 +1,4 @@
-package podcast.models.utils;
+package podcast.models.formats;
 
 import lombok.Getter;
 import java.util.HashMap;

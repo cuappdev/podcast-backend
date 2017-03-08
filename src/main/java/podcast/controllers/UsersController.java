@@ -4,12 +4,13 @@ import com.couchbase.client.java.Bucket;
 import org.codehaus.jackson.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import podcast.models.entities.User;
-import podcast.models.utils.Response;
+import podcast.models.formats.Response;
 import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class UsersController {
 
   /** Google Sign In endpoint **/
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
-  public Response googleSignIn(@RequestParam(value="id_token", required = true) String idToken) {
+  public ResponseEntity<Response> googleSignIn(@RequestParam(value="id_token", required = true) String idToken) {
     /* Grab Google API response */
     JsonNode response = googleService.googleAuthentication(idToken);
     String googleID = googleService.googleIDFromResponse(response);
@@ -51,12 +52,12 @@ public class UsersController {
     if (possUser.isPresent()) {
       r = new Response(true, "user", possUser.get());
       r.addField("newUser", false);
-      return r;
+      return ResponseEntity.status(200).body(r);
     } else {
       User user = usersService.createUser(bucket, response);
       r = new Response(true, "user", user);
       r.addField("newUser", true);
-      return r;
+      return ResponseEntity.status(200).body(r);
     }
   }
 
