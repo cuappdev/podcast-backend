@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import podcast.models.entities.User;
-import podcast.models.formats.Response;
+import podcast.models.formats.Result;
+import podcast.models.formats.Success;
 import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import java.util.Optional;
@@ -39,7 +40,7 @@ public class UsersController {
 
   /** Google Sign In endpoint **/
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
-  public ResponseEntity<Response> googleSignIn(@RequestParam(value="id_token", required = true) String idToken) {
+  public ResponseEntity<Result> googleSignIn(@RequestParam(value="id_token", required = true) String idToken) {
     /* Grab Google API response */
     JsonNode response = googleService.googleAuthentication(idToken);
     String googleID = googleService.googleIDFromResponse(response);
@@ -48,14 +49,14 @@ public class UsersController {
     Optional<User> possUser = usersService.getUserByGoogleID(bucket, googleID);
 
     /* If exists, return, else make new user */
-    Response r;
+    Success r;
     if (possUser.isPresent()) {
-      r = new Response(true, "user", possUser.get());
+      r = new Success("user", possUser.get());
       r.addField("newUser", false);
       return ResponseEntity.status(200).body(r);
     } else {
       User user = usersService.createUser(bucket, response);
-      r = new Response(true, "user", user);
+      r = new Success("user", user);
       r.addField("newUser", true);
       return ResponseEntity.status(200).body(r);
     }
