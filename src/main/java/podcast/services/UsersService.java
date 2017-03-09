@@ -34,7 +34,7 @@ public class UsersService {
 
 
   /** Get User by Google ID (optional) **/
-  public Optional<User> getUserByGoogleID(Bucket bucket, String googleID) {
+  public Optional<User> getUserByGoogleId(Bucket bucket, String googleID) {
     /* Prepare and execute N1QL query */
     N1qlQuery q = N1qlQuery.simple("SELECT * FROM `users` where googleID='" + googleID + "'");
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
@@ -48,6 +48,29 @@ public class UsersService {
     return Optional.of(new User(rows.get(0).value().getObject("users")));
   }
 
+
+  /** Update the username of a user **/
+  public User updateUsername(Bucket bucket, User user, String username) throws User.InvalidUsernameException {
+    user.setUsername(username);
+    storeUser(bucket, user);
+    return user;
+  }
+
+
+  /** Thrown when the desired user is not found **/
+  public class UserNotFoundException extends Exception {
+    public UserNotFoundException() {
+      super("Desired user was not found.");
+    }
+  }
+
+
+  /** Thrown when Google Authentication is invalid  **/
+  public class InvalidGoogleIdException extends Exception {
+    public InvalidGoogleIdException() {
+      super("Google authentication failed.  Please try again.");
+    }
+  }
 
 
 }

@@ -61,9 +61,9 @@ public class Session extends Entity {
    * @param object - JsonObject from Couchbase
    */
   public Session(JsonObject object) {
-    this.sessionToken = object.getString("sessionToken");
-    this.expiresAt = new Date(object.getLong("expiresAt"));
-    this.updateToken = object.getString("updateToken");
+    this.sessionToken = object.getString(Constants.SESSION_TOKEN);
+    this.expiresAt = new Date(object.getLong(Constants.EXPIRES_AT));
+    this.updateToken = object.getString(Constants.UPDATE_TOKEN);
   }
 
 
@@ -72,10 +72,10 @@ public class Session extends Entity {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
-    result.put("type", type.toString());
-    result.put("sessionToken", sessionToken);
-    result.put("expiresAt", expiresAt.getTime()); // Store long
-    result.put("updateToken", updateToken);
+    result.put(Constants.TYPE, type.toString());
+    result.put(Constants.SESSION_TOKEN, sessionToken);
+    result.put(Constants.EXPIRES_AT, expiresAt.getTime()); // Store long
+    result.put(Constants.UPDATE_TOKEN, updateToken);
     return result;
   }
 

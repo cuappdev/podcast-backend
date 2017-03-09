@@ -46,7 +46,7 @@ public class UsersController {
     String googleID = googleService.googleIDFromResponse(response);
 
     /* Check if user exists */
-    Optional<User> possUser = usersService.getUserByGoogleID(bucket, googleID);
+    Optional<User> possUser = usersService.getUserByGoogleId(bucket, googleID);
 
     /* If exists, return, else make new user */
     Success r;

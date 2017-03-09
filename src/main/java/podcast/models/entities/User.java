@@ -21,8 +21,9 @@ public class User extends Entity {
   @Getter private String imageUrl;
   @Getter private Integer numberFollowers;
   @Getter private Integer numberFollowing;
+  @Getter private String username;
   @Setter @Getter private Session session;
-  @Setter @Getter private String username;
+
 
   /**
    * Constructor from Google Sign In credentials
@@ -87,6 +88,23 @@ public class User extends Entity {
     result.put(Constants.NUMBER_FOLLOWERS, numberFollowers);
     result.put(Constants.NUMBER_FOLLOWING, numberFollowing);
     return result;
+  }
+
+
+  /** Username setter **/
+  public void setUsername(String username) throws InvalidUsernameException {
+    if (username.length() == 0) {
+      throw new InvalidUsernameException();
+    }
+    this.username = username;
+  }
+
+
+  /** Thrown when the username is not valid **/
+  public class InvalidUsernameException extends Exception {
+    public InvalidUsernameException() {
+      super("This username is not valid, please try again.");
+    }
   }
 
 }
