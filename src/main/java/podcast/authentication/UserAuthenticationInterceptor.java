@@ -39,7 +39,9 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
   }
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+  public boolean preHandle(HttpServletRequest request,
+                           HttpServletResponse response,
+                           Object handler) throws Exception {
 
     /* Get the HTTP Authorization header from the request */
     String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -47,14 +49,23 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
     /* Ensure that the HTTP Authorization header is present and
      * properly formatted */
     if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-      throw new NotAuthorizedException("Authorization header must be provided");
+      response.sendError(
+        HttpServletResponse.SC_FORBIDDEN,
+        "Please provide a properly formatted sessionToken");
+      return false;
     }
 
     /* Grab session token from header */
     String sessionToken = authorizationHeader.substring("Bearer".length()).trim();
 
-    /* Grab user + set attribute */
-    request.setAttribute(Constants.USER, validateSessionToken(sessionToken));
+    try {
+      /* Grab user + set attribute */
+      request.setAttribute(Constants.USER, validateSessionToken(sessionToken));
+    } catch (Exception e) {
+      /* Send an error */
+      response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+      return false;
+    }
 
     return true;
   }
@@ -82,7 +93,7 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 
     }
     /* Caught if document with above userId is not found */
-    catch (DocumentDoesNotExistException e) {
+    catch (Exception e) {
       throw new InvalidSessionException();
     }
 

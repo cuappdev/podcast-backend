@@ -62,7 +62,6 @@ public class Crypto {
       byte[] encrypted = getEncryptionCipher().doFinal(s.getBytes());
       return Base64.getEncoder().encodeToString(encrypted);
     } catch (Exception e) {
-      e.printStackTrace();
       return null;
     }
   }
@@ -77,7 +76,6 @@ public class Crypto {
       byte[] base64crypt = Base64.getDecoder().decode(s);
       return new String(getDecryptionCipher().doFinal(base64crypt));
     } catch (Exception e) {
-      e.printStackTrace();
       return null;
     }
   }

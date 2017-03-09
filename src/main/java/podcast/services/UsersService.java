@@ -36,7 +36,7 @@ public class UsersService {
   /** Get User by Google ID (optional) **/
   public Optional<User> getUserByGoogleId(Bucket bucket, String googleID) {
     /* Prepare and execute N1QL query */
-    N1qlQuery q = N1qlQuery.simple("SELECT * FROM `users` where googleID='" + googleID + "'");
+    N1qlQuery q = N1qlQuery.simple("SELECT * FROM `users` where googleId='" + googleID + "'");
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     /* If empty */
