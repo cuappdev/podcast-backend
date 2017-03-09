@@ -30,11 +30,6 @@ public class SessionsController {
     this.sessionsService = sessionsService;
   }
 
-  /** Check session validity **/
-  @RequestMapping(method = RequestMethod.GET, value = "/check")
-  public ResponseEntity<Result> check(@RequestHeader(value = "SESSION_TOKEN", required = true) String sessionToken) {
-    User user = sessionsService.userFromSessionToken(bucket, sessionToken);
-    return ResponseEntity.status(200).body(new Success("user", user));
-  }
+
 
 }

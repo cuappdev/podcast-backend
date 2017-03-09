@@ -10,10 +10,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import podcast.models.entities.User;
+import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
+import podcast.models.utils.Constants;
 import podcast.services.GoogleService;
 import podcast.services.UsersService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
 
@@ -51,18 +56,38 @@ public class UsersController {
     /* If exists, return, else make new user */
     Success r;
     if (possUser.isPresent()) {
-      r = new Success("user", possUser.get());
-      r.addField("newUser", false);
+      r = new Success(Constants.USER, possUser.get());
+      r.addField(Constants.NEW_USER, false);
       return ResponseEntity.status(200).body(r);
     } else {
       User user = usersService.createUser(bucket, response);
-      r = new Success("user", user);
-      r.addField("newUser", true);
+      r = new Success(Constants.USER, user);
+      r.addField(Constants.NEW_USER, true);
       return ResponseEntity.status(200).body(r);
     }
   }
 
 
-  // TODO - More user endpoints
+  /** Change username **/
+  @RequestMapping(method = RequestMethod.POST, value = "/change_username")
+  public ResponseEntity<Result> changeUsername(HttpServletRequest request,
+                                               @RequestParam(value=Constants.USERNAME, required = true) String username) {
+    /* Grab the user corresponding to the request */
+    User user = (User) request.getAttribute(Constants.USER);
+    
+    /* If the username is valid */
+    try {
+      usersService.updateUsername(bucket, user, username);
+      return ResponseEntity.status(200).body(
+        new Success(Constants.USER, user));
+    }
+    /* If the username is invalid */
+    catch (User.InvalidUsernameException e) {
+      return ResponseEntity.status(500).body(new Failure(
+        new ArrayList<String>(Arrays.asList(e.getMessage())))
+      );
+    }
+  }
+
 
 }

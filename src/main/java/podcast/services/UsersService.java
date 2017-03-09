@@ -51,7 +51,8 @@ public class UsersService {
 
   /** Update the username of a user **/
   public User updateUsername(Bucket bucket, User user, String username) throws User.InvalidUsernameException {
-    user.setUsername(username);
+    // TODO - check duplicate usernames amongst users
+    user.setUsername(username.toLowerCase());
     storeUser(bucket, user);
     return user;
   }

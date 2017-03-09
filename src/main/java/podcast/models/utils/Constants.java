@@ -15,7 +15,7 @@ public class Constants {
   public static final String RELEASE = "release";
   public static final String RECOMMENDATION = "recommendation";
 
-  /* FIELD NAMES */
+  /* FIELDS */
   public static final String TYPE = "type";
   public static final String ID = "id";
   public static final String GOOGLE_ID = "googleId";
@@ -29,6 +29,8 @@ public class Constants {
   public static final String SESSION_TOKEN = "sessionToken";
   public static final String EXPIRES_AT = "expiresAt";
   public static final String UPDATE_TOKEN = "updateToken";
+  public static final String NEW_USER = "newUser";
+  public static final String ID_TOKEN = "idToken";
 
   // TODO - more
 

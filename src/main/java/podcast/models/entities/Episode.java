@@ -2,6 +2,8 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 
+import java.util.Date;
+
 /**
  * Podcast episode (e.g. an episode of 'Serial')
  */
