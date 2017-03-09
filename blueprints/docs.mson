@@ -1,0 +1,26 @@
+# Podcasts
+CUAppDev's podcast app API documentation
+
+## Questions Collection [/questions]
+### List All Questions [GET]
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer "MY_SESSION_TOKEN"
+
+    + Body
+
+            [
+              {
+                "hello" : "world"
+              }
+            ]
+
++ Response 200 (application/json)
+
+        [
+          {
+            "hello" : "world2"
+          }
+        ]

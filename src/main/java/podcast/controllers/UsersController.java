@@ -74,7 +74,7 @@ public class UsersController {
                                                @RequestParam(value=Constants.USERNAME, required = true) String username) {
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(Constants.USER);
-    
+
     /* If the username is valid */
     try {
       usersService.updateUsername(bucket, user, username);
