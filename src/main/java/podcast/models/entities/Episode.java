@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Podcast episode (e.g. an episode of 'Serial')
  */
-public class Episode extends Entity {
+public class Episode extends Podcast {
 
   /**
    * See {@link Entity#toJsonObject()}

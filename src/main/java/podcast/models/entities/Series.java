@@ -5,7 +5,7 @@ import com.couchbase.client.java.document.json.JsonObject;
 /**
  * Podcast series (e.g. 'Serial' itself)
  */
-public class Series extends Entity {
+public class Series extends Podcast {
 
   /**
    * See {@link Entity#toJsonObject()}
