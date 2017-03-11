@@ -1,5 +1,6 @@
 package podcast.models.entities;
 
+
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import podcast.models.utils.Constants;
@@ -11,11 +12,11 @@ public class Following extends Entity {
 
   @Getter private Constants.Type type = Constants.Type.FOLLOWING;
   @Getter private String ownerId;
-  @Getter private String followingId;
-  @Getter private String followingFirstName;
-  @Getter private String followingLastName;
-  @Getter private String followingUsername;
-  @Getter private String followingImageUrl;
+  @Getter private String id;
+  @Getter private String firstName;
+  @Getter private String lastName;
+  @Getter private String username;
+  @Getter private String imageUrl;
 
   /**
    * Constructor from owning User and future following
@@ -24,11 +25,11 @@ public class Following extends Entity {
    */
   public Following(User owner, User following) {
     this.ownerId = owner.getId();
-    this.followingId = following.getId();
-    this.followingFirstName = following.getFirstName();
-    this.followingLastName = following.getLastName();
-    this.followingUsername = following.getUsername();
-    this.followingImageUrl = following.getImageUrl();
+    this.id = following.getId();
+    this.firstName = following.getFirstName();
+    this.lastName = following.getLastName();
+    this.username = following.getUsername();
+    this.imageUrl = following.getImageUrl();
   }
 
 
