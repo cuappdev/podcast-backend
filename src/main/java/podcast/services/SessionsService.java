@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import podcast.models.entities.Session;
 import podcast.models.entities.User;
+import podcast.repos.UsersRepo;
 
 /**
  * Service to handle storage and querying of
@@ -14,14 +15,13 @@ import podcast.models.entities.User;
 @Service
 public class SessionsService {
 
-  /* Because we deal with some user operations */
-  private UsersService usersService;
+  /* DB operations */
+  private UsersRepo usersRepo;
 
   @Autowired
-  public SessionsService (UsersService usersService) {
-    this.usersService = usersService;
+  public SessionsService (UsersRepo usersRepo) {
+    this.usersRepo = usersRepo;
   }
-
 
   /** Grab the user by the update token,
    * update the session and save the new user **/
@@ -32,7 +32,7 @@ public class SessionsService {
       throw new InvalidUpdateTokenException();
     }
     user.setSession(new Session(user));
-    usersService.storeUser(bucket, user);
+    usersRepo.storeUser(user);
     return user;
   }
 

@@ -46,3 +46,4 @@ fabric.properties
 *.class
 *.env
 target
+google.json

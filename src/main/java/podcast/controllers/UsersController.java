@@ -1,9 +1,7 @@
 package podcast.controllers;
 
-import com.couchbase.client.java.Bucket;
 import org.codehaus.jackson.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,15 +27,12 @@ import java.util.Optional;
 @RequestMapping("/api/v1/users")
 public class UsersController {
 
-  private final Bucket bucket;
   private final GoogleService googleService;
   private final UsersService usersService;
 
   @Autowired
-  public UsersController(@Qualifier("usersBucket") Bucket bucket,
-                         GoogleService googleService,
+  public UsersController(GoogleService googleService,
                          UsersService usersService) {
-    this.bucket = bucket;
     this.googleService = googleService;
     this.usersService = usersService;
   }
@@ -51,7 +46,7 @@ public class UsersController {
     String googleID = googleService.googleIDFromResponse(response);
 
     /* Check if user exists */
-    Optional<User> possUser = usersService.getUserByGoogleId(bucket, googleID);
+    Optional<User> possUser = usersService.getUserByGoogleId(googleID);
 
     /* If exists, return, else make new user */
     Success r;
@@ -60,7 +55,7 @@ public class UsersController {
       r.addField(Constants.NEW_USER, false);
       return ResponseEntity.status(200).body(r);
     } else {
-      User user = usersService.createUser(bucket, response);
+      User user = usersService.createUser(response);
       r = new Success(Constants.USER, user);
       r.addField(Constants.NEW_USER, true);
       return ResponseEntity.status(200).body(r);
@@ -77,7 +72,7 @@ public class UsersController {
 
     /* If the username is valid */
     try {
-      usersService.updateUsername(bucket, user, username);
+      usersService.updateUsername(user, username);
       return ResponseEntity.status(200).body(
         new Success(Constants.USER, user));
     }
