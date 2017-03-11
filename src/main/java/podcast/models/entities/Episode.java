@@ -9,6 +9,11 @@ import java.util.Date;
  */
 public class Episode extends Podcast {
 
+
+  public Episode(JsonObject object) {
+
+  }
+
   /**
    * See {@link Entity#toJsonObject()}
    */

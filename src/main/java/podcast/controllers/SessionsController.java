@@ -22,14 +22,11 @@ import podcast.services.SessionsService;
 @RequestMapping("/api/v1/sessions")
 public class SessionsController {
 
-  private final Bucket bucket;
   private final SessionsService sessionsService;
 
 
   @Autowired
-  public SessionsController(@Qualifier("usersBucket") Bucket bucket,
-                            SessionsService sessionsService) {
-    this.bucket = bucket;
+  public SessionsController(SessionsService sessionsService) {
     this.sessionsService = sessionsService;
   }
 
@@ -39,7 +36,7 @@ public class SessionsController {
   public ResponseEntity<Result> updateSession(
     @RequestHeader(value = "UpdateToken", required = true) String updatetoken) {
     try {
-      User user = sessionsService.updateSession(bucket, updatetoken);
+      User user = sessionsService.updateSession(updatetoken);
       return ResponseEntity.status(200).body(new Success(Constants.USER, user));
     } catch (Exception e) {
       return ResponseEntity.status(403).body(new Failure(e.getMessage()));

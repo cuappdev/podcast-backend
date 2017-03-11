@@ -57,7 +57,7 @@ public class StartupPreparations implements InitializingBean {
 
     // Podcast indexes
     ArrayList<String> podcastIndexes =
-      new ArrayList<String>(Arrays.asList("def_title"));
+      new ArrayList<String>(Arrays.asList("def_title", "def_seriesTitle", "def_type"));
     ensureBucketIndexes(podcastsBucket, podcastIndexes);
 
     ArrayList<String> followersfollowingsIndexes =

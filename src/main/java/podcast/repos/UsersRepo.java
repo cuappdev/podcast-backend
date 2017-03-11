@@ -28,10 +28,17 @@ public class UsersRepo {
     return user;
   }
 
+
+  /** Get User by ID **/
+  public User getUserById(String id) throws Exception {
+    return new User(bucket.get(id).content());
+  }
+
+
   /** Get User by Google ID (optional) **/
   public Optional<User> getUserByGoogleId(String googleID) {
     /* Prepare and execute N1QL query */
-    N1qlQuery q = N1qlQuery.simple("SELECT * FROM `users` where googleId='" + googleID + "'");
+    N1qlQuery q = N1qlQuery.simple("SELECT * FROM users WHERE googleId='" + googleID + "'");
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     /* If empty */
@@ -42,5 +49,6 @@ public class UsersRepo {
     /* Grab user accordingly */
     return Optional.of(new User(rows.get(0).value().getObject("users")));
   }
+
 
 }

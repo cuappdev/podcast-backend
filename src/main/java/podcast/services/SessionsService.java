@@ -25,9 +25,9 @@ public class SessionsService {
 
   /** Grab the user by the update token,
    * update the session and save the new user **/
-  public User updateSession(Bucket bucket, String updateToken) throws Exception {
+  public User updateSession(String updateToken) throws Exception {
     String userId = Session.tokenToUserId(updateToken);
-    User user = new User(bucket.get(userId).content());
+    User user = usersRepo.getUserById(userId);
     if (!user.getSession().getUpdateToken().equals(updateToken)) {
       throw new InvalidUpdateTokenException();
     }
