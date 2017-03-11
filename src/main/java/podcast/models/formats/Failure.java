@@ -1,6 +1,9 @@
 package podcast.models.formats;
 
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +19,12 @@ public class Failure extends Result {
   public Failure(List<String> errors) {
     this.data = new HashMap<String, List<String>>();
     this.data.put("errors", errors);
+  }
+
+  /** Constructor with only one error **/
+  public Failure(String error) {
+    this.data = new HashMap<String, List<String>>();
+    this.data.put("errors", new ArrayList<String>(Arrays.asList(error)));
   }
 
   /** Add an error **/

@@ -45,7 +45,7 @@ public class UsersController {
 
   /** Google Sign In endpoint **/
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
-  public ResponseEntity<Result> googleSignIn(@RequestParam(value="id_token", required = true) String idToken) {
+  public ResponseEntity<Result> googleSignIn(@RequestParam(value="id_token") String idToken) {
     /* Grab Google API response */
     JsonNode response = googleService.googleAuthentication(idToken);
     String googleID = googleService.googleIDFromResponse(response);
@@ -71,7 +71,7 @@ public class UsersController {
   /** Change username **/
   @RequestMapping(method = RequestMethod.POST, value = "/change_username")
   public ResponseEntity<Result> changeUsername(HttpServletRequest request,
-                                               @RequestParam(value=Constants.USERNAME, required = true) String username) {
+                                               @RequestParam(value=Constants.USERNAME) String username) {
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(Constants.USER);
 
