@@ -26,6 +26,12 @@ public class Database {
   @Value("${storage.podcastsBucketPassword}")
   private String podcastsBucketPassword;
 
+  @Value("${storage.followersfollowingsBucket}")
+  private String followersfollowingsBucket;
+
+  @Value("${storage.followersfollowingsBucketPassword}")
+  private String followersfollowingsBucketPassword;
+
   private Cluster couchbaseCluster;
 
   @Autowired
@@ -48,6 +54,15 @@ public class Database {
       return couchbaseCluster.openBucket(podcastsBucket);
     } else {
       return couchbaseCluster.openBucket(podcastsBucket, podcastsBucketPassword);
+    }
+  }
+
+  @Bean
+  public Bucket followersfollowingsBucket() {
+    if (followersfollowingsBucketPassword == null || followersfollowingsBucketPassword.length() == 0) {
+      return couchbaseCluster.openBucket(followersfollowingsBucket);
+    } else {
+      return couchbaseCluster.openBucket(followersfollowingsBucket, followersfollowingsBucketPassword);
     }
   }
 

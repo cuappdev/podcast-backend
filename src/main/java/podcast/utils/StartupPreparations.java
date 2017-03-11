@@ -29,14 +29,16 @@ public class StartupPreparations implements InitializingBean {
   /* Buckets */
   private final Bucket usersBucket;
   private final Bucket podcastsBucket;
-  // Add more
+  private final Bucket followersfollowingsBucket;
 
 
   /** Constructor **/
   public StartupPreparations(@Qualifier("usersBucket") Bucket usersBucket,
-                             @Qualifier("podcastsBucket") Bucket podcastsBucket) {
+                             @Qualifier("podcastsBucket") Bucket podcastsBucket,
+                             @Qualifier("followersfollowingsBucket") Bucket followersfollowingsBucket) {
     this.usersBucket = usersBucket;
     this.podcastsBucket = podcastsBucket;
+    this.followersfollowingsBucket = followersfollowingsBucket;
   }
 
 
@@ -57,6 +59,10 @@ public class StartupPreparations implements InitializingBean {
     ArrayList<String> podcastIndexes =
       new ArrayList<String>(Arrays.asList("def_title"));
     ensureBucketIndexes(podcastsBucket, podcastIndexes);
+
+    ArrayList<String> followersfollowingsIndexes =
+        new ArrayList<String>(Arrays.asList("def_ownerId", "def_type"));
+    ensureBucketIndexes(followersfollowingsBucket, followersfollowingsIndexes);
 
     // -- More buckets
   }
