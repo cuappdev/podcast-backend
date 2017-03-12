@@ -23,9 +23,9 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     registry.addInterceptor(
       new UserAuthenticationInterceptor(userBucket))
       .addPathPatterns("/api/v1/users/change_username")
-      .addPathPatterns("/api/v1/podcasts/*")
-      .addPathPatterns("/api/v1/followings/*")
-      .addPathPatterns("/api/v1/search/*");
+      .addPathPatterns("/api/v1/podcasts/**")
+      .addPathPatterns("/api/v1/followings/**")
+      .addPathPatterns("/api/v1/search/**");
 
     // Add more patterns
 
