@@ -8,7 +8,6 @@ import podcast.models.utils.Constants;
  * Abstract parent of followers / followings (relationships)
  */
 public abstract class FollowRelationship extends Entity{
-
   @Getter private Constants.Type type;
   @Getter protected String ownerId;
   @Getter protected String id;
