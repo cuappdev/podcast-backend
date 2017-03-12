@@ -46,6 +46,8 @@ public class Constants {
   public static final String PUB_DATE = "pubDate";
   public static final String DURATION = "duration";
   public static final String TAGS = "tags";
+  public static final String FOLLOWINGS = "followings";
+  public static final String FOLLOWERS = "followers";
   // TODO - more
 
 

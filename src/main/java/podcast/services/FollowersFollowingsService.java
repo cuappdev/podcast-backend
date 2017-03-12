@@ -2,10 +2,14 @@ package podcast.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import podcast.models.entities.Follower;
 import podcast.models.entities.Following;
 import podcast.models.entities.User;
 import podcast.repos.FollowersFollowingsRepo;
 import podcast.repos.UsersRepo;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FollowersFollowingsService {
@@ -37,8 +41,14 @@ public class FollowersFollowingsService {
   public boolean deleteFollowing(User owner, String followedId) {
     try {
       User followed = usersRepo.getUserById(followedId);
-      Following following = ffRepo.getFollowingByUsers(owner, followed);
-      return ffRepo.deleteFollowing(following);
+      Optional<Following> followingOpt = ffRepo.getFollowingByUsers(owner, followed);
+      Following following = followingOpt.orElse(null);
+      if(following != null) {
+        return ffRepo.deleteFollowing(following);
+      }
+      else {
+        throw new Exception("Can't delete nonexistent following."); // TODO better exception handling
+      }
     }
     catch(Exception e) {
       e.printStackTrace(); // TODO figure out what goes here
@@ -48,10 +58,9 @@ public class FollowersFollowingsService {
     }
   }
 
-  public List<Following> getUserFollowings(String ownerId) {
+  public Optional<List<Following>> getUserFollowings(String ownerId) {
     try {
-      User owner = usersRepo.getUserById(ownerId);
-      List<Following> followings = ffRepo.getUserFollowings(owner);
+      Optional<List<Following>> followings = ffRepo.getUserFollowings(ownerId);
       return followings;
     }
     catch(Exception e) {
@@ -62,10 +71,9 @@ public class FollowersFollowingsService {
     }
   }
 
-  public List<Follower> getUserFollowers(String ownerId) {
+  public Optional<List<Follower>> getUserFollowers(String ownerId) {
     try {
-      User owner = usersRepo.getUserById(ownerId);
-      List<Follower> followers = ffRepo.getUserFollowers(owner);
+      Optional<List<Follower>> followers = ffRepo.getUserFollowers(ownerId);
       return followers;
     }
     catch(Exception e) {

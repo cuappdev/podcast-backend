@@ -91,15 +91,14 @@ public class FollowersFollowingsRepo {
     return Optional.of(followings);
   }
 
-  public Following getFollowingByUsers(User owner, User followed) {
+  public Optional<Following> getFollowingByUsers(User owner, User followed) {
     N1qlQuery q = N1qlQuery.simple("SELECT * FROM followersfollowings WHERE ownerId='" +
         owner.getId() + " AND id='" + followed.getId() + " AND type='following'");
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     // TODO exception handling
-    // make this an Optional?
 
-    return new Following(rows.get(0).value().getObject("followersfollowings"));
+    return Optional.of(new Following(rows.get(0).value().getObject("followersfollowings")));
   }
 
   public boolean deleteFollowing(Following following) {
@@ -115,7 +114,7 @@ public class FollowersFollowingsRepo {
     N1qlQuery q2 = N1qlQuery.simple(qs2);
     bucket.query(q2);
 
-    // TODO Better error handling for the above operations
+    // TODO Better exception handling for the above operations
 
     return true;
   }

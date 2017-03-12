@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import podcast.models.entities.Following;
 import podcast.models.entities.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
@@ -14,6 +15,9 @@ import podcast.models.utils.Constants;
 import podcast.services.FollowersFollowingsService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/followings/")
@@ -55,25 +59,20 @@ public class FollowingsController {
                                                   @RequestParam(value = Constants.ID) String id) {
 
     User user = (User) request.getAttribute(Constants.USER);
+    Optional<List<Following>> followings;
 
     if (id.equals("me")) {
-      ffService.getUserFollowings(user.getId());
-      try {
-        return ResponseEntity.status(200).body(
-            new Success(Constants.USER, user));
-      } catch (Exception e) {
-        return ResponseEntity.status(400).body(new Failure(e.getMessage()));
-      }
+      followings = ffService.getUserFollowings(user.getId());
     }
     else {
+      followings = ffService.getUserFollowings(id);
+    }
       try {
-        ffService.getUserFollowings(id);
         return ResponseEntity.status(200).body(
-            new Success(Constants.USER, user));
+            new Success(Constants.FOLLOWINGS, followings.orElse(new ArrayList<Following>())));
       } catch (Exception e) {
         return ResponseEntity.status(400).body(new Failure(e.getMessage()));
       }
-    }
   }
 }
 
