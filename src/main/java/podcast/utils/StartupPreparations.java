@@ -52,7 +52,7 @@ public class StartupPreparations implements InitializingBean {
   private void ensureIndexes() throws Exception {
     // User indexes
     ArrayList<String> usersIndexes =
-      new ArrayList<String>(Arrays.asList("def_googleId", "def_firstName", "def_lastName"));
+      new ArrayList<String>(Arrays.asList("def_googleId", "def_firstName", "def_lastName", "def_username"));
     ensureBucketIndexes(usersBucket, usersIndexes);
 
     // Podcast indexes

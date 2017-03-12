@@ -5,19 +5,23 @@ import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryRow;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import podcast.models.entities.Episode;
 import podcast.models.entities.Podcast;
 import podcast.models.entities.Series;
 import podcast.models.utils.Constants;
 import java.util.List;
 import java.util.stream.Collectors;
+import static podcast.models.utils.Constants.*;
 
 /** Podcasts search via indexes on certain fields **/
+@Component
+@Qualifier("simplePodcastsSearch")
 public class SimplePodcastsSearch extends PodcastsSearch {
 
   private Bucket bucket;
 
-  SimplePodcastsSearch(@Qualifier("podcastsBucket") Bucket podcastsBucket) {
+  public SimplePodcastsSearch(@Qualifier("podcastsBucket") Bucket podcastsBucket) {
     this.bucket = bucket;
   }
 
@@ -25,9 +29,9 @@ public class SimplePodcastsSearch extends PodcastsSearch {
   public List<Episode> searchEpisodes(String query) {
     query = query.trim(); // cleanse the query
     String queryString =
-      "SELECT * FROM podcasts WHERE " +
-        "type='episode' AND seriesTitle LIKE '" + query + "%' " +
-          "OR title LIKE '" + query + "%'";
+      "SELECT * FROM " + PODCASTS + " WHERE " +
+        TYPE + " = '" + EPISODE + "' AND " + SERIES_TITLE + " LIKE '" + query + "%' " +
+        "OR " + TITLE + " LIKE '" + query + "%'";
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
@@ -41,8 +45,8 @@ public class SimplePodcastsSearch extends PodcastsSearch {
   public List<Series> searchSeries(String query) {
     query = query.trim(); // cleanse the query
     String queryString =
-      "SELECT * FROM podasts WHERE " +
-        "type='series' AND title LIKE '" + query + "%'";
+      "SELECT * FROM " + PODCASTS + " WHERE " +
+        TYPE + "='" + SERIES + "' AND " + TITLE + " LIKE '" + query + "%'";
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
@@ -56,9 +60,9 @@ public class SimplePodcastsSearch extends PodcastsSearch {
   public List<Podcast> searchEverything(String query) {
     query = query.trim(); // cleanse the query
     String queryString =
-      "SELECT * FROM podcasts WHERE " +
-        "title LIKE '" + query + "%' " +
-        "OR seriesTitle LIKE '" + query + "%'";
+      "SELECT * FROM " + PODCASTS + " WHERE " +
+        TITLE + " LIKE '" + query + "%' " +
+        "OR " + SERIES_TITLE + " LIKE '" + query + "%'";
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 

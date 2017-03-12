@@ -1,9 +1,11 @@
 package podcast.models.utils;
 
-
-import podcast.models.entities.User;
-
 public class Constants {
+
+  /* BUCKET NAMES */
+  public static final String USERS = "users";
+  public static final String PODCASTS = "podcasts";
+  public static final String FOLLOWERS_FOLLOWINGS = "followersfollowings";
 
   /* RESOURCE NAMES */
   public static final String USER = "user";
@@ -45,7 +47,6 @@ public class Constants {
   public static final String DURATION = "duration";
   public static final String TAGS = "tags";
   // TODO - more
-
 
 
   /* Secret encryption key */
