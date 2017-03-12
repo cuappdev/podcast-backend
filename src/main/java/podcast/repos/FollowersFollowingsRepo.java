@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import podcast.models.entities.FollowRelationship;
 import podcast.models.entities.Follower;
 import podcast.models.entities.Following;
+import podcast.models.entities.User;
+
 import static podcast.models.utils.Constants.*;
 
 import java.util.ArrayList;
@@ -41,10 +43,18 @@ public class FollowersFollowingsRepo {
     this.bucket = followersfollowingsBucket;
   }
 
-  /* Store a user in the bucket */
-  public FollowRelationship storeFollowRelationship(FollowRelationship fr) {
-    bucket.upsert(JsonDocument.create(composeKey(fr), fr.toJsonObject()));
-    return fr;
+  /**
+   * Creates a following from user A to B. Also creates a follower from B to A.
+   * @param following
+   * @return
+   */
+  public Following storeFollowing(Following following, User owner, User followed) {
+    Follower follower = new Follower(followed, owner);
+    JsonDocument followingDoc = JsonDocument.create(composeKey(following), following.toJsonObject());
+    JsonDocument followerDoc = JsonDocument.create(composeKey(follower), follower.toJsonObject());
+    bucket.upsert(followingDoc);
+    bucket.upsert(followerDoc);
+    return following;
   }
 
   public Optional<List<Follower>> getUserFollowers(String ownerId) {
@@ -79,5 +89,34 @@ public class FollowersFollowingsRepo {
     }
 
     return Optional.of(followings);
+  }
+
+  public Following getFollowingByUsers(User owner, User followed) {
+    N1qlQuery q = N1qlQuery.simple("SELECT * FROM followersfollowings WHERE ownerId='" +
+        owner.getId() + " AND id='" + followed.getId() + " AND type='following'");
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+
+    // TODO exception handling
+    // make this an Optional?
+
+    return new Following(rows.get(0).value().getObject("followersfollowings"));
+  }
+
+  public boolean deleteFollowing(Following following) {
+    /* Can we do this without n1ql queries? */
+
+    String qs1 = "DELETE * FROM followersfollowings WHERE ownerId='" +
+        following.getOwnerId() + " AND id='" + following.getId() + " AND type='following'";
+    N1qlQuery q1 = N1qlQuery.simple(qs1);
+    bucket.query(q1);
+
+    String qs2 = "DELETE * FROM followersfollowings WHERE ownerId='" +
+        following.getId() + " AND id='" + following.getOwnerId() + " AND type='follower'";
+    N1qlQuery q2 = N1qlQuery.simple(qs2);
+    bucket.query(q2);
+
+    // TODO Better error handling for the above operations
+
+    return true;
   }
 }
