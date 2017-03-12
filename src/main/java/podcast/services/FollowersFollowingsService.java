@@ -48,4 +48,32 @@ public class FollowersFollowingsService {
     }
   }
 
+  public List<Following> getUserFollowings(String ownerId) {
+    try {
+      User owner = usersRepo.getUserById(ownerId);
+      List<Following> followings = ffRepo.getUserFollowings(owner);
+      return followings;
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+    finally {
+      return null;
+    }
+  }
+
+  public List<Follower> getUserFollowers(String ownerId) {
+    try {
+      User owner = usersRepo.getUserById(ownerId);
+      List<Follower> followers = ffRepo.getUserFollowers(owner);
+      return followers;
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+    finally {
+      return null;
+    }
+  }
+
 }
