@@ -31,7 +31,19 @@ public class Constants {
   public static final String UPDATE_TOKEN = "updateToken";
   public static final String NEW_USER = "newUser";
   public static final String ID_TOKEN = "idToken";
-
+  public static final String TITLE = "title";
+  public static final String COUNTRY = "country";
+  public static final String AUTHOR = "author";
+  public static final String IMAGE_URL_SM = "imageUrlSm";
+  public static final String IMAGE_URL_LG = "imageUrlLg";
+  public static final String FEED_URL = "feedUrl";
+  public static final String GENRES = "genres";
+  public static final String SERIES_ID = "seriesId";
+  public static final String SERIES_TITLE = "seriesTitle";
+  public static final String SUMMARY = "summary";
+  public static final String PUB_DATE = "pubDate";
+  public static final String DURATION = "duration";
+  public static final String TAGS = "tags";
   // TODO - more
 
 

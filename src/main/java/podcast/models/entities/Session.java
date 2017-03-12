@@ -2,13 +2,13 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
-import podcast.models.utils.Constants;
 import podcast.models.utils.Crypto;
 import podcast.models.utils.TokenGenerator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
+import static podcast.models.utils.Constants.*;
 
 /**
  * Session used to authenticate users on REST API calls
@@ -16,7 +16,7 @@ import java.util.Date;
 public class Session extends Entity {
 
   /* Fields */
-  @Getter private Constants.Type type = Constants.Type.SESSION;
+  @Getter private Type type = Type.SESSION;
   @Getter private String sessionToken;
   @Getter private Date expiresAt;
   @Getter private String updateToken;
@@ -34,7 +34,7 @@ public class Session extends Entity {
   /** Get user ID from token **/
   public static String tokenToUserId(String token) {
     String decrypted = Crypto.decrypt(token);
-    return new String(Arrays.copyOfRange(decrypted.getBytes(), 0, Constants.UUID_BYTES));
+    return new String(Arrays.copyOfRange(decrypted.getBytes(), 0, UUID_BYTES));
   }
 
 
@@ -61,9 +61,9 @@ public class Session extends Entity {
    * @param object - JsonObject from Couchbase
    */
   public Session(JsonObject object) {
-    this.sessionToken = object.getString(Constants.SESSION_TOKEN);
-    this.expiresAt = new Date(object.getLong(Constants.EXPIRES_AT));
-    this.updateToken = object.getString(Constants.UPDATE_TOKEN);
+    this.sessionToken = object.getString(SESSION_TOKEN);
+    this.expiresAt = new Date(object.getLong(EXPIRES_AT));
+    this.updateToken = object.getString(UPDATE_TOKEN);
   }
 
 
@@ -72,10 +72,10 @@ public class Session extends Entity {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
-    result.put(Constants.TYPE, type.toString());
-    result.put(Constants.SESSION_TOKEN, sessionToken);
-    result.put(Constants.EXPIRES_AT, expiresAt.getTime()); // Store long
-    result.put(Constants.UPDATE_TOKEN, updateToken);
+    result.put(TYPE, type.toString());
+    result.put(SESSION_TOKEN, sessionToken);
+    result.put(EXPIRES_AT, expiresAt.getTime()); // Store long
+    result.put(UPDATE_TOKEN, updateToken);
     return result;
   }
 

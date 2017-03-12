@@ -40,7 +40,7 @@ public class UsersController {
 
   /** Google Sign In endpoint **/
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
-  public ResponseEntity<Result> googleSignIn(@RequestParam(value="id_token") String idToken) {
+  public ResponseEntity<Result> googleSignIn(@RequestParam(value=Constants.ID_TOKEN) String idToken) {
     /* Grab Google API response */
     JsonNode response = googleService.googleAuthentication(idToken);
     String googleID = googleService.googleIDFromResponse(response);
