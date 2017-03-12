@@ -26,7 +26,7 @@ public class SimplePodcastsSearch extends PodcastsSearch {
   }
 
   /** {@link PodcastsSearch#searchEpisodes(String, Integer, Integer)} **/
-  public List<Episode> searchEpisodes(String query, Integer pageSize, Integer page) {
+  public List<Episode> searchEpisodes(String query, Integer offset, Integer max) {
     query = query.trim(); // cleanse the query
     String queryString =
       "SELECT * FROM " + PODCASTS + " WHERE " +
@@ -43,7 +43,7 @@ public class SimplePodcastsSearch extends PodcastsSearch {
 
 
   /** {@link PodcastsSearch#searchSeries(String, Integer, Integer)} **/
-  public List<Series> searchSeries(String query, Integer pageSize, Integer page) {
+  public List<Series> searchSeries(String query, Integer offset, Integer max) {
     query = query.trim(); // cleanse the query
     String queryString =
       "SELECT * FROM " + PODCASTS + " WHERE " +
@@ -58,7 +58,7 @@ public class SimplePodcastsSearch extends PodcastsSearch {
 
 
   /** {@link PodcastsSearch#searchEverything(String, Integer, Integer)} **/
-  public List<Podcast> searchEverything(String query, Integer pageSize, Integer page) {
+  public List<Podcast> searchEverything(String query, Integer offset, Integer max) {
     query = query.trim(); // cleanse the query
     String queryString =
       "SELECT * FROM " + PODCASTS + " WHERE " +
