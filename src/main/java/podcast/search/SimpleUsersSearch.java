@@ -21,8 +21,8 @@ public class SimpleUsersSearch extends UsersSearch {
     this.bucket = usersBucket;
   }
 
-  /** {@link UsersSearch#searchUsers(String)} **/
-  public List<User> searchUsers(String query) {
+  /** {@link UsersSearch#searchUsers(String, Integer, Integer)} **/
+  public List<User> searchUsers(String query, Integer pageSize, Integer page) {
     query = query.trim(); // cleanse query
     String queryString =
       "SELECT * FROM " + USERS + " WHERE " +
@@ -33,7 +33,7 @@ public class SimpleUsersSearch extends UsersSearch {
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     return rows.stream()
-      .map(r -> { return new User(r.value()); })
+      .map(r -> { return new User(r.value().getObject(USERS)); })
       .collect(Collectors.toList());
   }
 

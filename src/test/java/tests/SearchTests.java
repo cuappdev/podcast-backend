@@ -11,42 +11,55 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.*;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import podcast.controllers.SessionsController;
+import podcast.controllers.SearchController;
 import podcast.controllers.UsersController;
 
-/* Session tests */
+/* Search tests */
 @SpringBootTest(classes = AppConfig.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SessionTests {
+public class SearchTests {
 
   /* Mock API configuration */
-  @Autowired private SessionsController sessionsController;
   @Autowired private UsersController usersController;
+  @Autowired private SearchController searchController;
   private ObjectMapper mapper = new ObjectMapper();
   private MockMvc mockMvc;
+
 
   @Before
   public void setup() {
     this.mockMvc =
-      MockMvcBuilders.standaloneSetup(sessionsController, usersController).build();
+      MockMvcBuilders.standaloneSetup(usersController, searchController).build();
   }
 
   @Test
   public void test1() throws Exception {
     String idToken = System.getenv("TEST_ID_TOKEN");
     MvcResult result =
-      this.mockMvc
-      .perform(MockMvcRequestBuilders.post("/api/v1/users/google_sign_in").param("id_token", idToken))
-      .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+      mockMvc
+        .perform(MockMvcRequestBuilders.post("/api/v1/users/google_sign_in").param("id_token", idToken))
+        .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
     JsonNode response = mapper.readTree(result.getResponse().getContentAsString());
     String sessionToken = response.get("data").get("user").get("session").get("sessionToken").asText();
-    System.out.println(sessionToken);
-  }
 
+
+    MvcResult result1 =
+      mockMvc
+        .perform(MockMvcRequestBuilders
+          .get("/api/v1/search/episodes/Plan")
+          .header("Authorization", "Grant " + sessionToken))
+      .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+    JsonNode response1 = mapper.readTree(result1.getResponse().getContentAsString());
+    System.out.println(response1);
+
+
+
+
+  }
 
 
 }

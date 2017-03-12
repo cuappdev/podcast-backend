@@ -36,9 +36,10 @@ public class SearchController {
   public ResponseEntity<Result> searchEpisodes(HttpServletRequest request,
                                                @PathVariable("query") String query) {
     try {
-      List<Episode> results = podcastsSearch.searchEpisodes(query);
+      List<Episode> results = podcastsSearch.searchEpisodes(query, 0, 0);
       return ResponseEntity.status(200).body(new Success("episodes", results));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }

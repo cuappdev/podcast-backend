@@ -7,6 +7,6 @@ import java.util.List;
 public abstract class UsersSearch {
 
   /** Given a query, search and return resultant users **/
-  public abstract List<User> searchUsers(String query);
+  public abstract List<User> searchUsers(String query, Integer pageSize, Integer page);
 
 }
