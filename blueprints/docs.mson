@@ -1,26 +1,259 @@
 # Podcasts
 CUAppDev's podcast app API documentation
 
-## Questions Collection [/questions]
-### List All Questions [GET]
-
-+ Request (application/json)
-    + Headers
-
-            Authorization: Bearer "MY_SESSION_TOKEN"
-
-    + Body
-
-            [
-              {
-                "hello" : "world"
-              }
-            ]
+# Group Users
+## Google Sign In [/api/v1/users/google_sign_in?id_token={id_token}]
+### Google Sign In [POST]
 
 + Response 200 (application/json)
 
-        [
-          {
-            "hello" : "world2"
+        {
+          "data": {
+            "user": {
+              "email": "john.doe@gmail.com",
+              "firstName": "John",
+              "googleId": "12345",
+              "id": "8361c722-0513-11e7-9fc2-7b1dcc97b110",
+              "imageUrl": "https://goo.gl/L37gfS",
+              "lastName": "Doe",
+              "numberFollowers": 0,
+              "numberFollowing": 0,
+              "session": {
+                "expiresAt": 1489636800000,
+                "sessionToken": "myLongSessionToken",
+                "type": "SESSION",
+                "updateToken": "myLongUpdateToken"
+              },
+              "type": "USER",
+              "username": "johndoe"
+            },
+            "newUser": true
+          },
+          "success": true
+        }
+
+
+## Change Username [/api/v1/users/change_username?username={username}]
+### Change Username [POST]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "user": {
+              "email": "john.doe@gmail.com",
+              "firstName": "John",
+              "googleId": "12345",
+              "id": "8361c722-0513-11e7-9fc2-7b1dcc97b110",
+              "imageUrl": "https://goo.gl/L37gfS",
+              "lastName": "Doe",
+              "numberFollowers": 0,
+              "numberFollowing": 0,
+              "session": {
+                "expiresAt": 1489636800000,
+                "sessionToken": "myLongSessionToken",
+                "type": "SESSION",
+                "updateToken": "myLongUpdateToken"
+              },
+              "type": "USER",
+              "username": "johnDoesNewUsername"
+            }
+          },
+          "success": true
+        }
+
+
+# Group Sessions
+## Update Session [/api/v1/sessions/update]
+### Update Session [POST]
+
++ Request
+
+  + Headers
+
+            UpdateToken : {updateToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "user": {
+              "email": "john.doe@gmail.com",
+              "firstName": "John",
+              "googleId": "12345",
+              "id": "8361c722-0513-11e7-9fc2-7b1dcc97b110",
+              "imageUrl": "https://goo.gl/L37gfS",
+              "lastName": "Doe",
+              "numberFollowers": 0,
+              "numberFollowing": 0,
+              "session": {
+                "expiresAt": 1489636800000,
+                "sessionToken": "myLongSessionToken",
+                "type": "SESSION",
+                "updateToken": "myLongUpdateToken"
+              },
+              "type": "USER",
+              "username": "johndoe"
+            }
+          },
+          "success": true
+        }
+
+
+# Group Search
+## Search Episodes [/api/v1/search/episodes/{query}?offset={offset}&max={max}]
+### Search Episodes [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "episodes": [
+              {
+                "type": "EPISODE",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"]
+              }
+            ]
           }
-        ]
+        }
+
+
+## Search Series [/api/v1/search/series/{query}?offset={offset}&max={max}]
+### Search Episodes [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "series": [
+              {
+                "type": "SERIES",
+                "id": 207698746,
+                "title": "Piazza, a Platform for Vengeance",
+                "country": "USA",
+                "author": "Anonymous",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "feedUrl": "A RSS Feed URL",
+                "genres": ["Loop Invariants", "56 Years of Programming Experience"]
+              }
+            ]
+          }
+        }
+
+
+## Search Users [/api/v1/search/users/{query}?offset={offset}&max={max}]
+### Search Users [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "users": [
+              {
+                "id": "f8415c6a-0513-11e7-9ace-8fe67936672c",
+                "firstName": "John",
+                "lastName": "Doe",
+                "username": "jDoe",
+                "numberFollowers": 0,
+                "numberFollowing": 0,
+                "imageUrl": "https://goo.gl/L37gfS"
+              }
+            ]
+          }
+        }
+
+
+## Search All [/api/v1/search/all/{query}?offset={offset}&max={max}]
+### Search All [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "episodes": [
+              {
+                "type": "EPISODE",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"]
+              }
+            ],
+            "series": [
+              {
+                "type": "SERIES",
+                "id": 207698746,
+                "title": "Piazza, a Platform for Vengeance",
+                "country": "USA",
+                "author": "Anonymous",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "feedUrl": "A RSS Feed URL",
+                "genres": ["Loop Invariants", "56 Years of Programming Experience"]
+              }
+            ],
+            "users": [
+              {
+                "id": "f8415c6a-0513-11e7-9ace-8fe67936672c",
+                "firstName": "John",
+                "lastName": "Doe",
+                "username": "jDoe",
+                "numberFollowers": 0,
+                "numberFollowing": 0,
+                "imageUrl": "https://goo.gl/L37gfS"
+              }
+            ]
+          }
+        }
