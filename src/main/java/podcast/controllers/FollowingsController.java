@@ -46,9 +46,9 @@ public class FollowingsController {
     User user = (User) request.getAttribute(Constants.USER);
 
     try {
-      ffService.createFollowing(user, id);
+      Following following = ffService.createFollowing(user, id);
       return ResponseEntity.status(200).body(
-          new Success(Constants.USER, user));
+          new Success(Constants.FOLLOWING, following));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }

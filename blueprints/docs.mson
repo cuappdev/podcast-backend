@@ -105,6 +105,97 @@ CUAppDev's podcast app API documentation
           "success": true
         }
 
+# Group Followers Followings
+## Create Following [/api/v1/followings/new?id={id}]
+### Create Following [GET]
+
++ Request
+
++ Headers
+
+          Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+{
+  "data": {
+    "following": {
+      "ownerId": 1,
+      "id": 2,
+      "firstName": "John",
+      "lastName": "Doe",
+      "username": "jDoe",
+      "imageUrl": "https://avatars0.githubusercontent.com/u/17533691?v=3&s=200"
+    }
+  },
+  "success": true
+}
+
+## Display User Followings [/api/v1/followings?id={id}]
+### Display User Followings [GET]
+
++ Request
+
++ Headers
+
+          Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+{
+  "data": {
+    "followings": [{
+      "ownerId": 1,
+      "id": 2,
+      "firstName": "John",
+      "lastName": "Doe",
+      "username": "jDoe",
+      "imageUrl": "https://avatars0.githubusercontent.com/u/17533691?v=3&s=200"
+    },
+    {
+      "ownerId": 2,
+      "id": 1,
+      "firstName": "Ezra",
+      "lastName": "Cornell",
+      "username": "cornL",
+      "imageUrl": "http://bit.ly/2nsBAPG"
+    }]
+    },
+    "success": true
+}
+
+## Display User Followers [/api/v1/followers?id={id}]
+### Display User Followers [GET]
+
++ Request
+
++ Headers
+
+          Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+{
+  "data": {
+      "followings": [{
+        "ownerId": 2,
+        "id": 1,
+        "firstName": "Ezra",
+        "lastName": "Cornell",
+        "username": "cornL",
+        "imageUrl": "http://bit.ly/2nsBAPG"
+      },
+      {
+        "ownerId": 1,
+        "id": 2,
+        "firstName": "John",
+        "lastName": "Doe",
+        "username": "jDoe",
+        "imageUrl": "https://avatars0.githubusercontent.com/u/17533691?v=3&s=200"
+      }]
+    },
+  "success": true
+}
 
 # Group Search
 ## Search Episodes [/api/v1/search/episodes/{query}?offset={offset}&max={max}]
