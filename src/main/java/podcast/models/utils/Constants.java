@@ -45,12 +45,12 @@ public class Constants {
   public static final String PUB_DATE = "pubDate";
   public static final String DURATION = "duration";
   public static final String TAGS = "tags";
+  public static final String AUDIO_URL = "audioUrl";
   // TODO - more
 
 
   /* Secret encryption key */
-  // public static final String SECRET_KEY = System.getenv("SECRET_KEY");
-  public static final String SECRET_KEY = "abcdefghijklmnop";
+  public static final String SECRET_KEY = System.getenv("SECRET_KEY");
 
   /* Number of bytes in a UUID */
   public static final Integer UUID_BYTES = 36;

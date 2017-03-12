@@ -2,7 +2,8 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
-import podcast.models.utils.Constants;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import static podcast.models.utils.Constants.*;
@@ -35,7 +36,7 @@ public class Series extends Podcast {
     this.imageUrlSm = object.getString(IMAGE_URL_SM);
     this.imageUrlLg = object.getString(IMAGE_URL_LG);
     this.feedUrl = object.getString(FEED_URL);
-    this.genres = object.getArray(GENRES).toList()
+    this.genres = object.getArray(GENRES) == null ? new ArrayList<String>() : object.getArray(GENRES).toList()
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }
 

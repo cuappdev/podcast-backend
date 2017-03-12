@@ -28,10 +28,8 @@ public class SimplePodcastsSearch extends PodcastsSearch {
   /** {@link PodcastsSearch#searchEpisodes(String, Integer, Integer)} **/
   public List<Episode> searchEpisodes(String query, Integer offset, Integer max) {
     query = query.trim(); // cleanse the query
-    String queryString =
-      "SELECT * FROM " + PODCASTS + " WHERE " +
-        TYPE + " = '" + EPISODE + "' AND " + SERIES_TITLE + " LIKE '" + query + "%' " +
-        "OR " + TITLE + " LIKE '" + query + "%' LIMIT 10";
+    String qS = "SELECT * FROM %s WHERE %s='%s' AND %s LIKE '%s%%' OR %s LIKE '%s%%' OFFSET %d LIMIT %d";
+    String queryString = String.format(qS, PODCASTS, TYPE, EPISODE, SERIES_TITLE, query, TITLE, query, offset, max);
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
@@ -45,9 +43,8 @@ public class SimplePodcastsSearch extends PodcastsSearch {
   /** {@link PodcastsSearch#searchSeries(String, Integer, Integer)} **/
   public List<Series> searchSeries(String query, Integer offset, Integer max) {
     query = query.trim(); // cleanse the query
-    String queryString =
-      "SELECT * FROM " + PODCASTS + " WHERE " +
-        TYPE + "='" + SERIES + "' AND " + TITLE + " LIKE '" + query + "%' LIMIT 10";
+    String qS = "SELECT * FROM %s WHERE %s='%s' AND %s LIKE '%s%%' OFFSET %d LIMIT %d";
+    String queryString = String.format(qS, PODCASTS, TYPE, SERIES, TITLE, query, offset, max);
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
@@ -60,10 +57,8 @@ public class SimplePodcastsSearch extends PodcastsSearch {
   /** {@link PodcastsSearch#searchEverything(String, Integer, Integer)} **/
   public List<Podcast> searchEverything(String query, Integer offset, Integer max) {
     query = query.trim(); // cleanse the query
-    String queryString =
-      "SELECT * FROM " + PODCASTS + " WHERE " +
-        TITLE + " LIKE '" + query + "%' " +
-        "OR " + SERIES_TITLE + " LIKE '" + query + "%' LIMIT 10";
+    String qS = "SELECT * FROM %s WHERE %s LIKE '%s%%' OR %s LIKE '%s%%' OFFSET %d LIMIT %d";
+    String queryString = String.format(qS, PODCASTS, TITLE, query, SERIES_TITLE, query, offset, max);
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 

@@ -18,7 +18,7 @@ import podcast.services.UsersService;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/v1/followings/")
+@RequestMapping("/api/v1/followings")
 public class FollowingsController {
 
   private final FollowersFollowingsService ffService;
