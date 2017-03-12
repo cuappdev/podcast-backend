@@ -19,8 +19,9 @@ public class Success extends Result {
   }
 
   /** Add more information to data **/
-  public void addField(String key, Object value) {
+  public Success addField(String key, Object value) {
     this.data.put(key, value);
+    return this;
   }
 
 }
