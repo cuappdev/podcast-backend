@@ -1,5 +1,6 @@
 package podcast.configs;
 
+import com.couchbase.client.core.env.QueryServiceConfig;
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
@@ -42,11 +43,13 @@ public class Database {
   @Autowired
   public Database(@Value("${storage.cluster.host}") String clusterHost,
                   @Value("${storage.cluster.timeout}") Integer timeout) {
+
     CouchbaseEnvironment env = DefaultCouchbaseEnvironment.builder()
       .queryTimeout(timeout)
       .socketConnectTimeout(timeout)
       .connectTimeout(timeout)
       .kvTimeout(timeout)
+      .queryEndpoints(8091)
       .build();
 
     this.couchbaseCluster = CouchbaseCluster.create(env, clusterHost);
