@@ -5,10 +5,10 @@ import lombok.Getter;
 import podcast.models.utils.Constants;
 
 /**
- * Created by amitm on 3/11/17.
+ * Abstract parent of followers / followings (relationships)
  */
 public abstract class FollowRelationship extends Entity{
-  @Getter protected Constants.Type type;
+  @Getter private Constants.Type type;
   @Getter protected String ownerId;
   @Getter protected String id;
   @Getter protected String firstName;

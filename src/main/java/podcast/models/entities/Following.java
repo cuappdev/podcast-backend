@@ -1,7 +1,5 @@
 package podcast.models.entities;
 
-
-import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import podcast.models.utils.Constants;
 
@@ -9,6 +7,7 @@ import podcast.models.utils.Constants;
  * Following (someone you follow)
  */
 public class Following extends FollowRelationship {
+
   @Getter private Constants.Type type = Constants.Type.FOLLOWING;
 
   /**

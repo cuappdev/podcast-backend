@@ -5,14 +5,14 @@ import com.fasterxml.uuid.Generators;
 import lombok.Getter;
 import lombok.Setter;
 import org.codehaus.jackson.JsonNode;
-import podcast.models.utils.Constants;
+import static podcast.models.utils.Constants.*;
 
 /**
  * App user (w/Google credentials)
  */
 public class User extends Entity {
 
-  @Getter private Constants.Type type = Constants.Type.USER;
+  @Getter private Type type = Type.USER;
   @Getter private String id;
   @Getter private String googleId;
   @Getter private String email;
@@ -58,16 +58,16 @@ public class User extends Entity {
    * @param object - JsonObject from Couchbase
    */
   public User(JsonObject object) {
-    this.id = object.getString(Constants.ID);
-    this.googleId = object.getString(Constants.GOOGLE_ID);
-    this.email = object.getString(Constants.EMAIL);
-    this.firstName = object.getString(Constants.FIRST_NAME);
-    this.lastName = object.getString(Constants.LAST_NAME);
-    this.imageUrl = object.getString(Constants.IMAGE_URL);
-    this.session = new Session(object.getObject(Constants.SESSION));
-    this.numberFollowers = object.getInt(Constants.NUMBER_FOLLOWERS);
-    this.numberFollowing = object.getInt(Constants.NUMBER_FOLLOWING);
-    this.username = object.getString(Constants.USERNAME);
+    this.id = object.getString(ID);
+    this.googleId = object.getString(GOOGLE_ID);
+    this.email = object.getString(EMAIL);
+    this.firstName = object.getString(FIRST_NAME);
+    this.lastName = object.getString(LAST_NAME);
+    this.imageUrl = object.getString(IMAGE_URL);
+    this.session = new Session(object.getObject(SESSION));
+    this.numberFollowers = object.getInt(NUMBER_FOLLOWERS);
+    this.numberFollowing = object.getInt(NUMBER_FOLLOWING);
+    this.username = object.getString(USERNAME);
   }
 
 
@@ -76,17 +76,17 @@ public class User extends Entity {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
-    result.put(Constants.TYPE, type.toString());
-    result.put(Constants.ID, id);
-    result.put(Constants.GOOGLE_ID, googleId);
-    result.put(Constants.EMAIL, email);
-    result.put(Constants.FIRST_NAME, firstName);
-    result.put(Constants.LAST_NAME, lastName);
-    result.put(Constants.IMAGE_URL, imageUrl);
-    result.put(Constants.USERNAME, username);
-    result.put(Constants.SESSION, session.toJsonObject());
-    result.put(Constants.NUMBER_FOLLOWERS, numberFollowers);
-    result.put(Constants.NUMBER_FOLLOWING, numberFollowing);
+    result.put(TYPE, type.toString());
+    result.put(ID, id);
+    result.put(GOOGLE_ID, googleId);
+    result.put(EMAIL, email);
+    result.put(FIRST_NAME, firstName);
+    result.put(LAST_NAME, lastName);
+    result.put(IMAGE_URL, imageUrl);
+    result.put(USERNAME, username);
+    result.put(SESSION, session.toJsonObject());
+    result.put(NUMBER_FOLLOWERS, numberFollowers);
+    result.put(NUMBER_FOLLOWING, numberFollowing);
     return result;
   }
 
