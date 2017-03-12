@@ -3,6 +3,10 @@ package podcast.configs;
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
+import com.couchbase.client.java.cluster.ClusterManager;
+import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.env.CouchbaseEnvironment;
+import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -34,10 +38,20 @@ public class Database {
 
   private Cluster couchbaseCluster;
 
+
   @Autowired
-  public Database(@Value("${storage.cluster.host}") String clusterHost) {
-    this.couchbaseCluster = CouchbaseCluster.create(clusterHost);
+  public Database(@Value("${storage.cluster.host}") String clusterHost,
+                  @Value("${storage.cluster.timeout}") Integer timeout) {
+    CouchbaseEnvironment env = DefaultCouchbaseEnvironment.builder()
+      .queryTimeout(timeout)
+      .socketConnectTimeout(timeout)
+      .connectTimeout(timeout)
+      .kvTimeout(timeout)
+      .build();
+
+    this.couchbaseCluster = CouchbaseCluster.create(env, clusterHost);
   }
+
 
   @Bean
   public Bucket usersBucket() {
@@ -48,6 +62,7 @@ public class Database {
     }
   }
 
+
   @Bean
   public Bucket podcastsBucket() {
     if (podcastsBucketPassword == null || podcastsBucketPassword.length() == 0) {
@@ -57,6 +72,7 @@ public class Database {
     }
   }
 
+
   @Bean
   public Bucket followersfollowingsBucket() {
     if (followersfollowingsBucketPassword == null || followersfollowingsBucketPassword.length() == 0) {
@@ -65,5 +81,6 @@ public class Database {
       return couchbaseCluster.openBucket(followersfollowingsBucket, followersfollowingsBucketPassword);
     }
   }
+
 
 }
