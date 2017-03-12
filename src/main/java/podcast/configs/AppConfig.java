@@ -27,7 +27,6 @@ public class AppConfig extends WebMvcConfigurerAdapter {
       .addPathPatterns("/api/v1/followings/*")
       .addPathPatterns("/api/v1/search/*");
 
-
     // Add more patterns
 
     // Add more interceptors if necessary

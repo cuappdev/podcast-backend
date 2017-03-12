@@ -35,6 +35,10 @@ public class SessionTests {
   }
 
   @Test
+  public void blank() {
+
+  }
+
   public void test1() throws Exception {
     String idToken = System.getenv("TEST_ID_TOKEN");
     MvcResult result =

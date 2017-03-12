@@ -6,14 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import podcast.models.entities.Episode;
 import podcast.models.entities.Person;
 import podcast.models.entities.Series;
-import podcast.models.entities.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
 import podcast.search.PodcastsSearch;
 import podcast.search.UsersSearch;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Path;
 import java.util.List;
 
 /**

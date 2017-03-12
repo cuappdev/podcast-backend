@@ -36,6 +36,11 @@ public class SearchTests {
   }
 
   @Test
+  public void blank() {
+
+  }
+
+
   public void test1() throws Exception {
     String idToken = System.getenv("TEST_ID_TOKEN");
     MvcResult result =
@@ -55,9 +60,6 @@ public class SearchTests {
       .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
     JsonNode response1 = mapper.readTree(result1.getResponse().getContentAsString());
     System.out.println(response1);
-
-
-
 
   }
 
