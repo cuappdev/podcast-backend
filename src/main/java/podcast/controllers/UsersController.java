@@ -79,7 +79,7 @@ public class UsersController {
       return ResponseEntity.status(200).body(
         new Success(Constants.USER, user));
     } catch (Exception e) {
-      return ResponseEntity.status(400).body(new Failure(e.getMessage());
+      return ResponseEntity.status(400).body(new Failure(e.getMessage())); 
     }
   }
 
