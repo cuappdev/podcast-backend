@@ -24,4 +24,12 @@ public class Follower extends FollowRelationship {
     this.imageUrl = follower.getImageUrl();
   }
 
+  public Follower(JsonObject object) {
+    this.id = object.getString(Constants.ID);
+    this.firstName = object.getString(Constants.FIRST_NAME);
+    this.lastName = object.getString(Constants.LAST_NAME);
+    this.imageUrl = object.getString(Constants.IMAGE_URL);
+    this.username = object.getString(Constants.USERNAME);
+  }
+
 }

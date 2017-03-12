@@ -8,8 +8,7 @@ import podcast.models.utils.Constants;
  * Created by amitm on 3/11/17.
  */
 public abstract class FollowRelationship extends Entity{
-  @Getter
-  private Constants.Type type;
+  @Getter protected Constants.Type type;
   @Getter protected String ownerId;
   @Getter protected String id;
   @Getter protected String firstName;
