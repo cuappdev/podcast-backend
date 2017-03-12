@@ -41,24 +41,28 @@ public class UsersController {
   /** Google Sign In endpoint **/
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
   public ResponseEntity<Result> googleSignIn(@RequestParam(value=Constants.ID_TOKEN) String idToken) {
+    try {
     /* Grab Google API response */
-    JsonNode response = googleService.googleAuthentication(idToken);
-    String googleID = googleService.googleIDFromResponse(response);
+      JsonNode response = googleService.googleAuthentication(idToken);
+      String googleID = googleService.googleIDFromResponse(response);
 
     /* Check if user exists */
-    Optional<User> possUser = usersService.getUserByGoogleId(googleID);
+      Optional<User> possUser = usersService.getUserByGoogleId(googleID);
 
     /* If exists, return, else make new user */
-    Success r;
-    if (possUser.isPresent()) {
-      r = new Success(Constants.USER, possUser.get());
-      r.addField(Constants.NEW_USER, false);
-      return ResponseEntity.status(200).body(r);
-    } else {
-      User user = usersService.createUser(response);
-      r = new Success(Constants.USER, user);
-      r.addField(Constants.NEW_USER, true);
-      return ResponseEntity.status(200).body(r);
+      Success r;
+      if (possUser.isPresent()) {
+        r = new Success(Constants.USER, possUser.get());
+        r.addField(Constants.NEW_USER, false);
+        return ResponseEntity.status(200).body(r);
+      } else {
+        User user = usersService.createUser(response);
+        r = new Success(Constants.USER, user);
+        r.addField(Constants.NEW_USER, true);
+        return ResponseEntity.status(200).body(r);
+      }
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
 
@@ -70,17 +74,12 @@ public class UsersController {
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(Constants.USER);
 
-    /* If the username is valid */
     try {
       usersService.updateUsername(user, username);
       return ResponseEntity.status(200).body(
         new Success(Constants.USER, user));
-    }
-    /* If the username is invalid */
-    catch (User.InvalidUsernameException e) {
-      return ResponseEntity.status(500).body(new Failure(
-        new ArrayList<String>(Arrays.asList(e.getMessage())))
-      );
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage())); 
     }
   }
 
