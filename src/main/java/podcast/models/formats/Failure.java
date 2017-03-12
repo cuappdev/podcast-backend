@@ -1,7 +1,6 @@
 package podcast.models.formats;
 
 import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,8 +27,9 @@ public class Failure extends Result {
   }
 
   /** Add an error **/
-  public void addError(String error) {
+  public Failure addError(String error) {
     this.data.get("errors").add(error);
+    return this;
   }
 
 }

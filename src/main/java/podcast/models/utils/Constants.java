@@ -32,7 +32,6 @@ public class Constants {
   public static final String EXPIRES_AT = "expiresAt";
   public static final String UPDATE_TOKEN = "updateToken";
   public static final String NEW_USER = "newUser";
-  public static final String ID_TOKEN = "idToken";
   public static final String TITLE = "title";
   public static final String COUNTRY = "country";
   public static final String AUTHOR = "author";
@@ -48,12 +47,12 @@ public class Constants {
   public static final String TAGS = "tags";
   public static final String FOLLOWINGS = "followings";
   public static final String FOLLOWERS = "followers";
+  public static final String AUDIO_URL = "audioUrl";
   // TODO - more
 
 
   /* Secret encryption key */
-  // public static final String SECRET_KEY = System.getenv("SECRET_KEY");
-  public static final String SECRET_KEY = "abcdefghijklmnop";
+  public static final String SECRET_KEY = System.getenv("SECRET_KEY");
 
   /* Number of bytes in a UUID */
   public static final Integer UUID_BYTES = 36;

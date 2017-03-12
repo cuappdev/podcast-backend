@@ -22,54 +22,50 @@ public class SimplePodcastsSearch extends PodcastsSearch {
   private Bucket bucket;
 
   public SimplePodcastsSearch(@Qualifier("podcastsBucket") Bucket podcastsBucket) {
-    this.bucket = bucket;
+    this.bucket = podcastsBucket;
   }
 
-  /** {@link PodcastsSearch#searchEpisodes(String)} **/
-  public List<Episode> searchEpisodes(String query) {
+  /** {@link PodcastsSearch#searchEpisodes(String, Integer, Integer)} **/
+  public List<Episode> searchEpisodes(String query, Integer offset, Integer max) {
     query = query.trim(); // cleanse the query
-    String queryString =
-      "SELECT * FROM " + PODCASTS + " WHERE " +
-        TYPE + " = '" + EPISODE + "' AND " + SERIES_TITLE + " LIKE '" + query + "%' " +
-        "OR " + TITLE + " LIKE '" + query + "%'";
-    N1qlQuery q = N1qlQuery.simple(queryString);
-    List<N1qlQueryRow> rows = bucket.query(q).allRows();
-
-    return rows.stream()
-      .map(r -> { return new Episode(r.value()); })
-      .collect(Collectors.toList());
-  }
-
-
-  /** {@link PodcastsSearch#searchSeries(String)} **/
-  public List<Series> searchSeries(String query) {
-    query = query.trim(); // cleanse the query
-    String queryString =
-      "SELECT * FROM " + PODCASTS + " WHERE " +
-        TYPE + "='" + SERIES + "' AND " + TITLE + " LIKE '" + query + "%'";
-    N1qlQuery q = N1qlQuery.simple(queryString);
-    List<N1qlQueryRow> rows = bucket.query(q).allRows();
-
-    return rows.stream()
-      .map(r -> { return new Series(r.value()); })
-      .collect(Collectors.toList());
-  }
-
-
-  /** {@link PodcastsSearch#searchEverything(String)} **/
-  public List<Podcast> searchEverything(String query) {
-    query = query.trim(); // cleanse the query
-    String queryString =
-      "SELECT * FROM " + PODCASTS + " WHERE " +
-        TITLE + " LIKE '" + query + "%' " +
-        "OR " + SERIES_TITLE + " LIKE '" + query + "%'";
+    String qS = "SELECT * FROM %s WHERE %s='%s' AND %s LIKE '%s%%' OR %s LIKE '%s%%' OFFSET %d LIMIT %d";
+    String queryString = String.format(qS, PODCASTS, TYPE, EPISODE, SERIES_TITLE, query, TITLE, query, offset, max);
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     return rows.stream()
       .map(r -> {
-        JsonObject object = r.value();
-        if (object.getString(Constants.TYPE).equals(Constants.EPISODE)) {
+        return new Episode(r.value().getObject(PODCASTS)); })
+      .collect(Collectors.toList());
+  }
+
+
+  /** {@link PodcastsSearch#searchSeries(String, Integer, Integer)} **/
+  public List<Series> searchSeries(String query, Integer offset, Integer max) {
+    query = query.trim(); // cleanse the query
+    String qS = "SELECT * FROM %s WHERE %s='%s' AND %s LIKE '%s%%' OFFSET %d LIMIT %d";
+    String queryString = String.format(qS, PODCASTS, TYPE, SERIES, TITLE, query, offset, max);
+    N1qlQuery q = N1qlQuery.simple(queryString);
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+
+    return rows.stream()
+      .map(r -> { return new Series(r.value().getObject(PODCASTS)); })
+      .collect(Collectors.toList());
+  }
+
+
+  /** {@link PodcastsSearch#searchEverything(String, Integer, Integer)} **/
+  public List<Podcast> searchEverything(String query, Integer offset, Integer max) {
+    query = query.trim(); // cleanse the query
+    String qS = "SELECT * FROM %s WHERE %s LIKE '%s%%' OR %s LIKE '%s%%' OFFSET %d LIMIT %d";
+    String queryString = String.format(qS, PODCASTS, TITLE, query, SERIES_TITLE, query, offset, max);
+    N1qlQuery q = N1qlQuery.simple(queryString);
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+
+    return rows.stream()
+      .map(r -> {
+        JsonObject object = r.value().getObject(PODCASTS);
+        if (object.getString(Constants.TYPE).equals(EPISODE)) {
           return (Podcast) new Episode(object);
         } else {
           return (Podcast) new Series(object);

@@ -40,16 +40,16 @@ public class UsersController {
 
   /** Google Sign In endpoint **/
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
-  public ResponseEntity<Result> googleSignIn(@RequestParam(value=Constants.ID_TOKEN) String idToken) {
+  public ResponseEntity<Result> googleSignIn(@RequestParam(value="id_token") String idToken) {
     try {
-    /* Grab Google API response */
+      /* Grab Google API response */
       JsonNode response = googleService.googleAuthentication(idToken);
       String googleID = googleService.googleIDFromResponse(response);
 
-    /* Check if user exists */
+      /* Check if user exists */
       Optional<User> possUser = usersService.getUserByGoogleId(googleID);
 
-    /* If exists, return, else make new user */
+      /* If exists, return, else make new user */
       Success r;
       if (possUser.isPresent()) {
         r = new Success(Constants.USER, possUser.get());
@@ -70,7 +70,7 @@ public class UsersController {
   /** Change username **/
   @RequestMapping(method = RequestMethod.POST, value = "/change_username")
   public ResponseEntity<Result> changeUsername(HttpServletRequest request,
-                                               @RequestParam(value=Constants.USERNAME) String username) {
+                                               @RequestParam(value="username") String username) {
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(Constants.USER);
 
@@ -79,7 +79,7 @@ public class UsersController {
       return ResponseEntity.status(200).body(
         new Success(Constants.USER, user));
     } catch (Exception e) {
-      return ResponseEntity.status(400).body(new Failure(e.getMessage())); 
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
 

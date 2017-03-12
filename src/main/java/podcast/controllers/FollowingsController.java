@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/followings/")
+@RequestMapping("/api/v1/followings")
 public class FollowingsController {
 
   private final FollowersFollowingsService ffService;

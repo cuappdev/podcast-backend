@@ -42,7 +42,7 @@ public class UsersService {
   public User updateUsername(User user,
                              String username) throws User.InvalidUsernameException {
     // TODO - check duplicate usernames amongst users
-    user.setUsername(username.toLowerCase());
+    user.setUsername(username);
     usersRepo.storeUser(user);
     return user;
   }

@@ -2,6 +2,8 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ public class Episode extends Podcast {
   @Getter private String summary;
   @Getter private Date pubDate;
   @Getter private String duration;
+  @Getter private String audioUrl;
   @Getter private List<String> tags;
 
 
@@ -37,9 +40,10 @@ public class Episode extends Podcast {
     this.title = object.getString(TITLE);
     this.author = object.getString(AUTHOR);
     this.summary = object.getString(SUMMARY);
-    this.pubDate = new Date(object.getLong(PUB_DATE));
+    this.pubDate = object.getLong(PUB_DATE) == null ? null : new Date(object.getLong(PUB_DATE));
     this.duration = object.getString(DURATION);
-    this.tags = object.getArray(TAGS).toList()
+    this.audioUrl = object.getString(AUDIO_URL);
+    this.tags = object.getArray(TAGS) == null ? new ArrayList<String>() : object.getArray(TAGS).toList()
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());;
   }
 
