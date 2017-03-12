@@ -17,3 +17,7 @@ USERS_BUCKET_PASSWORD # self-explanatory
 PODCASTS_BUCKET_PASSWORD # self-explanatory
 FOLLOWERS_FOLLOWINGS_BUCKET_PASSWORD # self-explanatory
 ````
+
+## API Documentation 
+
+Found [`here`](http://docs.podcasts1.apiary.io/#)
