@@ -11,43 +11,46 @@ import podcast.models.entities.FollowRelationship;
 import podcast.models.entities.Follower;
 import podcast.models.entities.Following;
 import podcast.models.entities.User;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import static com.couchbase.client.java.query.Select.select;
 import static com.couchbase.client.java.query.dsl.Expression.*;
 import static podcast.models.utils.Constants.*;
 
 @Component
 public class FollowersFollowingsRepo {
+
   /* Connection to DB */
   private Bucket bucket;
 
-  private String composeKey(FollowRelationship fr) {
-    String endString = "";
-    switch(fr.getType()) {
-      case FOLLOWER:
-        endString = "follower";
-        break;
-      case FOLLOWING:
-        endString = "following";
-        break;
-      default:
-        break;
-    }
-    return fr.getOwnerId() + ":" + fr.getId() + ":" + endString;
+
+  /** Given id's and following relationship type, compose key **/
+  private String composeKey(String ownerId, String corrId, Type type) {
+    return String.format("%s:%s:%s", ownerId, corrId, type.toString());
   }
+
+
+  /** Given an owning user, a correspondent, and a following
+   * relationship type, compose key **/
+  private String composeKey(User owner, User correspondent, Type type) {
+    return composeKey(owner, correspondent, type);
+  }
+
+
+  /** Given a relationship, compose a key **/
+  private String composeKey(FollowRelationship fr) {
+    return composeKey(fr.getOwnerId(), fr.getId(), fr.getType());
+  }
+
 
   @Autowired
   public FollowersFollowingsRepo(@Qualifier("followersfollowingsBucket") Bucket followersfollowingsBucket) {
     this.bucket = followersfollowingsBucket;
   }
 
-  /**
-   * Creates a following from user A to B. Also creates a follower from B to A.
-   * @param following
-   * @return
-   */
+
+  /** Creates a following from user A to B. Also creates a follower from B to A. **/
   public Following storeFollowing(Following following, User owner, User followed) {
     Follower follower = new Follower(followed, owner);
     JsonDocument followingDoc = JsonDocument.create(composeKey(following), following.toJsonObject());
@@ -57,65 +60,74 @@ public class FollowersFollowingsRepo {
     return following;
   }
 
+
+  /** Get followers of a user (identified by ownerId) **/
   public Optional<List<Follower>> getUserFollowers(String ownerId) {
-    N1qlQuery q = N1qlQuery.simple("SELECT * FROM followersfollowings WHERE ownerId='" + ownerId + "' AND type='follower'");
+    N1qlQuery q = N1qlQuery.simple(
+      select("*").from("`" + FOLLOWERS_FOLLOWINGS + "`")
+      .where(
+        (x(OWNER_ID).eq(s(ownerId)))
+        .and(x(TYPE).eq(s(FOLLOWER)))
+      )
+    );
+
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     if (rows.size() == 0) {
       return Optional.empty();
     }
 
-    List<Follower> followers = new ArrayList<Follower>();
-
-    for(int i = 0; i < rows.size(); i++) {
-      followers.add(new Follower(rows.get(i).value().getObject("followersfollowings")));
-    }
-
-    return Optional.of(followers);
+    return Optional.of(
+      rows.stream()
+        .map(r -> new Follower(r.value().getObject(FOLLOWERS_FOLLOWINGS))).collect(Collectors.toList())
+    );
   }
 
+
+  /** Get followings of a user (identified by ownerId) **/
   public Optional<List<Following>> getUserFollowings(String ownerId) {
-    N1qlQuery q = N1qlQuery.simple("SELECT * FROM followersfollowings WHERE ownerId='" + ownerId + "' AND type='following'");
+    N1qlQuery q = N1qlQuery.simple(
+      select("*").from("`" + FOLLOWERS_FOLLOWINGS + "`")
+      .where(
+        (x(OWNER_ID).eq(s(ownerId)))
+        .and(x(TYPE).eq(s(FOLLOWING)))
+      )
+    );
+
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     if (rows.size() == 0) {
       return Optional.empty();
     }
 
-    List<Following> followings = new ArrayList<Following>();
-
-    for(int i = 0; i < rows.size(); i++) {
-      followings.add(new Following(rows.get(i).value().getObject("followersfollowings")));
-    }
-
-    return Optional.of(followings);
+    return Optional.of(
+      rows.stream()
+        .map(r -> new Following(r.value().getObject(FOLLOWERS_FOLLOWINGS))).collect(Collectors.toList())
+    );
   }
 
+
+  /** Get following by users **/
   public Optional<Following> getFollowingByUsers(User owner, User followed) {
-    N1qlQuery q = N1qlQuery.simple("SELECT * FROM followersfollowings WHERE ownerId='" +
-        owner.getId() + " AND id='" + followed.getId() + " AND type='following'");
-    List<N1qlQueryRow> rows = bucket.query(q).allRows();
-
-    // TODO exception handling
-
-    return Optional.of(new Following(rows.get(0).value().getObject("followersfollowings")));
+    try {
+      return Optional.of(
+        new Following(bucket.get(composeKey(owner, followed, Type.FOLLOWING)).content()));
+    } catch (Exception e) {
+      return Optional.empty();
+    }
   }
 
+
+  /** Delete following (A following B, B's follower A) **/
   public boolean deleteFollowing(Following following) {
-    /* Can we do this without n1ql queries? */
-
-    String qs1 = "DELETE * FROM followersfollowings WHERE ownerId='" +
-        following.getOwnerId() + " AND id='" + following.getId() + " AND type='following'";
-    N1qlQuery q1 = N1qlQuery.simple(qs1);
-    bucket.query(q1);
-
-    String qs2 = "DELETE * FROM followersfollowings WHERE ownerId='" +
-        following.getId() + " AND id='" + following.getOwnerId() + " AND type='follower'";
-    N1qlQuery q2 = N1qlQuery.simple(qs2);
-    bucket.query(q2);
-
-    // TODO Better exception handling for the above operations
-
-    return true;
+    try {
+      bucket.remove(composeKey(following.getOwnerId(), following.getId(), Type.FOLLOWING));
+      bucket.remove(composeKey(following.getId(), following.getOwnerId(), Type.FOLLOWER));
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
+
+
 }

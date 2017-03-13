@@ -48,6 +48,7 @@ public class Constants {
   public static final String FOLLOWINGS = "followings";
   public static final String FOLLOWERS = "followers";
   public static final String AUDIO_URL = "audioUrl";
+  public static final String OWNER_ID = "ownerId";
   // TODO - more
 
 
