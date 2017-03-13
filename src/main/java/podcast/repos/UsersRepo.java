@@ -55,7 +55,7 @@ public class UsersRepo {
     }
 
     /* Grab user accordingly */
-    return Optional.of(new User(rows.get(0).value().getObject("users")));
+    return Optional.of(new User(rows.get(0).value().getObject(USERS)));
   }
 
 
