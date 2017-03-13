@@ -38,7 +38,7 @@ public class FollowingsController {
    * @param id      the user being followed
    * @return
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/new")
+  @RequestMapping(method = RequestMethod.POST, value = "/")
   public ResponseEntity<Result> newFollowing(HttpServletRequest request,
                                              @RequestParam(value = Constants.ID) String id) {
 
@@ -54,7 +54,13 @@ public class FollowingsController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.POST, value = "/")
+  /**
+   * Gets the followings of a user.
+   * @param request
+   * @param id
+   * @return
+   */
+  @RequestMapping(method = RequestMethod.GET, value = "/")
   public ResponseEntity<Result> getUserFollowings(HttpServletRequest request,
                                                   @RequestParam(value = Constants.ID) String id) {
 
@@ -73,6 +79,25 @@ public class FollowingsController {
       } catch (Exception e) {
         return ResponseEntity.status(400).body(new Failure(e.getMessage()));
       }
+  }
+
+  /**
+   * Deletes a following.
+   */
+  @RequestMapping(method = RequestMethod.DELETE, value = "/")
+  public ResponseEntity<Result> deleteFollowing(HttpServletRequest request,
+                                                  @RequestParam(value = Constants.ID) String id) {
+
+    /* Grab the user corresponding to the request */
+    User user = (User) request.getAttribute(Constants.USER);
+
+    try {
+      boolean deleted = ffService.deleteFollowing(user, id);
+      return ResponseEntity.status(200).body(
+          new Success(Constants.DELETED_FOLLOWING, id));
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
   }
 }
 
