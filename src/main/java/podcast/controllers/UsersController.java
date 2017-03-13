@@ -3,19 +3,17 @@ package podcast.controllers;
 import org.codehaus.jackson.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import podcast.models.entities.Person;
 import podcast.models.entities.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
-import podcast.models.utils.Constants;
 import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import static podcast.models.utils.Constants.*;
 
 
 /**
@@ -50,13 +48,13 @@ public class UsersController {
       /* If exists, return, else make new user */
       Success r;
       if (possUser.isPresent()) {
-        r = new Success(Constants.USER, possUser.get());
-        r.addField(Constants.NEW_USER, false);
+        r = new Success(USER, possUser.get());
+        r.addField(NEW_USER, false);
         return ResponseEntity.status(200).body(r);
       } else {
         User user = usersService.createUser(response);
-        r = new Success(Constants.USER, user);
-        r.addField(Constants.NEW_USER, true);
+        r = new Success(USER, user);
+        r.addField(NEW_USER, true);
         return ResponseEntity.status(200).body(r);
       }
     } catch (Exception e) {
@@ -70,12 +68,31 @@ public class UsersController {
   public ResponseEntity<Result> changeUsername(HttpServletRequest request,
                                                @RequestParam(value="username") String username) {
     /* Grab the user corresponding to the request */
-    User user = (User) request.getAttribute(Constants.USER);
+    User user = (User) request.getAttribute(USER);
 
     try {
       usersService.updateUsername(user, username);
       return ResponseEntity.status(200).body(
-        new Success(Constants.USER, user));
+        new Success(USER, user));
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
+
+
+  /** Get a user by Id **/
+  @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+  public ResponseEntity<Result> userById(HttpServletRequest request,
+                                         @PathVariable("id") String id) {
+    /* Grab the user corresponding to the request */
+    User user = (User) request.getAttribute(USER);
+    try {
+      if (user.getId().equals(id)) {
+        return ResponseEntity.status(200).body(new Success(USER, user));
+      } else {
+        Person peer = new Person(usersService.getUserById(id));
+        return ResponseEntity.status(200).body(new Success(USER, peer));
+      }
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }

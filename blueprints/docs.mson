@@ -69,6 +69,34 @@ CUAppDev's podcast app API documentation
         }
 
 
+## User by ID [/api/v1/users/{id}]
+### User by ID [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "user": {
+              "id": "f8415c6a-0513-11e7-9ace-8fe67936672c",
+              "firstName": "John",
+              "lastName": "Doe",
+              "username": "jDoe",
+              "numberFollowers": 0,
+              "numberFollowing": 0,
+              "imageUrl": "https://goo.gl/L37gfS"
+            }
+
+          }
+        }
+
+
 # Group Sessions
 ## Update Session [/api/v1/sessions/update]
 ### Update Session [POST]

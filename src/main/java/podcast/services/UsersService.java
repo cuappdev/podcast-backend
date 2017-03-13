@@ -32,7 +32,13 @@ public class UsersService {
   }
 
 
-  /** Get user by Google ID **/
+  /** Get user by Id **/
+  public User getUserById(String id) throws Exception {
+    return usersRepo.getUserById(id);
+  }
+
+
+  /** Get user by googleId **/
   public Optional<User> getUserByGoogleId(String googleId) {
     return usersRepo.getUserByGoogleId(googleId);
   }
