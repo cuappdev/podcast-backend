@@ -3,9 +3,9 @@ package podcast.models.utils;
 public class Constants {
 
   /* BUCKET NAMES */
-  public static final String USERS = "users";
-  public static final String PODCASTS = "podcasts";
-  public static final String FOLLOWERS_FOLLOWINGS = "followersfollowings";
+  public static final String USERS = System.getenv("USERS_BUCKET_NAME");
+  public static final String PODCASTS = System.getenv("PODCASTS_BUCKET_NAME");
+  public static final String FOLLOWERS_FOLLOWINGS = System.getenv("FOLLOWERS_FOLLOWINGS_BUCKET_NAME");
 
   /* RESOURCE NAMES */
   public static final String USER = "user";

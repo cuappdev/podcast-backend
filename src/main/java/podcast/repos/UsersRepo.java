@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import podcast.models.entities.User;
 import java.util.List;
 import java.util.Optional;
+import static com.couchbase.client.java.query.Select.select;
+import static com.couchbase.client.java.query.dsl.Expression.*;
+import static podcast.models.utils.Constants.*;
 
 @Component
 public class UsersRepo {
@@ -38,7 +41,12 @@ public class UsersRepo {
   /** Get User by Google ID (optional) **/
   public Optional<User> getUserByGoogleId(String googleID) {
     /* Prepare and execute N1QL query */
-    N1qlQuery q = N1qlQuery.simple("SELECT * FROM users WHERE googleId='" + googleID + "'");
+    N1qlQuery q = N1qlQuery.simple(
+      select("*").from(USERS).where(
+        (x(GOOGLE_ID).eq(googleID))
+      )
+    );
+
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     /* If empty */

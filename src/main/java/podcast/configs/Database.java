@@ -49,7 +49,6 @@ public class Database {
       .socketConnectTimeout(timeout)
       .connectTimeout(timeout)
       .kvTimeout(timeout)
-      .queryEndpoints(8091)
       .build();
 
     this.couchbaseCluster = CouchbaseCluster.create(env, clusterHost);
