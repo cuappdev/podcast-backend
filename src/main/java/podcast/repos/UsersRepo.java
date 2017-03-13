@@ -42,11 +42,11 @@ public class UsersRepo {
   public Optional<User> getUserByGoogleId(String googleID) {
     /* Prepare and execute N1QL query */
     N1qlQuery q = N1qlQuery.simple(
-      select("*").from(USERS).where(
-        (x(GOOGLE_ID).eq(googleID))
+      select("*").from("`" + USERS + "`").where(
+        (x(GOOGLE_ID).eq(s(googleID)))
       )
     );
-
+    System.out.println(q.toString());
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     /* If empty */

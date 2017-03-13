@@ -11,12 +11,12 @@ import podcast.models.entities.FollowRelationship;
 import podcast.models.entities.Follower;
 import podcast.models.entities.Following;
 import podcast.models.entities.User;
-
-import static podcast.models.utils.Constants.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import static com.couchbase.client.java.query.Select.select;
+import static com.couchbase.client.java.query.dsl.Expression.*;
+import static podcast.models.utils.Constants.*;
 
 @Component
 public class FollowersFollowingsRepo {
