@@ -9,7 +9,7 @@ import podcast.models.entities.Person;
 import podcast.models.entities.User;
 import java.util.List;
 import java.util.stream.Collectors;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 /** Users search via indexes on certain fields **/
 @Component

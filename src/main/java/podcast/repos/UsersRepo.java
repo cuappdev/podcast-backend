@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import static com.couchbase.client.java.query.Select.select;
 import static com.couchbase.client.java.query.dsl.Expression.*;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 @Component
 public class UsersRepo {

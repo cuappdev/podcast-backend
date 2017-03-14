@@ -13,7 +13,7 @@ import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 
 /**

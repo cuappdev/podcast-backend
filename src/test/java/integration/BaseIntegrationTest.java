@@ -1,7 +1,6 @@
 package integration;
 
 import lombok.Getter;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ public abstract class BaseIntegrationTest extends BaseTest {
   @Autowired private SearchController searchController;
   @Autowired private SessionsController sessionsController;
   @Autowired private UsersController usersController;
-  @Getter private ObjectMapper mapper = new ObjectMapper();
   @Getter private MockMvc mockMvc;
 
   /* Services */
@@ -34,6 +32,9 @@ public abstract class BaseIntegrationTest extends BaseTest {
 
   /* Mock Data */
   @Getter private List<User> mockUsers;
+
+  /** Session to use in every request **/
+  @Getter private String session;
 
   /** Setup mock MVC connector + seed the DB **/
   @Before
@@ -57,6 +58,8 @@ public abstract class BaseIntegrationTest extends BaseTest {
     for (int i = 0; i < 10; i++) {
       mockUsers.add(usersService.createUser(new MockGoogleCreds(i).toJsonNode()));
     }
+
+    this.session = mockUsers.get(0).getSession().getSessionToken();
 
   }
 

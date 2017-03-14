@@ -11,7 +11,7 @@ import podcast.models.entities.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
-import podcast.models.utils.Constants;
+import podcast.utils.Constants;
 import podcast.services.FollowersFollowingsService;
 
 import javax.servlet.http.HttpServletRequest;

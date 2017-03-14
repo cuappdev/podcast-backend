@@ -1,4 +1,4 @@
-package podcast.models.utils;
+package podcast.utils;
 
 public class Constants {
 
@@ -50,6 +50,9 @@ public class Constants {
   public static final String AUDIO_URL = "audioUrl";
   public static final String OWNER_ID = "ownerId";
   // TODO - more
+
+  public static final String AUTHORIZATION = "Authorization";
+  public static final String BEARER = "Bearer ";
 
 
   /* Secret encryption key */

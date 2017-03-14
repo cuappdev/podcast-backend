@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 import podcast.models.entities.Episode;
 import podcast.models.entities.Podcast;
 import podcast.models.entities.Series;
-import podcast.models.utils.Constants;
+import podcast.utils.Constants;
 import java.util.List;
 import java.util.stream.Collectors;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 /** Podcasts search via indexes on certain fields **/
 @Component

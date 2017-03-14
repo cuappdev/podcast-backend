@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 /**
  * Session used to authenticate users on REST API calls

@@ -5,7 +5,7 @@ import com.fasterxml.uuid.Generators;
 import lombok.Getter;
 import lombok.Setter;
 import org.codehaus.jackson.JsonNode;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 /**
  * App user (w/Google credentials)
