@@ -59,4 +59,10 @@ public class UsersRepo {
   }
 
 
+  /** Remove User by ID (+ return the user just deleted) **/
+  public void removeUserById(String id) throws Exception {
+    bucket.remove(id);
+  }
+
+
 }
