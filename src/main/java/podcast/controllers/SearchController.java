@@ -62,6 +62,7 @@ public class SearchController {
       List<Series> series = podcastsSearch.searchSeries(query, offset, max);
       return ResponseEntity.status(200).body(new Success("series", series));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
@@ -100,6 +101,7 @@ public class SearchController {
           .addField("users", users)
       );
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }

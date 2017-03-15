@@ -44,4 +44,16 @@ public class SearchTest extends BaseIntegrationTest {
   }
 
 
+  @Test
+  public void testAllSearch() throws Exception {
+    // Parse response
+    JsonNode response = mvcResultAsJson(
+      getMockMvc()
+        .perform(MockMvcRequestBuilders.get("/api/v1/search/all/Design?offset=0&max=10")
+          .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+        .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+    );
+  }
+
+
 }
