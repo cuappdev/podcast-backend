@@ -134,8 +134,8 @@ CUAppDev's podcast app API documentation
         }
 
 # Group Followers Followings
-## Create Following [/api/v1/followings/new?id={id}]
-### Create Following [GET]
+## New Following [/api/v1/followings/new?id={id}]
+### New Following [POST]
 
 + Request
 

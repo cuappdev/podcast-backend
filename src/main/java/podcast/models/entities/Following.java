@@ -1,15 +1,12 @@
 package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
-import lombok.Getter;
-import podcast.utils.Constants;
+import static podcast.utils.Constants.*;
 
 /**
  * Following (someone you follow)
  */
 public class Following extends FollowRelationship {
-
-  @Getter private Constants.Type type = Constants.Type.FOLLOWING;
 
   /**
    * Constructor from owning User and future following
@@ -17,20 +14,26 @@ public class Following extends FollowRelationship {
    * @param following - User
    */
   public Following(User owner, User following) {
-    this.ownerId = owner.getId();
-    this.id = following.getId();
-    this.firstName = following.getFirstName();
-    this.lastName = following.getLastName();
-    this.username = following.getUsername();
-    this.imageUrl = following.getImageUrl();
+    super(
+      Type.FOLLOWING,
+      owner.getId(),
+      following.getId(),
+      following.getFirstName(),
+      following.getLastName(),
+      following.getUsername(),
+      following.getImageUrl());
   }
 
   public Following(JsonObject object) {
-    this.id = object.getString(Constants.ID);
-    this.firstName = object.getString(Constants.FIRST_NAME);
-    this.lastName = object.getString(Constants.LAST_NAME);
-    this.imageUrl = object.getString(Constants.IMAGE_URL);
-    this.username = object.getString(Constants.USERNAME);
+    super(
+      Type.FOLLOWING,
+      object.getString(OWNER_ID),
+      object.getString(ID),
+      object.getString(FIRST_NAME),
+      object.getString(LAST_NAME),
+      object.getString(USERNAME),
+      object.getString(IMAGE_URL)
+    );
   }
 
 }

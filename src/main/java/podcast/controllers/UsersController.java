@@ -66,7 +66,7 @@ public class UsersController {
   /** Change username **/
   @RequestMapping(method = RequestMethod.POST, value = "/change_username")
   public ResponseEntity<Result> changeUsername(HttpServletRequest request,
-                                               @RequestParam(value="username") String username) {
+                                               @RequestParam(value=USERNAME) String username) {
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
 

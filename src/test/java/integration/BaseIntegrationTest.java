@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import podcast.controllers.*;
+import org.springframework.web.context.WebApplicationContext;
 import podcast.models.entities.User;
 import podcast.services.FollowersFollowingsService;
 import podcast.services.UsersService;
@@ -15,15 +15,14 @@ import utils.MockGoogleCreds;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public abstract class BaseIntegrationTest extends BaseTest {
 
-  /* Mock API configuration */
-  @Autowired private FollowersController followersController;
-  @Autowired private FollowingsController followingsController;
-  @Autowired private PodcastsController podcastsController;
-  @Autowired private SearchController searchController;
-  @Autowired private SessionsController sessionsController;
-  @Autowired private UsersController usersController;
+  /* Web application context */
+  @Autowired
+  private WebApplicationContext wac;
+
+  /* Mock MVC */
   @Getter private MockMvc mockMvc;
 
   /* Services */
@@ -41,15 +40,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
   public void before() throws Exception {
 
     // Setup connection
-    mockMvc =
-      MockMvcBuilders.standaloneSetup(
-        followersController,
-        followingsController,
-        podcastsController,
-        searchController,
-        sessionsController,
-        usersController
-      ).build();
+    mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
     // Contains seeded users
     mockUsers = new ArrayList<User>();
