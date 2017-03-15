@@ -46,7 +46,6 @@ public class UsersRepo {
         (x(GOOGLE_ID).eq(s(googleID)))
       )
     );
-    System.out.println(q.toString());
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
     /* If empty */

@@ -58,6 +58,7 @@ public class UsersController {
         return ResponseEntity.status(200).body(r);
       }
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
@@ -75,6 +76,7 @@ public class UsersController {
       return ResponseEntity.status(200).body(
         new Success(USER, user));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
@@ -94,6 +96,7 @@ public class UsersController {
         return ResponseEntity.status(200).body(new Success(USER, peer));
       }
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
