@@ -101,7 +101,7 @@ public class User extends Entity {
 
 
   /** Thrown when the username is not valid **/
-  public class InvalidUsernameException extends Exception {
+  public static class InvalidUsernameException extends Exception {
     public InvalidUsernameException() {
       super("This username is not valid, please try again.");
     }

@@ -32,6 +32,26 @@ public class UsersRepo {
   }
 
 
+  /** Get user by username (case insensitive) **/
+  public Optional<User> getUserByUsername(String username) {
+    username = username.toLowerCase();
+    N1qlQuery q = N1qlQuery.simple(
+      select("*").from("`" + USERS + "`").where(
+        (x("lower(" + USERNAME + ")").eq(s(username)))
+      )
+    );
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+
+    // If empty
+    if (rows.size() == 0) {
+      return Optional.empty();
+    }
+
+    // Grab user accordingly
+    return Optional.of(new User(rows.get(0).value().getObject(USERS)));
+  }
+
+
   /** Get User by ID **/
   public User getUserById(String id) throws Exception {
     return new User(bucket.get(id).content());
@@ -40,7 +60,7 @@ public class UsersRepo {
 
   /** Get User by Google ID (optional) **/
   public Optional<User> getUserByGoogleId(String googleID) {
-    /* Prepare and execute N1QL query */
+    // Prepare and execute N1QL query
     N1qlQuery q = N1qlQuery.simple(
       select("*").from("`" + USERS + "`").where(
         (x(GOOGLE_ID).eq(s(googleID)))
@@ -48,12 +68,12 @@ public class UsersRepo {
     );
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
-    /* If empty */
+    // If empty
     if (rows.size() == 0) {
       return Optional.empty();
     }
 
-    /* Grab user accordingly */
+    // Grab user accordingly
     return Optional.of(new User(rows.get(0).value().getObject(USERS)));
   }
 
