@@ -2,6 +2,9 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+
+import java.util.Date;
+
 import static podcast.utils.Constants.*;
 
 /**
@@ -16,6 +19,7 @@ public class Recommendation extends Entity {
   @Getter private String imageUrlSm;
   @Getter private String imageUrlLg;
   @Getter private Person user;
+  @Getter private Date createdAt = new Date();
 
 
   /**
@@ -55,7 +59,8 @@ public class Recommendation extends Entity {
       .put(TITLE, title)
       .put(IMAGE_URL_SM, imageUrlSm)
       .put(IMAGE_URL_LG, imageUrlLg)
-      .put(USER, user);
+      .put(USER, user)
+      .put(CREATED_AT, createdAt);
   }
 
 }

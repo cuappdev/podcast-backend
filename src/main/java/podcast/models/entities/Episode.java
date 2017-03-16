@@ -44,8 +44,7 @@ public class Episode extends Podcast {
     this.duration = object.getString(DURATION);
     this.audioUrl = object.getString(AUDIO_URL);
     this.tags = object.getArray(TAGS) == null ? new ArrayList<String>() : object.getArray(TAGS).toList()
-      .stream().map(o -> { return (String) o; }).collect(Collectors.toList());;
+      .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }
-
 
 }

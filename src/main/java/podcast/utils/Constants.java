@@ -49,6 +49,7 @@ public class Constants {
   public static final String FOLLOWERS = "followers";
   public static final String AUDIO_URL = "audioUrl";
   public static final String OWNER_ID = "ownerId";
+  public static final String CREATED_AT = "createdAt";
   // TODO - more
 
   public static final String AUTHORIZATION = "Authorization";

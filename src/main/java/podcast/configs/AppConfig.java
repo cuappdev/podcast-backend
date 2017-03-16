@@ -29,7 +29,5 @@ public class AppConfig extends WebMvcConfigurerAdapter {
       .addPathPatterns("/**")
       .excludePathPatterns("/api/v1/users/google_sign_in")
       .excludePathPatterns("/api/v1/sessions/update");
-
-    // Add more interceptors if necessary
   }
 }
