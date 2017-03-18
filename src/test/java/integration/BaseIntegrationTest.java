@@ -28,7 +28,6 @@ public abstract class BaseIntegrationTest extends BaseTest {
   @Getter private MockMvc mockMvc;
 
   /* Services */
-  @Autowired @Getter FollowersFollowingsService ffService;
   @Autowired @Getter UsersService usersService;
 
   /* Mock Data */
@@ -63,16 +62,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
     // Remove all seeded users
     for (User u : getMockUsers()) {
       usersService.removeUserById(u.getId());
-
-      /* Remove followers/followings */
-
-      Optional<List<Follower>> maybeFollowers = ffService.getUserFollowers(u.getId());
-      List<Follower> followers = maybeFollowers.orElse(new ArrayList<Follower>());
-      for(Follower f : followers) {
-        ffService.deleteFollowing(u, f.getId());
-      }
     }
-
   }
 
 }
