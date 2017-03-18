@@ -40,6 +40,15 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   }
 
   /**
+   * Returns a user guaranteed not to be the current user
+   * @return
+   */
+  private String notMeId() {
+    int NOT_ME = 2; // Need some user who's not "me"; arbitrarily picked 2
+    return getMockUsers().get(NOT_ME).getId();
+  }
+
+  /**
    * Creates a following
    * @throws Exception
    */
@@ -82,7 +91,12 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
    */
   @Test
   public void getFollowings() throws Exception {
-
+    JsonNode respose = mvcResultAsJson(
+        getMockMvc()
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/"+notMeId())
+                .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+            .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+    );
   }
 
   /**
@@ -91,20 +105,26 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
    */
   @Test
   public void getMyFollowers() throws Exception {
-
+    JsonNode respose = mvcResultAsJson(
+        getMockMvc()
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/me")
+                .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+            .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+    );
   }
 
   /**
    * Gets followers for a user who's not 'me'
    * @throws Exception
    */
-  /**
-   * Gets followers when the id is 'me'
-   * @throws Exception
-   */
   @Test
   public void getFollowers() throws Exception {
-
+    JsonNode respose = mvcResultAsJson(
+        getMockMvc()
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/"+notMeId())
+                .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+            .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+    );
   }
 
   /**
