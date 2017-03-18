@@ -41,6 +41,7 @@ public class Constants {
   public static final String GENRES = "genres";
   public static final String SERIES_ID = "seriesId";
   public static final String SERIES_TITLE = "seriesTitle";
+  public static final String NUMBER_SUBSCRIBERS = "numberSubscribers";
   public static final String SUMMARY = "summary";
   public static final String PUB_DATE = "pubDate";
   public static final String DURATION = "duration";
