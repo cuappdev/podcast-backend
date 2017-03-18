@@ -30,17 +30,34 @@ public class SubscriptionsController {
     this.podcastsService = podcastsService;
   }
 
-  /** Create a recommendation **/
+  /** Create a subscription **/
   @RequestMapping(method = RequestMethod.POST, value = "/create")
   public ResponseEntity<Result> createSubscription(HttpServletRequest request,
                                                      @RequestParam("series_id") Long seriesId) {
-    /* Grab the user from the corresponding request */
     User user = (User) request.getAttribute(USER);
 
     try {
       Series series = podcastsService.getSeries(seriesId);
       Subscription subscription = new Subscription(user, series);
       // TODO - Save subscription
+      return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
+
+  /** Delete a subscription **/
+  @RequestMapping(method = RequestMethod.POST, value = "/create")
+  public ResponseEntity<Result> deleteSubscription(HttpServletRequest request,
+                                                   @RequestParam("series_id") Long seriesId) {
+    User user = (User) request.getAttribute(USER);
+
+
+    // TODO - discuss how to implement this
+    
+    try {
+      Series series = podcastsService.getSeries(seriesId);
+      Subscription subscription = new Subscription(user, series);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
