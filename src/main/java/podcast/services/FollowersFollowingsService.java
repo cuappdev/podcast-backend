@@ -16,24 +16,23 @@ public class FollowersFollowingsService {
 
   /* Database communication */
   private UsersRepo usersRepo;
-  private FollowersFollowingsRepo ffRepo;
+  private FollowersFollowingsRepo followersFollowingsRepo;
 
   @Autowired
-  public FollowersFollowingsService(UsersRepo usersRepo, FollowersFollowingsRepo ffRepo) {
+  public FollowersFollowingsService(UsersRepo usersRepo, FollowersFollowingsRepo followersFollowingsRepo) {
     this.usersRepo = usersRepo;
+    this.followersFollowingsRepo = followersFollowingsRepo;
   }
 
   public Following createFollowing(User owner, String followedId) {
     try {
       User followed = usersRepo.getUserById(followedId);
       Following following = new Following(owner, followed);
-      ffRepo.storeFollowing(following, owner, followed);
+      followersFollowingsRepo.storeFollowing(following, owner, followed);
       return following;
     }
     catch(Exception e) {
       e.printStackTrace(); // TODO figure out what goes here
-    }
-    finally {
       return null;
     }
   }
@@ -41,10 +40,10 @@ public class FollowersFollowingsService {
   public boolean deleteFollowing(User owner, String followedId) {
     try {
       User followed = usersRepo.getUserById(followedId);
-      Optional<Following> followingOpt = ffRepo.getFollowingByUsers(owner, followed);
+      Optional<Following> followingOpt = followersFollowingsRepo.getFollowingByUsers(owner, followed);
       Following following = followingOpt.orElse(null);
       if(following != null) {
-        return ffRepo.deleteFollowing(following);
+        return followersFollowingsRepo.deleteFollowing(following);
       }
       else {
         throw new Exception("Can't delete nonexistent following."); // TODO better exception handling
@@ -60,7 +59,7 @@ public class FollowersFollowingsService {
 
   public Optional<List<Following>> getUserFollowings(String ownerId) {
     try {
-      Optional<List<Following>> followings = ffRepo.getUserFollowings(ownerId);
+      Optional<List<Following>> followings = followersFollowingsRepo.getUserFollowings(ownerId);
       return followings;
     }
     catch(Exception e) {
@@ -73,7 +72,7 @@ public class FollowersFollowingsService {
 
   public Optional<List<Follower>> getUserFollowers(String ownerId) {
     try {
-      Optional<List<Follower>> followers = ffRepo.getUserFollowers(ownerId);
+      Optional<List<Follower>> followers = followersFollowingsRepo.getUserFollowers(ownerId);
       return followers;
     }
     catch(Exception e) {

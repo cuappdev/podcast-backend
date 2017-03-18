@@ -2,13 +2,13 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
-import podcast.models.utils.Constants;
+import static podcast.utils.Constants.*;
 
 /**
  * Abstract parent of followers / followings (relationships)
  */
 public abstract class FollowRelationship extends Entity{
-  @Getter private Constants.Type type;
+  @Getter protected Type type;
   @Getter protected String ownerId;
   @Getter protected String id;
   @Getter protected String firstName;
@@ -16,17 +16,34 @@ public abstract class FollowRelationship extends Entity{
   @Getter protected String username;
   @Getter protected String imageUrl;
 
+  /** Constructor **/
+  public FollowRelationship(Type type,
+                            String ownerId,
+                            String id,
+                            String firstName,
+                            String lastName,
+                            String username,
+                            String imageUrl) {
+    this.type = type;
+    this.ownerId = ownerId;
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.imageUrl = imageUrl;
+  }
+
   /**
    * See {@link Entity#toJsonObject()}
    */
   public JsonObject toJsonObject() {
-    JsonObject result = JsonObject.create();
-    result.put(Constants.TYPE, type.toString());
-    result.put(Constants.ID, id);
-    result.put(Constants.FIRST_NAME, firstName);
-    result.put(Constants.LAST_NAME, lastName);
-    result.put(Constants.IMAGE_URL, imageUrl);
-    result.put(Constants.USERNAME, username);
-    return result;
+    return JsonObject.create()
+      .put(TYPE, type.toString())
+      .put(OWNER_ID, ownerId)
+      .put(ID, id)
+      .put(FIRST_NAME, firstName)
+      .put(LAST_NAME, lastName)
+      .put(IMAGE_URL, imageUrl)
+      .put(USERNAME, username);
   }
 }

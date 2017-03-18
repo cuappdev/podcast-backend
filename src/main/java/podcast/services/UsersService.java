@@ -47,12 +47,26 @@ public class UsersService {
   /** Update the username of a user **/
   public User updateUsername(User user,
                              String username) throws User.InvalidUsernameException {
-    // TODO - check duplicate usernames amongst users
-    user.setUsername(username);
-    usersRepo.storeUser(user);
-    return user;
+    // Must be atomic, we can't have one thread check and update while
+    // the other is
+    synchronized (this) {
+      Optional<User> op = usersRepo.getUserByGoogleId(username);
+
+      if (op.isPresent()) {
+        throw new User.InvalidUsernameException();
+      }
+
+      user.setUsername(username);
+      usersRepo.storeUser(user);
+      return user;
+    }
   }
 
+
+  /** Remove user by ID **/
+  public void removeUserById(String id) throws Exception {
+    usersRepo.removeUserById(id);
+  }
 
 
 }

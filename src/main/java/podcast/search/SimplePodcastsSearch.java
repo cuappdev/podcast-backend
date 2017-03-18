@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 import podcast.models.entities.Episode;
 import podcast.models.entities.Podcast;
 import podcast.models.entities.Series;
-import podcast.models.utils.Constants;
+import podcast.utils.Constants;
 import java.util.List;
 import java.util.stream.Collectors;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 /** Podcasts search via indexes on certain fields **/
 @Component
@@ -28,8 +28,8 @@ public class SimplePodcastsSearch extends PodcastsSearch {
   /** {@link PodcastsSearch#searchEpisodes(String, Integer, Integer)} **/
   public List<Episode> searchEpisodes(String query, Integer offset, Integer max) {
     query = query.trim(); // cleanse the query
-    String qS = "SELECT * FROM `%s` WHERE %s='%s' AND %s LIKE '%s%%' OR %s LIKE '%s%%' OFFSET %d LIMIT %d";
-    String queryString = String.format(qS, PODCASTS, TYPE, EPISODE, SERIES_TITLE, query, TITLE, query, offset, max);
+    String qS = "SELECT * FROM `%s` WHERE %s='%s' AND %s LIKE '%s%%' OFFSET %d LIMIT %d";
+    String queryString = String.format(qS, PODCASTS, TYPE, EPISODE, TITLE, query, offset, max);
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 

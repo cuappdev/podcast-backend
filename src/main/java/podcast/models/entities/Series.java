@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 /**
  * Podcast series (e.g. 'Serial' itself)

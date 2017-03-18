@@ -5,7 +5,7 @@ import com.fasterxml.uuid.Generators;
 import lombok.Getter;
 import lombok.Setter;
 import org.codehaus.jackson.JsonNode;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 /**
  * App user (w/Google credentials)
@@ -101,7 +101,7 @@ public class User extends Entity {
 
 
   /** Thrown when the username is not valid **/
-  public class InvalidUsernameException extends Exception {
+  public static class InvalidUsernameException extends Exception {
     public InvalidUsernameException() {
       super("This username is not valid, please try again.");
     }

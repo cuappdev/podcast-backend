@@ -2,16 +2,14 @@ package podcast.authentication;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.error.DocumentDoesNotExistException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import podcast.models.entities.Session;
 import podcast.models.entities.User;
-import podcast.models.utils.Constants;
+import podcast.utils.Constants;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.NotAuthorizedException;
 import java.util.Date;
 
 public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {

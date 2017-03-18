@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 /**
  * Podcast episode (e.g. an episode of 'Serial')
@@ -44,8 +44,7 @@ public class Episode extends Podcast {
     this.duration = object.getString(DURATION);
     this.audioUrl = object.getString(AUDIO_URL);
     this.tags = object.getArray(TAGS) == null ? new ArrayList<String>() : object.getArray(TAGS).toList()
-      .stream().map(o -> { return (String) o; }).collect(Collectors.toList());;
+      .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }
-
 
 }

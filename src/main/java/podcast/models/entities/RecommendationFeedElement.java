@@ -2,7 +2,7 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
-import podcast.models.utils.Constants;
+import podcast.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;

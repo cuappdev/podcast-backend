@@ -8,6 +8,12 @@ Podcasts app-layer backend written in Spring
 mvn spring-boot:run
 ````
 
+## Running tests 
+
+````bash
+mvn test
+````
+
 ## Required Environment Variables 
 
 ````bash

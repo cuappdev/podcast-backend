@@ -1,6 +1,7 @@
 package podcast.configs;
 
 import com.couchbase.client.core.env.QueryServiceConfig;
+import com.couchbase.client.core.retry.FailFastRetryStrategy;
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
@@ -49,6 +50,8 @@ public class Database {
       .socketConnectTimeout(timeout)
       .connectTimeout(timeout)
       .kvTimeout(timeout)
+      .computationPoolSize(5)
+      .retryStrategy(FailFastRetryStrategy.INSTANCE)
       .build();
 
     this.couchbaseCluster = CouchbaseCluster.create(env, clusterHost);

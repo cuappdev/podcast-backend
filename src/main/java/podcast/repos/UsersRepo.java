@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import static com.couchbase.client.java.query.Select.select;
 import static com.couchbase.client.java.query.dsl.Expression.*;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 @Component
 public class UsersRepo {
@@ -32,6 +32,26 @@ public class UsersRepo {
   }
 
 
+  /** Get user by username (case insensitive) **/
+  public Optional<User> getUserByUsername(String username) {
+    username = username.toLowerCase();
+    N1qlQuery q = N1qlQuery.simple(
+      select("*").from("`" + USERS + "`").where(
+        (x("lower(" + USERNAME + ")").eq(s(username)))
+      )
+    );
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+
+    // If empty
+    if (rows.size() == 0) {
+      return Optional.empty();
+    }
+
+    // Grab user accordingly
+    return Optional.of(new User(rows.get(0).value().getObject(USERS)));
+  }
+
+
   /** Get User by ID **/
   public User getUserById(String id) throws Exception {
     return new User(bucket.get(id).content());
@@ -40,22 +60,27 @@ public class UsersRepo {
 
   /** Get User by Google ID (optional) **/
   public Optional<User> getUserByGoogleId(String googleID) {
-    /* Prepare and execute N1QL query */
+    // Prepare and execute N1QL query
     N1qlQuery q = N1qlQuery.simple(
       select("*").from("`" + USERS + "`").where(
         (x(GOOGLE_ID).eq(s(googleID)))
       )
     );
-    System.out.println(q.toString());
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
-    /* If empty */
+    // If empty
     if (rows.size() == 0) {
       return Optional.empty();
     }
 
-    /* Grab user accordingly */
+    // Grab user accordingly
     return Optional.of(new User(rows.get(0).value().getObject(USERS)));
+  }
+
+
+  /** Remove User by ID (+ return the user just deleted) **/
+  public void removeUserById(String id) throws Exception {
+    bucket.remove(id);
   }
 
 

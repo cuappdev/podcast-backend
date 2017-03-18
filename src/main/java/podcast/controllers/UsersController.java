@@ -13,7 +13,7 @@ import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
-import static podcast.models.utils.Constants.*;
+import static podcast.utils.Constants.*;
 
 
 /**
@@ -58,6 +58,7 @@ public class UsersController {
         return ResponseEntity.status(200).body(r);
       }
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
@@ -66,7 +67,7 @@ public class UsersController {
   /** Change username **/
   @RequestMapping(method = RequestMethod.POST, value = "/change_username")
   public ResponseEntity<Result> changeUsername(HttpServletRequest request,
-                                               @RequestParam(value="username") String username) {
+                                               @RequestParam(value=USERNAME) String username) {
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
 
@@ -75,6 +76,7 @@ public class UsersController {
       return ResponseEntity.status(200).body(
         new Success(USER, user));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
@@ -94,6 +96,7 @@ public class UsersController {
         return ResponseEntity.status(200).body(new Success(USER, peer));
       }
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }

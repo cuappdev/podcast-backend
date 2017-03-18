@@ -15,7 +15,7 @@ import podcast.models.entities.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
-import podcast.models.utils.Constants;
+import podcast.utils.Constants;
 import podcast.services.FollowersFollowingsService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +32,7 @@ public class FollowersController {
     this.ffService = ffService;
   }
 
-  @RequestMapping(method = RequestMethod.POST, value = "/")
+  @RequestMapping(method = RequestMethod.GET, value = "/")
   public ResponseEntity<Result> getUserFollowings(HttpServletRequest request,
                                                   @RequestParam(value = Constants.ID) String id) {
 

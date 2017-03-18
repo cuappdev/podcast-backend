@@ -3,12 +3,16 @@ package podcast.configs;
 import com.couchbase.client.java.Bucket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import podcast.authentication.UserAuthenticationInterceptor;
 
 @Configuration
+@EnableWebMvc
+@ComponentScan("podcast")
 public class AppConfig extends WebMvcConfigurerAdapter {
 
   private Bucket userBucket;
@@ -22,13 +26,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(
       new UserAuthenticationInterceptor(userBucket))
-      .addPathPatterns("/api/v1/users/change_username")
-      .addPathPatterns("/api/v1/podcasts/**")
-      .addPathPatterns("/api/v1/followings/**")
-      .addPathPatterns("/api/v1/search/**");
-
-    // Add more patterns
-
-    // Add more interceptors if necessary
+      .addPathPatterns("/**")
+      .excludePathPatterns("/api/v1/users/google_sign_in")
+      .excludePathPatterns("/api/v1/sessions/update");
   }
 }

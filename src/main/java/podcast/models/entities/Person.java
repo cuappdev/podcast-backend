@@ -1,6 +1,8 @@
 package podcast.models.entities;
 
+import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+import static podcast.utils.Constants.*;
 
 /** Person scopes down the fields in User **/
 public class Person {
@@ -21,6 +23,16 @@ public class Person {
     this.numberFollowers = user.getNumberFollowers();
     this.numberFollowing = user.getNumberFollowing();
     this.imageUrl = user.getImageUrl();
+  }
+
+  public Person(JsonObject object) {
+    this.id = object.getString(ID);
+    this.firstName = object.getString(FIRST_NAME);
+    this.lastName = object.getString(LAST_NAME);
+    this.username = object.getString(USERNAME);
+    this.numberFollowers = object.getInt(NUMBER_FOLLOWERS);
+    this.numberFollowing = object.getInt(NUMBER_FOLLOWING);
+    this.imageUrl = object.getString(IMAGE_URL);
   }
 
 }

@@ -11,13 +11,12 @@ import podcast.models.entities.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
-import podcast.models.utils.Constants;
 import podcast.services.FollowersFollowingsService;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import static podcast.utils.Constants.*;
 
 @RestController
 @RequestMapping("/api/v1/followings")
@@ -33,38 +32,28 @@ public class FollowingsController {
   /**
    * Create a following.
    * This is the endpoint we want to call when a user follows another.
-   *
-   * @param request
-   * @param id      the user being followed
-   * @return
    */
   @RequestMapping(method = RequestMethod.POST, value = "/")
   public ResponseEntity<Result> newFollowing(HttpServletRequest request,
-                                             @RequestParam(value = Constants.ID) String id) {
+                                             @RequestParam(value = ID) String id) {
 
     /* Grab the user corresponding to the request */
-    User user = (User) request.getAttribute(Constants.USER);
+    User user = (User) request.getAttribute(USER);
 
     try {
       Following following = ffService.createFollowing(user, id);
       return ResponseEntity.status(200).body(
-          new Success(Constants.FOLLOWING, following));
+          new Success(FOLLOWING, following));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
 
-  /**
-   * Gets the followings of a user.
-   * @param request
-   * @param id
-   * @return
-   */
   @RequestMapping(method = RequestMethod.GET, value = "/")
   public ResponseEntity<Result> getUserFollowings(HttpServletRequest request,
-                                                  @RequestParam(value = Constants.ID) String id) {
+                                                  @RequestParam(value = ID) String id) {
 
-    User user = (User) request.getAttribute(Constants.USER);
+    User user = (User) request.getAttribute(USER);
     Optional<List<Following>> followings;
 
     if (id.equals("me")) {
@@ -75,7 +64,7 @@ public class FollowingsController {
     }
       try {
         return ResponseEntity.status(200).body(
-            new Success(Constants.FOLLOWINGS, followings.orElse(new ArrayList<Following>())));
+            new Success(FOLLOWINGS, followings.orElse(new ArrayList<Following>())));
       } catch (Exception e) {
         return ResponseEntity.status(400).body(new Failure(e.getMessage()));
       }
@@ -86,15 +75,15 @@ public class FollowingsController {
    */
   @RequestMapping(method = RequestMethod.DELETE, value = "/")
   public ResponseEntity<Result> deleteFollowing(HttpServletRequest request,
-                                                  @RequestParam(value = Constants.ID) String id) {
+                                                  @RequestParam(value = ID) String id) {
 
     /* Grab the user corresponding to the request */
-    User user = (User) request.getAttribute(Constants.USER);
+    User user = (User) request.getAttribute(USER);
 
     try {
       boolean deleted = ffService.deleteFollowing(user, id);
       return ResponseEntity.status(200).body(
-          new Success(Constants.DELETED_FOLLOWING, id));
+          new Success(DELETED_FOLLOWING, id));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
