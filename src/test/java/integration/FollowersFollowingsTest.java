@@ -64,7 +64,7 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
 
       JsonNode respose = mvcResultAsJson(
         getMockMvc()
-        .perform(MockMvcRequestBuilders.post("/api/v1/followings/new?id=" + u.getId())
+        .perform(MockMvcRequestBuilders.post("/api/v1/followings/?id=" + u.getId())
           .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
         .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
       );
@@ -133,7 +133,19 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
    */
   @Test
   public void deleteFollowings() throws Exception {
-    
+    for (User u : getMockUsers()) {
+      // If it's me, don't follow myself
+      if (u.getSession().getSessionToken().equals(getSession())) {
+        continue;
+      }
+
+      JsonNode respose = mvcResultAsJson(
+          getMockMvc()
+              .perform(MockMvcRequestBuilders.delete("/api/v1/followings/?id=" + u.getId())
+                  .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+              .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+      );
+    }
   }
 
   @After
