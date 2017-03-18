@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import podcast.models.entities.Follower;
 import podcast.models.entities.User;
 import podcast.services.FollowersFollowingsService;
 import podcast.services.UsersService;
@@ -14,6 +15,7 @@ import utils.BaseTest;
 import utils.MockGoogleCreds;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public abstract class BaseIntegrationTest extends BaseTest {
@@ -26,7 +28,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
   @Getter private MockMvc mockMvc;
 
   /* Services */
-  @Autowired @Getter FollowersFollowingsService followersFollowingsService;
+  @Autowired @Getter FollowersFollowingsService ffService;
   @Autowired @Getter UsersService usersService;
 
   /* Mock Data */
@@ -61,9 +63,15 @@ public abstract class BaseIntegrationTest extends BaseTest {
     // Remove all seeded users
     for (User u : getMockUsers()) {
       usersService.removeUserById(u.getId());
-    }
 
-    // TODO - remove followers / followings
+      /* Remove followers/followings */
+
+      Optional<List<Follower>> maybeFollowers = ffService.getUserFollowers(u.getId());
+      List<Follower> followers = maybeFollowers.orElse(new ArrayList<Follower>());
+      for(Follower f : followers) {
+        ffService.deleteFollowing(u, f.getId());
+      }
+    }
 
   }
 

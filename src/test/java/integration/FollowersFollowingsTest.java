@@ -29,7 +29,20 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
     }
   }
 
+  @Test
+  public void getFollowings() throws Exception {
 
+  }
+
+  @Test
+  public void getFollowers() throws Exception {
+
+  }
+
+  @Test
+  public void deleteFollowings() throws Exception {
+
+  }
 
 
 }
