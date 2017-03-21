@@ -62,7 +62,7 @@ public class Session extends Entity {
    */
   public Session(JsonObject object) {
     this.sessionToken = object.getString(SESSION_TOKEN);
-    this.expiresAt = new Date(object.getLong(EXPIRES_AT));
+    this.expiresAt = new Date(object.getLong(EXPIRES_AT) * 1000);
     this.updateToken = object.getString(UPDATE_TOKEN);
   }
 
