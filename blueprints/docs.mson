@@ -134,7 +134,7 @@ CUAppDev's podcast app API documentation
         }
 
 # Group Followers Followings
-## New Following [/api/v1/followings/new?id={id}]
+## Followings CRUD [/api/v1/followings?id={id}]
 ### New Following [POST]
 
 + Request
@@ -159,7 +159,7 @@ CUAppDev's podcast app API documentation
           "success": true
         }
 
-## Delete Following [/api/v1/followings?id={id}]
+
 ### Delete Following [DELETE]
 
 + Request
@@ -177,7 +177,8 @@ CUAppDev's podcast app API documentation
           "success": true
         }
 
-## Display User Followings [/api/v1/followings?id={id}]
+
+## Display User Followings [/api/v1/followings/show?id={id}]
 ### Display User Followings [GET]
 
 + Request
@@ -210,7 +211,8 @@ CUAppDev's podcast app API documentation
             "success": true
         }
 
-## Display User Followers [/api/v1/followers?id={id}]
+
+## Display User Followers [/api/v1/followers/show?id={id}]
 ### Display User Followers [GET]
 
 + Request

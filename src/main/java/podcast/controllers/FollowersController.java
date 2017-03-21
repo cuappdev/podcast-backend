@@ -32,7 +32,7 @@ public class FollowersController {
     this.ffService = ffService;
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/")
+  @RequestMapping(method = RequestMethod.GET, value = "/show")
   public ResponseEntity<Result> getUserFollowings(HttpServletRequest request,
                                                   @RequestParam(value = Constants.ID) String id) {
 

@@ -34,8 +34,8 @@ public class FollowingsController {
    * This is the endpoint we want to call when a user follows another.
    */
   @RequestMapping(method = RequestMethod.POST, value = "/")
-  public ResponseEntity<Result> newFollowing(HttpServletRequest request,
-                                             @RequestParam(value = ID) String id) {
+  public ResponseEntity<Result> createFollowing(HttpServletRequest request,
+                                                @RequestParam(value = ID) String id) {
 
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
@@ -49,7 +49,8 @@ public class FollowingsController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/")
+
+  @RequestMapping(method = RequestMethod.GET, value = "/show")
   public ResponseEntity<Result> getUserFollowings(HttpServletRequest request,
                                                   @RequestParam(value = ID) String id) {
 
@@ -69,6 +70,7 @@ public class FollowingsController {
         return ResponseEntity.status(400).body(new Failure(e.getMessage()));
       }
   }
+
 
   /**
    * Deletes a following.
