@@ -37,6 +37,7 @@ public class SessionsController {
       User user = sessionsService.updateSession(updatetoken);
       return ResponseEntity.status(200).body(new Success(Constants.USER, user));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(403).body(new Failure(e.getMessage()));
     }
   }
