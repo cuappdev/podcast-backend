@@ -172,7 +172,7 @@ CUAppDev's podcast app API documentation
 
         {
           "data": {
-            "deleted_following": 123 // user id deleted whose following was just deleted
+            "deleted_following": 123 // user id who you've just unfollowed
           },
           "success": true
         }

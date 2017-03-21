@@ -54,7 +54,7 @@ public class SubscriptionsController {
 
 
     // TODO - discuss how to implement this
-    
+
     try {
       Series series = podcastsService.getSeries(seriesId);
       Subscription subscription = new Subscription(user, series);
