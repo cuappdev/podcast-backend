@@ -12,6 +12,7 @@ import podcast.models.formats.Success;
 import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import javax.servlet.http.HttpServletRequest;
+import java.util.AbstractMap;
 import java.util.Optional;
 import static podcast.utils.Constants.*;
 
@@ -40,27 +41,15 @@ public class UsersController {
     try {
       /* Grab Google API response */
       JsonNode response = googleService.googleAuthentication(idToken);
-      String googleID = googleService.googleIDFromResponse(response);
-
-      /* Check if user exists */
-      Optional<User> possUser = usersService.getUserByGoogleId(googleID);
-
-      /* If exists, return, else make new user */
-      Success r;
-      if (possUser.isPresent()) {
-        r = new Success(USER, possUser.get());
-        r.addField(NEW_USER, false);
-        return ResponseEntity.status(200).body(r);
-      } else {
-        User user = usersService.createUser(response);
-        r = new Success(USER, user);
-        r.addField(NEW_USER, true);
-        return ResponseEntity.status(200).body(r);
-      }
+      String googleId = googleService.googleIdFromResponse(response);
+      AbstractMap.SimpleEntry<Boolean, User> r = usersService.getOrCreateUser(response, googleId);
+      return ResponseEntity.status(200)
+        .body(new Success(USER, r.getValue()).addField(NEW_USER, r.getKey()));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
+
   }
 
 

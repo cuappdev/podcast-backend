@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import podcast.models.entities.Session;
 import podcast.models.entities.User;
 import podcast.repos.UsersRepo;
+
+import java.util.AbstractMap;
 import java.util.Optional;
 
 /**
@@ -23,12 +25,19 @@ public class UsersService {
     this.usersRepo = usersRepo;
   }
 
-  /** Create User, given a response from Google API **/
-  public User createUser(JsonNode response) {
-    User user = new User(response);
-    user.setSession(new Session(user));
-    usersRepo.storeUser(user);
-    return user;
+
+  /** Get or create User, given a response from Google API -
+   * boolean indicates whether or not the user is new **/
+  public AbstractMap.SimpleEntry<Boolean, User> getOrCreateUser(JsonNode response, String googleId) {
+    // Must be an atomic attempt
+    synchronized (this) {
+      Optional<User> possUser = usersRepo.getUserByGoogleId(googleId);
+      User user = possUser.isPresent() ? possUser.get() : new User(response);
+      Boolean newUser = !possUser.isPresent();
+      user.setSession(new Session(user));
+      usersRepo.storeUser(user);
+      return new AbstractMap.SimpleEntry<Boolean, User>(newUser, user);
+    }
   }
 
 

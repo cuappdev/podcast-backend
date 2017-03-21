@@ -23,7 +23,7 @@ public class GoogleService {
    * @param googleResp - JsonNode
    * @return - String (googleID)
    */
-  public String googleIDFromResponse(JsonNode googleResp) {
+  public String googleIdFromResponse(JsonNode googleResp) {
     return googleResp.get("sub").asText();
   }
 
