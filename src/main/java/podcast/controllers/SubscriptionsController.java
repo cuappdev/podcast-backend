@@ -31,7 +31,7 @@ public class SubscriptionsController {
   }
 
   /** Create a subscription **/
-  @RequestMapping(method = RequestMethod.POST, value = "/create")
+  @RequestMapping(method = RequestMethod.POST, value = "/")
   public ResponseEntity<Result> createSubscription(HttpServletRequest request,
                                                      @RequestParam("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
@@ -47,7 +47,7 @@ public class SubscriptionsController {
   }
 
   /** Delete a subscription **/
-  @RequestMapping(method = RequestMethod.POST, value = "/create")
+  @RequestMapping(method = RequestMethod.DELETE, value = "/")
   public ResponseEntity<Result> deleteSubscription(HttpServletRequest request,
                                                    @RequestParam("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
