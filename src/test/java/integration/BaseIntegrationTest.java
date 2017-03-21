@@ -48,7 +48,8 @@ public abstract class BaseIntegrationTest extends BaseTest {
 
     // Seed the DB with users
     for (int i = 0; i < 10; i++) {
-      mockUsers.add(usersService.createUser(new MockGoogleCreds(i).toJsonNode()));
+      MockGoogleCreds creds = new MockGoogleCreds(i);
+      mockUsers.add(usersService.getOrCreateUser(creds.toJsonNode(), creds.getSub()).getValue());
     }
 
     this.session = mockUsers.get(0).getSession().getSessionToken();
