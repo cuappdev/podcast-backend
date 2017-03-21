@@ -3,6 +3,7 @@ package podcast.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import podcast.models.entities.Episode;
+import podcast.models.entities.Series;
 import podcast.repos.PodcastsRepo;
 
 /**
@@ -29,11 +30,23 @@ public class PodcastsService {
     }
   }
 
+  public Series getSeries(Long seriesId) throws Exception {
+    try {
+      return podcastsRepo.getSeries(seriesId);
+    } catch (Exception e) {
+      throw new SeriesDoesNotExistException();
+    }
+  }
+
   /** When an episode does not exist **/
   public class EpisodeDoesNotExistException extends Exception {
     public EpisodeDoesNotExistException() {
       super("Episode does not exist");
     }
+  }
+
+  public class SeriesDoesNotExistException extends Exception {
+    public SeriesDoesNotExistException() { super("Series does not exist"); }
   }
 
 }

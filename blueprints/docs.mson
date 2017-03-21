@@ -159,6 +159,24 @@ CUAppDev's podcast app API documentation
           "success": true
         }
 
+## Delete Following [/api/v1/followings?id={id}]
+### Delete Following [DELETE]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "deleted_following": 123 // user id who you've just unfollowed
+          },
+          "success": true
+        }
+
 ## Display User Followings [/api/v1/followings?id={id}]
 ### Display User Followings [GET]
 

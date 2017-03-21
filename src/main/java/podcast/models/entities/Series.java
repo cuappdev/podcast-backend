@@ -21,6 +21,7 @@ public class Series extends Podcast {
   @Getter private String imageUrlSm;
   @Getter private String imageUrlLg;
   @Getter private String feedUrl;
+  @Getter private Integer numberSubscribers;
   @Getter private List<String> genres;
 
 
@@ -36,6 +37,7 @@ public class Series extends Podcast {
     this.imageUrlSm = object.getString(IMAGE_URL_SM);
     this.imageUrlLg = object.getString(IMAGE_URL_LG);
     this.feedUrl = object.getString(FEED_URL);
+    this.numberSubscribers = object.getInt(NUMBER_SUBSCRIBERS);
     this.genres = object.getArray(GENRES) == null ? new ArrayList<String>() : object.getArray(GENRES).toList()
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }

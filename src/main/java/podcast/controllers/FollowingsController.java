@@ -33,7 +33,7 @@ public class FollowingsController {
    * Create a following.
    * This is the endpoint we want to call when a user follows another.
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/new")
+  @RequestMapping(method = RequestMethod.POST, value = "/")
   public ResponseEntity<Result> newFollowing(HttpServletRequest request,
                                              @RequestParam(value = ID) String id) {
 
@@ -48,7 +48,6 @@ public class FollowingsController {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
-
 
   @RequestMapping(method = RequestMethod.GET, value = "/")
   public ResponseEntity<Result> getUserFollowings(HttpServletRequest request,
@@ -69,6 +68,25 @@ public class FollowingsController {
       } catch (Exception e) {
         return ResponseEntity.status(400).body(new Failure(e.getMessage()));
       }
+  }
+
+  /**
+   * Deletes a following.
+   */
+  @RequestMapping(method = RequestMethod.DELETE, value = "/")
+  public ResponseEntity<Result> deleteFollowing(HttpServletRequest request,
+                                                  @RequestParam(value = ID) String id) {
+
+    /* Grab the user corresponding to the request */
+    User user = (User) request.getAttribute(USER);
+
+    try {
+      boolean deleted = ffService.deleteFollowing(user, id);
+      return ResponseEntity.status(200).body(
+          new Success(DELETED_FOLLOWING, id));
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
   }
 }
 

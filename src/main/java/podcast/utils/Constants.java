@@ -41,6 +41,7 @@ public class Constants {
   public static final String GENRES = "genres";
   public static final String SERIES_ID = "seriesId";
   public static final String SERIES_TITLE = "seriesTitle";
+  public static final String NUMBER_SUBSCRIBERS = "numberSubscribers";
   public static final String SUMMARY = "summary";
   public static final String PUB_DATE = "pubDate";
   public static final String DURATION = "duration";
@@ -50,6 +51,8 @@ public class Constants {
   public static final String AUDIO_URL = "audioUrl";
   public static final String OWNER_ID = "ownerId";
   public static final String CREATED_AT = "createdAt";
+  public static final String DELETED_FOLLOWING = "deletedFollowing";
+  public static final String SUBSCRIPTION = "subscription";
   // TODO - more
 
   public static final String AUTHORIZATION = "Authorization";
@@ -71,7 +74,8 @@ public class Constants {
     FOLLOWER,
     FOLLOWING,
     RELEASE,
-    RECOMMENDATION;
+    RECOMMENDATION,
+    SUBSCRIPTION;
 
     /** Properly format for storage in Couchbase **/
     @Override
@@ -85,6 +89,7 @@ public class Constants {
         case FOLLOWING: return Constants.FOLLOWING;
         case RELEASE: return Constants.RELEASE;
         case RECOMMENDATION: return Constants.RECOMMENDATION;
+        case SUBSCRIPTION: return Constants.SUBSCRIPTION;
         default: throw new IllegalArgumentException();
       }
     }

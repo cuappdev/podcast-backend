@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import podcast.models.entities.Follower;
 import podcast.models.entities.User;
 import podcast.services.FollowersFollowingsService;
 import podcast.services.UsersService;
@@ -14,6 +15,7 @@ import utils.BaseTest;
 import utils.MockGoogleCreds;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public abstract class BaseIntegrationTest extends BaseTest {
@@ -26,7 +28,6 @@ public abstract class BaseIntegrationTest extends BaseTest {
   @Getter private MockMvc mockMvc;
 
   /* Services */
-  @Autowired @Getter FollowersFollowingsService followersFollowingsService;
   @Autowired @Getter UsersService usersService;
 
   /* Mock Data */
@@ -62,9 +63,6 @@ public abstract class BaseIntegrationTest extends BaseTest {
     for (User u : getMockUsers()) {
       usersService.removeUserById(u.getId());
     }
-
-    // TODO - remove followers / followings
-
   }
 
 }
