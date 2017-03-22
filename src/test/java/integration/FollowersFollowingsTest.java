@@ -79,7 +79,7 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   public void getMyFollowings() throws Exception {
     JsonNode respose = mvcResultAsJson(
         getMockMvc()
-            .perform(MockMvcRequestBuilders.get("/api/v1/followings/me")
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/show?id=me")
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
     );
@@ -93,7 +93,7 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   public void getFollowings() throws Exception {
     JsonNode respose = mvcResultAsJson(
         getMockMvc()
-            .perform(MockMvcRequestBuilders.get("/api/v1/followings/"+notMeId())
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/show?id="+notMeId())
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
     );
@@ -107,7 +107,7 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   public void getMyFollowers() throws Exception {
     JsonNode respose = mvcResultAsJson(
         getMockMvc()
-            .perform(MockMvcRequestBuilders.get("/api/v1/followings/me")
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/show?id=me")
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
     );
@@ -121,7 +121,7 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   public void getFollowers() throws Exception {
     JsonNode respose = mvcResultAsJson(
         getMockMvc()
-            .perform(MockMvcRequestBuilders.get("/api/v1/followings/"+notMeId())
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/show?id="+notMeId())
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
     );
