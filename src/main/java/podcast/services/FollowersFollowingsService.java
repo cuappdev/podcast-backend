@@ -62,29 +62,13 @@ public class FollowersFollowingsService {
   }
 
   public Optional<List<Following>> getUserFollowings(String ownerId) {
-    try {
-      Optional<List<Following>> followings = followersFollowingsRepo.getUserFollowings(ownerId);
-      return followings;
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-    finally {
-      return null;
-    }
+    Optional<List<Following>> followings = followersFollowingsRepo.getUserFollowings(ownerId);
+    return followings;
   }
 
   public Optional<List<Follower>> getUserFollowers(String ownerId) {
-    try {
-      Optional<List<Follower>> followers = followersFollowingsRepo.getUserFollowers(ownerId);
-      return followers;
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-    finally {
-      return null;
-    }
+    Optional<List<Follower>> followers = followersFollowingsRepo.getUserFollowers(ownerId);
+    return followers;
   }
 
 }
