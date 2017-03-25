@@ -29,6 +29,8 @@ public class FollowersFollowingsService {
       User followed = usersRepo.getUserById(followedId);
       Following following = new Following(owner, followed);
       followersFollowingsRepo.storeFollowing(following, owner, followed);
+      usersRepo.incrementFollowerCount(followedId, true);
+      usersRepo.incrementFollowingCount(owner.getId(), true);
       return following;
     }
     catch(Exception e) {
@@ -42,6 +44,8 @@ public class FollowersFollowingsService {
       User followed = usersRepo.getUserById(followedId);
       Optional<Following> followingOpt = followersFollowingsRepo.getFollowingByUsers(owner, followed);
       Following following = followingOpt.orElse(null);
+      usersRepo.incrementFollowerCount(followedId, false);
+      usersRepo.incrementFollowingCount(owner.getId(), false);
       if(following != null) {
         return followersFollowingsRepo.deleteFollowing(following);
       }

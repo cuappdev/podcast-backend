@@ -83,5 +83,65 @@ public class UsersRepo {
     bucket.remove(id);
   }
 
+  /**
+   * Increments (if up == true) and decrements (if up == false) a user's follower count
+   * @param id
+   * @param up
+   * @return
+   * @throws Exception
+   */
+  public boolean incrementFollowerCount(String id, boolean up) throws Exception {
+    int amount = -1;
+    if(up) {
+      amount = 1;
+    }
+    N1qlQuery q = N1qlQuery.simple(
+        select("numberFollowers").from("`" + USERS + "`").where(
+            (x(ID).eq(s(id)))
+        )
+    );
+
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+    if (rows.size() == 0) {
+      return false;
+    } else {
+      int followers = new User(rows.get(0).value().getObject(USERS)).getNumberFollowers();
+      N1qlQuery q1 = N1qlQuery.simple(
+          "SET numberFollowers=" + (followers + amount) + "FOR u IN users WHEN u.id='" + id + "'"
+      );
+      return true;
+    }
+  }
+
+  /**
+   * Increments (if up == true) and decrements (if up == false) a user's following count
+   * @param id
+   * @return
+   * @throws Exception
+   */
+  public boolean incrementFollowingCount(String id, boolean up) throws Exception {
+    int amount = -1;
+    if(up) {
+      amount = 1;
+    }
+    N1qlQuery q = N1qlQuery.simple(
+        select("numberFollowings").from("`" + USERS + "`").where(
+            (x(ID).eq(s(id)))
+        )
+    );
+
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+    if(rows.size() == 0) {
+      return false;
+    }
+    else {
+      int followings = new User(rows.get(0).value().getObject(USERS)).getNumberFollowing();
+      N1qlQuery q1 = N1qlQuery.simple(
+          "SET numberFollowings="+(followings + amount)+"FOR u IN users WHEN u.id='"+id+"'"
+      );
+      return true;
+    }
+  }
+
 
 }
