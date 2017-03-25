@@ -79,7 +79,7 @@ public class User extends Entity {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
-    result.put(TYPE, type);
+    result.put(TYPE, type.toString());
     result.put(ID, id);
     result.put(GOOGLE_ID, googleId);
     result.put(EMAIL, email);
@@ -178,7 +178,7 @@ public class User extends Entity {
     /** See {@link Entity#toJsonObject()} **/
     public JsonObject toJsonObject() {
       return JsonObject.create()
-        .put(TYPE, type)
+        .put(TYPE, type.toString())
         .put(USERNAME, username)
         .put(USER_ID, userId);
     }
@@ -209,7 +209,7 @@ public class User extends Entity {
     /** See {@link Entity#toJsonObject()} **/
     public JsonObject toJsonObject() {
       return JsonObject.create()
-        .put(TYPE, type)
+        .put(TYPE, type.toString())
         .put(GOOGLE_ID, googleId)
         .put(USER_ID, userId);
     }

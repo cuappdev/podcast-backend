@@ -54,7 +54,7 @@ public class Recommendation extends Entity {
    */
   public JsonObject toJsonObject() {
     return JsonObject.create()
-      .put(TYPE, type)
+      .put(TYPE, type.toString())
       .put(SERIES_TITLE, seriesTitle)
       .put(TITLE, title)
       .put(IMAGE_URL_SM, imageUrlSm)

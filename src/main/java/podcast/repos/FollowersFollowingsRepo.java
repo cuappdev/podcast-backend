@@ -34,7 +34,7 @@ public class FollowersFollowingsRepo {
   /** Given an owning user, a correspondent, and a following
    * relationship type, compose key **/
   private String composeKey(User owner, User correspondent, Type type) {
-    return composeKey(owner, correspondent, type);
+    return composeKey(owner.getId(), correspondent.getId(), type);
   }
 
 

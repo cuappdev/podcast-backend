@@ -2,10 +2,7 @@ package podcast.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import podcast.models.entities.Following;
 import podcast.models.entities.User;
 import podcast.models.formats.Failure;
@@ -33,9 +30,9 @@ public class FollowingsController {
    * Create a following.
    * This is the endpoint we want to call when a user follows another.
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/")
+  @RequestMapping(method = RequestMethod.POST, value = "/{id}")
   public ResponseEntity<Result> createFollowing(HttpServletRequest request,
-                                                @RequestParam(value = ID) String id) {
+                                                @PathVariable(value = "id") String id) {
 
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
@@ -45,39 +42,40 @@ public class FollowingsController {
       return ResponseEntity.status(200).body(
           new Success(FOLLOWING, following));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
 
 
+  /**
+   * Get the list of people a given user is following
+   */
   @RequestMapping(method = RequestMethod.GET, value = "/show")
   public ResponseEntity<Result> getUserFollowings(HttpServletRequest request,
-                                                  @RequestParam(value = ID) String id) {
+                                                  @RequestParam(value = "id") String id) {
 
     User user = (User) request.getAttribute(USER);
-    Optional<List<Following>> followings;
+    Optional<List<Following>> followings = id.equals("me") ?
+      ffService.getUserFollowings(user.getId()) :
+      ffService.getUserFollowings(id);
 
-    if (id.equals("me")) {
-      followings = ffService.getUserFollowings(user.getId());
+    try {
+      return ResponseEntity.status(200).body(
+        new Success(FOLLOWINGS, followings.orElse(new ArrayList<Following>())));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
-    else {
-      followings = ffService.getUserFollowings(id);
-    }
-      try {
-        return ResponseEntity.status(200).body(
-            new Success(FOLLOWINGS, followings.orElse(new ArrayList<Following>())));
-      } catch (Exception e) {
-        return ResponseEntity.status(400).body(new Failure(e.getMessage()));
-      }
   }
 
 
   /**
    * Deletes a following.
    */
-  @RequestMapping(method = RequestMethod.DELETE, value = "/")
+  @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
   public ResponseEntity<Result> deleteFollowing(HttpServletRequest request,
-                                                  @RequestParam(value = ID) String id) {
+                                                @PathVariable(value = "id") String id) {
 
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
@@ -87,6 +85,7 @@ public class FollowingsController {
       return ResponseEntity.status(200).body(
           new Success(DELETED_FOLLOWING, id));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }

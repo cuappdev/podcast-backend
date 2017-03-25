@@ -41,7 +41,7 @@ public class Subscription extends Entity {
 
   public JsonObject toJsonObject() {
     return JsonObject.create()
-        .put(TYPE, type)
+        .put(TYPE, type.toString())
         .put(SERIES_TITLE, seriesTitle)
         .put(IMAGE_URL_SM, imageUrlSm)
         .put(IMAGE_URL_LG, imageUrlLg)

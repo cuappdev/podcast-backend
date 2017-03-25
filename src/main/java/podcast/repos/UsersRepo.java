@@ -2,7 +2,6 @@ package podcast.repos;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.error.DocumentDoesNotExistException;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryRow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +51,8 @@ public class UsersRepo {
 
   /** Checks to see if this username is available **/
   public boolean usernameAvailable(String username) {
-    try {
-      User.UsernameToUser usernameToUser = new User.UsernameToUser(bucket.get(username).content());
-      return false;
-    } catch (DocumentDoesNotExistException e) {
-      return true;
-    }
+    JsonDocument doc = bucket.get(username);
+    return doc == null;
   }
 
 
@@ -74,19 +69,24 @@ public class UsersRepo {
 
   /** Get User by ID **/
   public User getUserById(String id) throws Exception {
-    return new User(bucket.get(id).content());
+    JsonDocument doc = bucket.get(id);
+    if (doc == null) {
+      throw new Exception();
+    } else {
+      return new User(doc.content());
+    }
   }
 
 
   /** Get User by Google ID (optional) **/
-  public Optional<User> getUserByGoogleId(String googleID) {
-    try {
-      User.GoogleIdToUser idToUser = new User.GoogleIdToUser(bucket.get(googleID).content());
+  public Optional<User> getUserByGoogleId(String googleId) {
+    JsonDocument doc = bucket.get(googleId);
+    if (doc == null) {
+      return Optional.empty();
+    } else {
+      User.GoogleIdToUser idToUser = new User.GoogleIdToUser(doc.content());
       User user = new User(bucket.get(idToUser.getUserId()).content());
       return Optional.of(user);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return Optional.empty();
     }
   }
 

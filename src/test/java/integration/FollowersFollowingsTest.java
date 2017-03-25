@@ -1,6 +1,5 @@
 package integration;
 
-import lombok.Cleanup;
 import lombok.Getter;
 import org.codehaus.jackson.JsonNode;
 import org.junit.After;
@@ -13,11 +12,9 @@ import podcast.models.entities.Follower;
 import podcast.models.entities.User;
 import podcast.services.FollowersFollowingsService;
 import podcast.utils.Constants;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.Assert.*;
 
 /** Followers-followings tests **/
@@ -62,9 +59,9 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
         continue;
       }
 
-      JsonNode respose = mvcResultAsJson(
+      JsonNode response = mvcResultAsJson(
         getMockMvc()
-        .perform(MockMvcRequestBuilders.post("/api/v1/followings/?id=" + u.getId())
+        .perform(MockMvcRequestBuilders.post("/api/v1/followings/" + u.getId())
           .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
         .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
       );
@@ -77,9 +74,9 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
    */
   @Test
   public void getMyFollowings() throws Exception {
-    JsonNode respose = mvcResultAsJson(
+    JsonNode response = mvcResultAsJson(
         getMockMvc()
-            .perform(MockMvcRequestBuilders.get("/api/v1/followings/me")
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/show?id=me")
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
     );
@@ -91,9 +88,9 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
    */
   @Test
   public void getFollowings() throws Exception {
-    JsonNode respose = mvcResultAsJson(
+    JsonNode response = mvcResultAsJson(
         getMockMvc()
-            .perform(MockMvcRequestBuilders.get("/api/v1/followings/"+notMeId())
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/show?id=" + notMeId())
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
     );
@@ -105,9 +102,9 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
    */
   @Test
   public void getMyFollowers() throws Exception {
-    JsonNode respose = mvcResultAsJson(
+    JsonNode response = mvcResultAsJson(
         getMockMvc()
-            .perform(MockMvcRequestBuilders.get("/api/v1/followings/me")
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/show?id=me")
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
     );
@@ -119,9 +116,9 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
    */
   @Test
   public void getFollowers() throws Exception {
-    JsonNode respose = mvcResultAsJson(
+    JsonNode response = mvcResultAsJson(
         getMockMvc()
-            .perform(MockMvcRequestBuilders.get("/api/v1/followings/"+notMeId())
+            .perform(MockMvcRequestBuilders.get("/api/v1/followings/show?id=" + notMeId())
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
             .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
     );
@@ -139,9 +136,9 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
         continue;
       }
 
-      JsonNode respose = mvcResultAsJson(
+      JsonNode response = mvcResultAsJson(
           getMockMvc()
-              .perform(MockMvcRequestBuilders.delete("/api/v1/followings/?id=" + u.getId())
+              .perform(MockMvcRequestBuilders.delete("/api/v1/followings/" + u.getId())
                   .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
               .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
       );
