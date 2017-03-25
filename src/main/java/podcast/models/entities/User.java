@@ -123,7 +123,21 @@ public class User extends Entity {
     if (getGoogleId() != null) {
       docs.add(JsonDocument.create(getGoogleId(), makeGoogleIdToUser().toJsonObject()));
     }
+    // TODO check fb
     return docs;
+  }
+
+
+  /** Keys **/
+  public List<String> keys() {
+    List<String> keys = new ArrayList<String>();
+    keys.add(getId());
+    keys.add(getUsername());
+    if (getGoogleId() != null) {
+      keys.add(getGoogleId());
+    }
+    // TODO check fb
+    return keys;
   }
 
 

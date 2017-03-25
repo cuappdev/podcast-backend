@@ -49,6 +49,30 @@ public class UsersRepo {
   }
 
 
+  /** Remove User by ID (+ return the user just deleted) **/
+  public void removeUserById(String id) throws Exception {
+    JsonDocument doc = bucket.get(id);
+    if (doc == null) {
+      throw new Exception("This user does not exist");
+    }
+
+    User user = new User(doc.content());
+    List<String> keys = user.keys();
+    // Remove them batch-wise
+    Observable
+      .from(keys)
+      .flatMap(new Func1<String, Observable<?>>() {
+        @Override
+        public Observable<?> call(String s) {
+          return bucket.async().remove(s);
+        }
+      })
+      .last()
+      .toBlocking()
+      .single();
+  }
+
+
   /** Checks to see if this username is available **/
   public boolean usernameAvailable(String username) {
     JsonDocument doc = bucket.get(username);
@@ -88,14 +112,6 @@ public class UsersRepo {
       User user = new User(bucket.get(idToUser.getUserId()).content());
       return Optional.of(user);
     }
-  }
-
-
-  /** Remove User by ID (+ return the user just deleted) **/
-  public void removeUserById(String id) throws Exception {
-    User user = new User(bucket.get(id).content());
-    // TODO - remove all the lookup entities of the user too
-    // TODO - remove traces of the user in other parts of the DB
   }
 
 
