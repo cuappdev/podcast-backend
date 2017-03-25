@@ -38,7 +38,7 @@ public abstract class FollowRelationship extends Entity{
    */
   public JsonObject toJsonObject() {
     return JsonObject.create()
-      .put(TYPE, type.toString())
+      .put(TYPE, type)
       .put(OWNER_ID, ownerId)
       .put(ID, id)
       .put(FIRST_NAME, firstName)

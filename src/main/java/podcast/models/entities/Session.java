@@ -72,7 +72,7 @@ public class Session extends Entity {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
-    result.put(TYPE, type.toString());
+    result.put(TYPE, type);
     result.put(SESSION_TOKEN, sessionToken);
     result.put(EXPIRES_AT, expiresAt.getTime() / 1000); // Store long -> unix time
     result.put(UPDATE_TOKEN, updateToken);

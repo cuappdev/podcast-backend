@@ -76,7 +76,7 @@ public class User extends Entity {
    */
   public JsonObject toJsonObject() {
     JsonObject result = JsonObject.create();
-    result.put(TYPE, type.toString());
+    result.put(TYPE, type);
     result.put(ID, id);
     result.put(GOOGLE_ID, googleId);
     result.put(EMAIL, email);
@@ -99,6 +99,10 @@ public class User extends Entity {
     this.username = username;
   }
 
+  /** Make GoogleIdToUser lookup entity **/
+  public GoogleIdToUser makeGoogleIdToUser() {
+    return new GoogleIdToUser();
+  }
 
   /** Thrown when the username is not valid **/
   public static class InvalidUsernameException extends Exception {
@@ -107,4 +111,60 @@ public class User extends Entity {
     }
   }
 
+
+  /**
+   * Various types that can be used to lookup entities in the DB
+   */
+  public static enum UserLookupType {
+    GOOGLE_ID_TO_USER,
+    FACEBOOK_ID_TO_USER
+    // TODO - More?
+  }
+
+
+  /**
+   * Entity articulating the pairing of a
+   * GoogleId to a User
+   */
+  public class GoogleIdToUser extends Entity {
+
+    @Getter private UserLookupType type = UserLookupType.GOOGLE_ID_TO_USER;
+    @Getter private String googleId;
+    @Getter private String userId;
+
+    /** Constructor from outer class **/
+    private GoogleIdToUser() {
+      this.googleId = User.this.getGoogleId();
+      this.userId = User.this.getId();
+    }
+
+    /** Constructor from JsonObject **/
+    public GoogleIdToUser(JsonObject object) {
+      this.googleId = object.getString(GOOGLE_ID);
+      this.userId = object.getString(USER_ID);
+    }
+
+    /** See {@link Entity#toJsonObject()} **/
+    public JsonObject toJsonObject() {
+      return JsonObject.create()
+        .put(TYPE, type)
+        .put(GOOGLE_ID, googleId)
+        .put(USER_ID, userId);
+    }
+  }
+
+
+  /**
+   * Entity articulating the pairing of a
+   * FacebookId to a User
+   */
+  public class FacebookIdToUser extends Entity {
+    /** See {@link Entity#toJsonObject()} **/
+    public JsonObject toJsonObject() {
+      // TODO
+      return JsonObject.create();
+    }
+  }
+
+  
 }

@@ -52,16 +52,16 @@ public class StartupPreparations implements InitializingBean {
   private void ensureIndexes() throws Exception {
     // User indexes
     ArrayList<String> usersIndexes =
-      new ArrayList<String>(Arrays.asList("def_googleId", "def_firstName", "def_lastName", "def_username"));
+      new ArrayList<String>(Arrays.asList("def_type", "def_googleId", "def_firstName", "def_lastName", "def_username"));
     ensureBucketIndexes(usersBucket, usersIndexes);
 
     // Podcast indexes
     ArrayList<String> podcastIndexes =
-      new ArrayList<String>(Arrays.asList("def_title", "def_seriesTitle", "def_type"));
+      new ArrayList<String>(Arrays.asList("def_type", "def_title", "def_seriesTitle", "def_type"));
     ensureBucketIndexes(podcastsBucket, podcastIndexes);
 
     ArrayList<String> followersfollowingsIndexes =
-        new ArrayList<String>(Arrays.asList("def_ownerId", "def_type"));
+        new ArrayList<String>(Arrays.asList("def_type", "def_ownerId", "def_type"));
     ensureBucketIndexes(followersfollowingsBucket, followersfollowingsIndexes);
 
     // -- More buckets

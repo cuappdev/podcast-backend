@@ -53,6 +53,7 @@ public class Constants {
   public static final String CREATED_AT = "createdAt";
   public static final String DELETED_FOLLOWING = "deletedFollowing";
   public static final String SUBSCRIPTION = "subscription";
+  public static final String USER_ID = "userId";
   // TODO - more
 
   public static final String AUTHORIZATION = "Authorization";
@@ -76,24 +77,5 @@ public class Constants {
     RELEASE,
     RECOMMENDATION,
     SUBSCRIPTION;
-
-    /** Properly format for storage in Couchbase **/
-    @Override
-    public String toString() {
-      switch (this) {
-        case USER: return Constants.USER;
-        case SESSION: return Constants.SESSION;
-        case EPISODE: return Constants.EPISODE;
-        case SERIES: return Constants.SERIES;
-        case FOLLOWER: return Constants.FOLLOWER;
-        case FOLLOWING: return Constants.FOLLOWING;
-        case RELEASE: return Constants.RELEASE;
-        case RECOMMENDATION: return Constants.RECOMMENDATION;
-        case SUBSCRIPTION: return Constants.SUBSCRIPTION;
-        default: throw new IllegalArgumentException();
-      }
-    }
   }
-
-
 }
