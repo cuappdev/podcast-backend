@@ -1,10 +1,13 @@
 package podcast.models.entities;
 
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.fasterxml.uuid.Generators;
 import lombok.Getter;
 import lombok.Setter;
 import org.codehaus.jackson.JsonNode;
+import java.util.ArrayList;
+import java.util.List;
 import static podcast.utils.Constants.*;
 
 /**
@@ -99,10 +102,30 @@ public class User extends Entity {
     this.username = username;
   }
 
+
   /** Make GoogleIdToUser lookup entity **/
   public GoogleIdToUser makeGoogleIdToUser() {
-    return new GoogleIdToUser();
+    return new GoogleIdToUser(getGoogleId(), getId());
   }
+
+
+  /** Make UsernameToUser lookup entity **/
+  public UsernameToUser makeUsernameToUser() {
+    return new UsernameToUser(getUsername(), getId());
+  }
+
+
+  /** User documents to be inserted **/
+  public List<JsonDocument> docs() {
+    List<JsonDocument> docs = new ArrayList<JsonDocument>();
+    docs.add(JsonDocument.create(getId(), toJsonObject()));
+    docs.add(JsonDocument.create(getUsername(), makeUsernameToUser().toJsonObject()));
+    if (getGoogleId() != null) {
+      docs.add(JsonDocument.create(getGoogleId(), makeGoogleIdToUser().toJsonObject()));
+    }
+    return docs;
+  }
+
 
   /** Thrown when the username is not valid **/
   public static class InvalidUsernameException extends Exception {
@@ -112,30 +135,69 @@ public class User extends Entity {
   }
 
 
+  /** Thrown when the username is taken **/
+  public static class UsernameTakenException extends Exception {
+    public UsernameTakenException() {
+      super("This username is taken, please choose another one");
+    }
+  }
+
+
   /**
    * Various types that can be used to lookup entities in the DB
    */
   public static enum UserLookupType {
+    USERNAME_TO_USER,
     GOOGLE_ID_TO_USER,
     FACEBOOK_ID_TO_USER
     // TODO - More?
   }
 
+  /**
+   * Entity articulating the pairing of a
+   * Username to a User
+   */
+  public static class UsernameToUser extends Entity {
+
+    @Getter private UserLookupType type = UserLookupType.USERNAME_TO_USER;
+    @Getter private String username;
+    @Getter private String userId;
+
+    /** Constructor **/
+    private UsernameToUser(String username, String userId) {
+      this.username = username.toLowerCase();
+      this.userId = userId;
+    }
+
+    /** Constructor from JsonObject **/
+    public UsernameToUser(JsonObject object) {
+      this.username = object.getString(USERNAME);
+      this.userId = object.getString(USER_ID);
+    }
+
+    /** See {@link Entity#toJsonObject()} **/
+    public JsonObject toJsonObject() {
+      return JsonObject.create()
+        .put(TYPE, type)
+        .put(USERNAME, username)
+        .put(USER_ID, userId);
+    }
+  }
 
   /**
    * Entity articulating the pairing of a
    * GoogleId to a User
    */
-  public class GoogleIdToUser extends Entity {
+  public static class GoogleIdToUser extends Entity {
 
     @Getter private UserLookupType type = UserLookupType.GOOGLE_ID_TO_USER;
     @Getter private String googleId;
     @Getter private String userId;
 
-    /** Constructor from outer class **/
-    private GoogleIdToUser() {
-      this.googleId = User.this.getGoogleId();
-      this.userId = User.this.getId();
+    /** Constructor **/
+    private GoogleIdToUser(String googleId, String userId) {
+      this.googleId = googleId;
+      this.userId = userId;
     }
 
     /** Constructor from JsonObject **/
@@ -153,12 +215,11 @@ public class User extends Entity {
     }
   }
 
-
   /**
    * Entity articulating the pairing of a
    * FacebookId to a User
    */
-  public class FacebookIdToUser extends Entity {
+  public static class FacebookIdToUser extends Entity {
     /** See {@link Entity#toJsonObject()} **/
     public JsonObject toJsonObject() {
       // TODO
@@ -166,5 +227,4 @@ public class User extends Entity {
     }
   }
 
-  
 }
