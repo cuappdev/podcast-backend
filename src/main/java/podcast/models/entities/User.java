@@ -163,8 +163,14 @@ public class User extends Entity {
   public static enum UserLookupType {
     USERNAME_TO_USER,
     GOOGLE_ID_TO_USER,
-    FACEBOOK_ID_TO_USER
+    FACEBOOK_ID_TO_USER;
     // TODO - More?
+
+    @Override
+    public String toString() {
+      return super.toString().toLowerCase();
+    }
+
   }
 
   /**

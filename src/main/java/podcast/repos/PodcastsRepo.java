@@ -27,7 +27,8 @@ public class PodcastsRepo {
 
   /** Get series by id **/
   public Series getSeries(Long seriesId) {
-    return new Series(bucket.get("TODO should fix this to actually get a Series from the bucket").content());
+    // TODO
+    return null;
   }
 
 }

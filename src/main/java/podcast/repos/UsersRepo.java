@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import podcast.models.entities.User;
 import rx.Observable;
-import rx.functions.Func1;
 import java.util.List;
 import java.util.Optional;
 import static com.couchbase.client.java.query.Select.select;
@@ -23,8 +22,8 @@ public class UsersRepo {
   private Bucket bucket;
 
   @Autowired
-  public UsersRepo(@Qualifier("usersBucket") Bucket usersBucket) {
-    this.bucket = usersBucket;
+  public UsersRepo(@Qualifier("dbBucket") Bucket dbBucket) {
+    this.bucket = dbBucket;
   }
 
 
@@ -35,12 +34,7 @@ public class UsersRepo {
     // Insert them in one batch, waiting until the last one is done
     Observable
       .from(docs)
-      .flatMap(new Func1<JsonDocument, Observable<?>>() {
-        @Override
-        public Observable<?> call(JsonDocument jsonDocument) {
-          return bucket.async().upsert(jsonDocument);
-        }
-      })
+      .flatMap(jsonDocument -> bucket.async().upsert(jsonDocument))
       .last()
       .toBlocking()
       .single();
@@ -61,12 +55,7 @@ public class UsersRepo {
     // Remove them batch-wise
     Observable
       .from(keys)
-      .flatMap(new Func1<String, Observable<?>>() {
-        @Override
-        public Observable<?> call(String s) {
-          return bucket.async().remove(s);
-        }
-      })
+      .flatMap(s -> bucket.async().remove(s))
       .last()
       .toBlocking()
       .single();
@@ -120,7 +109,7 @@ public class UsersRepo {
     int amount = up ? 1 : -1;
 
     N1qlQuery q = N1qlQuery.simple(
-      select("numberFollowers").from("`" + USERS + "`").where(
+      select("numberFollowers").from("`" + DB + "`").where(
         (x(ID).eq(s(id)))
       )
     );
@@ -129,9 +118,10 @@ public class UsersRepo {
     if (rows.size() == 0) {
       return false;
     } else {
-      int followers = new User(rows.get(0).value().getObject(USERS)).getNumberFollowers();
+      int followers = new User(rows.get(0).value().getObject(DB)).getNumberFollowers();
       N1qlQuery q1 = N1qlQuery.simple(
-          "SET numberFollowers=" + (followers + amount) + "FOR u IN users WHEN u.id='" + id + "'"
+          "SET numberFollowers=" + (followers + amount) + "FOR u IN `" + DB +
+            "`s WHEN u.id='" + id + "'"
       );
       return true;
     }
@@ -143,7 +133,7 @@ public class UsersRepo {
     int amount = up ? 1 : -1;
 
     N1qlQuery q = N1qlQuery.simple(
-        select("numberFollowings").from("`" + USERS + "`").where(
+        select("numberFollowings").from("`" + DB + "`").where(
             (x(ID).eq(s(id)))
         )
     );
@@ -153,9 +143,10 @@ public class UsersRepo {
       return false;
     }
     else {
-      int followings = new User(rows.get(0).value().getObject(USERS)).getNumberFollowing();
+      int followings = new User(rows.get(0).value().getObject(DB)).getNumberFollowing();
       N1qlQuery q1 = N1qlQuery.simple(
-          "SET numberFollowings="+(followings + amount)+"FOR u IN users WHEN u.id='"+id+"'"
+          "SET numberFollowings="+(followings + amount)+"FOR u IN `" + DB +
+            "` WHEN u.id='" + id + "'"
       );
       return true;
     }

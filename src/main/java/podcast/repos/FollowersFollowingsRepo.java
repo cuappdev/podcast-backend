@@ -24,6 +24,10 @@ public class FollowersFollowingsRepo {
   /* Connection to DB */
   private Bucket bucket;
 
+  @Autowired
+  public FollowersFollowingsRepo(@Qualifier("dbBucket") Bucket dbBucket) {
+    this.bucket = dbBucket;
+  }
 
   /** Given id's and following relationship type, compose key **/
   private String composeKey(String ownerId, String corrId, Type type) {
@@ -44,12 +48,6 @@ public class FollowersFollowingsRepo {
   }
 
 
-  @Autowired
-  public FollowersFollowingsRepo(@Qualifier("followersfollowingsBucket") Bucket followersfollowingsBucket) {
-    this.bucket = followersfollowingsBucket;
-  }
-
-
   /** Creates a following from user A to B. Also creates a follower from B to A. **/
   public Following storeFollowing(Following following, User owner, User followed) {
     Follower follower = new Follower(followed, owner);
@@ -64,9 +62,10 @@ public class FollowersFollowingsRepo {
   /** Get followers of a user (identified by ownerId) **/
   public Optional<List<Follower>> getUserFollowers(String ownerId) {
     N1qlQuery q = N1qlQuery.simple(
-      select("*").from("`" + FOLLOWERS_FOLLOWINGS + "`")
+      select("*").from("`" + DB + "`")
       .where(
-        (x(OWNER_ID).eq(s(ownerId)))
+        (x(TYPE)).eq(s(FOLLOWER))
+        .and(x(OWNER_ID).eq(s(ownerId)))
         .and(x(TYPE).eq(s(FOLLOWER)))
       )
     );
@@ -79,7 +78,7 @@ public class FollowersFollowingsRepo {
 
     return Optional.of(
       rows.stream()
-        .map(r -> new Follower(r.value().getObject(FOLLOWERS_FOLLOWINGS))).collect(Collectors.toList())
+        .map(r -> new Follower(r.value().getObject(DB))).collect(Collectors.toList())
     );
   }
 
@@ -87,9 +86,10 @@ public class FollowersFollowingsRepo {
   /** Get followings of a user (identified by ownerId) **/
   public Optional<List<Following>> getUserFollowings(String ownerId) {
     N1qlQuery q = N1qlQuery.simple(
-      select("*").from("`" + FOLLOWERS_FOLLOWINGS + "`")
+      select("*").from("`" + DB + "`")
       .where(
-        (x(OWNER_ID).eq(s(ownerId)))
+        (x(TYPE).eq(s(FOLLOWING)))
+        .and(x(OWNER_ID).eq(s(ownerId)))
         .and(x(TYPE).eq(s(FOLLOWING)))
       )
     );
@@ -102,7 +102,7 @@ public class FollowersFollowingsRepo {
 
     return Optional.of(
       rows.stream()
-        .map(r -> new Following(r.value().getObject(FOLLOWERS_FOLLOWINGS))).collect(Collectors.toList())
+        .map(r -> new Following(r.value().getObject(DB))).collect(Collectors.toList())
     );
   }
 

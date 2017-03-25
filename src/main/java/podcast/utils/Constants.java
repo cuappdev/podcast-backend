@@ -3,9 +3,8 @@ package podcast.utils;
 public class Constants {
 
   /* BUCKET NAMES */
-  public static final String USERS = System.getenv("USERS_BUCKET_NAME");
+  public static final String DB = System.getenv("DB_BUCKET_NAME");
   public static final String PODCASTS = System.getenv("PODCASTS_BUCKET_NAME");
-  public static final String FOLLOWERS_FOLLOWINGS = System.getenv("FOLLOWERS_FOLLOWINGS_BUCKET_NAME");
 
   /* RESOURCE NAMES */
   public static final String USER = "user";
@@ -77,5 +76,10 @@ public class Constants {
     RELEASE,
     RECOMMENDATION,
     SUBSCRIPTION;
+
+    @Override
+    public String toString() {
+      return super.toString().toLowerCase();
+    }
   }
 }
