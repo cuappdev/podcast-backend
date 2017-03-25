@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import podcast.models.entities.Follower;
+import podcast.models.entities.Following;
 import podcast.models.entities.User;
 import podcast.services.FollowersFollowingsService;
 import podcast.utils.Constants;
@@ -96,7 +97,6 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   @Test
   public void deleteFollowings() throws Exception {
     followEveryone();
-    
     for (User u : getMockUsers()) {
       // If it's me, don't follow myself
       if (u.getSession().getSessionToken().equals(getSession())) {
@@ -116,12 +116,10 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   public void cleanup() throws Exception {
     // Clean up followings (try-catch b/c they might not exist)
     for (User u : getMockUsers()) {
-      List<Follower> followers = ffService.getUserFollowers(u.getId());
-      for (Follower f : followers) {
+      for (User u1 : getMockUsers()) {
         try {
-          ffService.deleteFollowing(u, f.getId());
+          ffService.deleteFollowing(u, u1.getId());
         } catch (Exception e) {
-
         }
       }
     }
