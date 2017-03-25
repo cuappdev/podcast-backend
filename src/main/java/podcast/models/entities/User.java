@@ -103,6 +103,30 @@ public class User extends Entity {
   }
 
 
+  /** Increment followers **/
+  public void incrementFollowers() {
+    numberFollowers += 1;
+  }
+
+
+  /** Increment followings **/
+  public void incrementFollowings() {
+    numberFollowing += 1;
+  }
+
+
+  /** Decrement followers **/
+  public void decrementFollowers() {
+    numberFollowers -= 1;
+  }
+
+
+  /** Decrement followings **/
+  public void decrementFollowings() {
+    numberFollowing -= 1;
+  }
+
+
   /** Make GoogleIdToUser lookup entity **/
   public GoogleIdToUser makeGoogleIdToUser() {
     return new GoogleIdToUser(getGoogleId(), getId());

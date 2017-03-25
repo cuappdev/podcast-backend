@@ -49,7 +49,7 @@ public class Episode extends Podcast {
 
   /** Establishes a UUID for episodes for client **/
   public String getId() {
-    return String.format("%s:%s", getSeriesId(), getPubDate());
+    return String.format("%s:%s", getSeriesId(), getPubDate().getTime());
   }
 
 }

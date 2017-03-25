@@ -11,6 +11,8 @@ import podcast.models.entities.FollowRelationship;
 import podcast.models.entities.Follower;
 import podcast.models.entities.Following;
 import podcast.models.entities.User;
+import rx.Observable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,18 +32,28 @@ public class FollowersFollowingsRepo {
   }
 
   /** Creates a following from user A to B. Also creates a follower from B to A. **/
-  public Following storeFollowing(Following following, User owner, User followed) {
+  public Following storeFollowing(Following following, User owner, User followed) throws Exception {
     Follower follower = new Follower(followed, owner);
-    JsonDocument followingDoc = following.toJsonDocument();
-    JsonDocument followerDoc = follower.toJsonDocument();
-    bucket.upsert(followingDoc);
-    bucket.upsert(followerDoc);
+    owner.incrementFollowings();
+    followed.incrementFollowers();
+    List<JsonDocument> docs = Arrays.asList(
+      following.toJsonDocument(),
+      follower.toJsonDocument(),
+      owner.toJsonDocument(),
+      followed.toJsonDocument()
+    );
+    Observable
+      .from(docs)
+      .flatMap(d -> bucket.async().upsert(d))
+      .last()
+      .toBlocking()
+      .single();
     return following;
   }
 
 
   /** Get followers of a user (identified by ownerId) **/
-  public Optional<List<Follower>> getUserFollowers(String ownerId) {
+  public List<Follower> getUserFollowers(String ownerId) throws Exception {
     N1qlQuery q = N1qlQuery.simple(
       select("*").from("`" + DB + "`")
       .where(
@@ -52,20 +64,13 @@ public class FollowersFollowingsRepo {
     );
 
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
-
-    if (rows.size() == 0) {
-      return Optional.empty();
-    }
-
-    return Optional.of(
-      rows.stream()
-        .map(r -> new Follower(r.value().getObject(DB))).collect(Collectors.toList())
-    );
+    return rows.stream()
+      .map(r -> new Follower(r.value().getObject(DB))).collect(Collectors.toList());
   }
 
 
   /** Get followings of a user (identified by ownerId) **/
-  public Optional<List<Following>> getUserFollowings(String ownerId) {
+  public List<Following> getUserFollowings(String ownerId) throws Exception {
     N1qlQuery q = N1qlQuery.simple(
       select("*").from("`" + DB + "`")
       .where(
@@ -76,38 +81,47 @@ public class FollowersFollowingsRepo {
     );
 
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
-
-    if (rows.size() == 0) {
-      return Optional.empty();
-    }
-
-    return Optional.of(
-      rows.stream()
-        .map(r -> new Following(r.value().getObject(DB))).collect(Collectors.toList())
-    );
+    return rows.stream()
+      .map(r -> new Following(r.value().getObject(DB))).collect(Collectors.toList());
   }
 
 
   /** Get following by users **/
   public Optional<Following> getFollowingByUsers(User owner, User followed) {
-    try {
-      return Optional.of(
-        new Following(bucket.get(FollowRelationship.composeKey(owner, followed, Type.FOLLOWING)).content()));
-    } catch (Exception e) {
+    JsonDocument doc = bucket.get(FollowRelationship.composeKey(owner, followed, Type.FOLLOWING));
+    if (doc == null) {
       return Optional.empty();
+    } else {
+      return Optional.of(new Following(doc.content()));
     }
   }
 
 
   /** Delete following (A following B, B's follower A) **/
-  public boolean deleteFollowing(Following following) {
-    try {
-      bucket.remove(FollowRelationship.composeKey(following.getOwnerId(), following.getId(), Type.FOLLOWING));
-      bucket.remove(FollowRelationship.composeKey(following.getId(), following.getOwnerId(), Type.FOLLOWER));
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+  public boolean deleteFollowing(Following following, User owner, User followed) throws Exception {
+    // Augment the users as such
+    owner.decrementFollowings();
+    followed.incrementFollowers();
+    // Bach remove + update of users
+    List<Object> keys = Arrays.asList(
+      FollowRelationship.composeKey(following.getOwnerId(), following.getId(), Type.FOLLOWING),
+      FollowRelationship.composeKey(following.getId(), following.getOwnerId(), Type.FOLLOWER),
+      owner.toJsonDocument(),
+      followed.toJsonDocument()
+    );
+    Observable
+      .from(keys)
+      .flatMap(x -> {
+        if (x instanceof String) {
+          return bucket.async().remove((String) x);
+        } else { // If it's a JsonDocument
+          return bucket.async().upsert((JsonDocument) x);
+        }
+      })
+      .last()
+      .toBlocking()
+      .single();
+    return true;
   }
 
 

@@ -10,9 +10,7 @@ import podcast.models.formats.Result;
 import podcast.models.formats.Success;
 import podcast.services.FollowersFollowingsService;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import static podcast.utils.Constants.*;
 
 @RestController
@@ -54,15 +52,14 @@ public class FollowingsController {
   @RequestMapping(method = RequestMethod.GET, value = "/show")
   public ResponseEntity<Result> getUserFollowings(HttpServletRequest request,
                                                   @RequestParam(value = "id") String id) {
-
+    /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
-    Optional<List<Following>> followings = id.equals("me") ?
-      ffService.getUserFollowings(user.getId()) :
-      ffService.getUserFollowings(id);
 
     try {
-      return ResponseEntity.status(200).body(
-        new Success(FOLLOWINGS, followings.orElse(new ArrayList<Following>())));
+      List<Following> followings = id.equals("me") ?
+        ffService.getUserFollowings(user.getId()) :
+        ffService.getUserFollowings(id);
+      return ResponseEntity.status(200).body(new Success(FOLLOWINGS, followings));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));

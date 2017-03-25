@@ -67,4 +67,11 @@ public abstract class FollowRelationship extends Entity {
     return composeKey(fr.getOwnerId(), fr.getId(), fr.getType());
   }
 
+  /** When the relationship is not found **/
+  public static class NonExistentFollowingException extends Exception {
+    public NonExistentFollowingException() {
+      super("No following relationship exists of this nature");
+    }
+  }
+
 }

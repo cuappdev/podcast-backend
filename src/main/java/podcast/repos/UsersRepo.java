@@ -2,8 +2,6 @@ package podcast.repos;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.query.N1qlQuery;
-import com.couchbase.client.java.query.N1qlQueryRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -11,9 +9,6 @@ import podcast.models.entities.User;
 import rx.Observable;
 import java.util.List;
 import java.util.Optional;
-import static com.couchbase.client.java.query.Select.select;
-import static com.couchbase.client.java.query.dsl.Expression.*;
-import static podcast.utils.Constants.*;
 
 @Component
 public class UsersRepo {
@@ -102,56 +97,5 @@ public class UsersRepo {
       return Optional.of(user);
     }
   }
-
-
-  /** Increments (if up == true) and decrements (if up == false) a user's follower count **/
-  public boolean incrementFollowerCount(String id, boolean up) throws Exception {
-    int amount = up ? 1 : -1;
-
-    N1qlQuery q = N1qlQuery.simple(
-      select("numberFollowers").from("`" + DB + "`").where(
-        (x(ID).eq(s(id)))
-      )
-    );
-
-    List<N1qlQueryRow> rows = bucket.query(q).allRows();
-    if (rows.size() == 0) {
-      return false;
-    } else {
-      int followers = new User(rows.get(0).value().getObject(DB)).getNumberFollowers();
-      N1qlQuery q1 = N1qlQuery.simple(
-          "SET numberFollowers=" + (followers + amount) + "FOR u IN `" + DB +
-            "`s WHEN u.id='" + id + "'"
-      );
-      return true;
-    }
-  }
-
-
-  /** Increments (if up == true) and decrements (if up == false) a user's following count **/
-  public boolean incrementFollowingCount(String id, boolean up) throws Exception {
-    int amount = up ? 1 : -1;
-
-    N1qlQuery q = N1qlQuery.simple(
-        select("numberFollowings").from("`" + DB + "`").where(
-            (x(ID).eq(s(id)))
-        )
-    );
-
-    List<N1qlQueryRow> rows = bucket.query(q).allRows();
-    if(rows.size() == 0) {
-      return false;
-    }
-    else {
-      int followings = new User(rows.get(0).value().getObject(DB)).getNumberFollowing();
-      N1qlQuery q1 = N1qlQuery.simple(
-          "SET numberFollowings="+(followings + amount)+"FOR u IN `" + DB +
-            "` WHEN u.id='" + id + "'"
-      );
-      return true;
-    }
-  }
-
-
 
 }
