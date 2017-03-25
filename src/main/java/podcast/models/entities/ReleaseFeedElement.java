@@ -1,6 +1,6 @@
 package podcast.models.entities;
 
-import com.couchbase.client.java.document.json.JsonObject;
+import com.couchbase.client.java.document.JsonDocument;
 import lombok.Getter;
 import podcast.utils.Constants;
 
@@ -22,9 +22,9 @@ public class ReleaseFeedElement extends FeedElement {
 
 
   /**
-   * See {@link Entity#toJsonObject()}
+   * See {@link Entity#toJsonDocument()}
    */
-  public JsonObject toJsonObject() {
+  public JsonDocument toJsonDocument() {
     // TODO
     return null;
   }

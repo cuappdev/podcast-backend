@@ -13,7 +13,7 @@ import static podcast.utils.Constants.*;
 /**
  * Session used to authenticate users on REST API calls
  */
-public class Session extends Entity {
+public class Session {
 
   /* Fields */
   @Getter private Type type = Type.SESSION;
@@ -67,9 +67,7 @@ public class Session extends Entity {
   }
 
 
-  /**
-   * See {@link Entity#toJsonObject()}
-   */
+  /** To JsonObject **/
   public JsonObject toJsonObject() {
     return JsonObject.create()
       .put(TYPE, type.toString())
@@ -77,5 +75,6 @@ public class Session extends Entity {
       .put(EXPIRES_AT, expiresAt.getTime() / 1000) // Store long -> unix time
       .put(UPDATE_TOKEN, updateToken);
   }
+
 
 }

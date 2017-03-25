@@ -29,30 +29,11 @@ public class FollowersFollowingsRepo {
     this.bucket = dbBucket;
   }
 
-  /** Given id's and following relationship type, compose key **/
-  private String composeKey(String ownerId, String corrId, Type type) {
-    return String.format("%s:%s:%s", ownerId, corrId, type.toString());
-  }
-
-
-  /** Given an owning user, a correspondent, and a following
-   * relationship type, compose key **/
-  private String composeKey(User owner, User correspondent, Type type) {
-    return composeKey(owner.getId(), correspondent.getId(), type);
-  }
-
-
-  /** Given a relationship, compose a key **/
-  private String composeKey(FollowRelationship fr) {
-    return composeKey(fr.getOwnerId(), fr.getId(), fr.getType());
-  }
-
-
   /** Creates a following from user A to B. Also creates a follower from B to A. **/
   public Following storeFollowing(Following following, User owner, User followed) {
     Follower follower = new Follower(followed, owner);
-    JsonDocument followingDoc = JsonDocument.create(composeKey(following), following.toJsonObject());
-    JsonDocument followerDoc = JsonDocument.create(composeKey(follower), follower.toJsonObject());
+    JsonDocument followingDoc = following.toJsonDocument();
+    JsonDocument followerDoc = follower.toJsonDocument();
     bucket.upsert(followingDoc);
     bucket.upsert(followerDoc);
     return following;
@@ -111,7 +92,7 @@ public class FollowersFollowingsRepo {
   public Optional<Following> getFollowingByUsers(User owner, User followed) {
     try {
       return Optional.of(
-        new Following(bucket.get(composeKey(owner, followed, Type.FOLLOWING)).content()));
+        new Following(bucket.get(FollowRelationship.composeKey(owner, followed, Type.FOLLOWING)).content()));
     } catch (Exception e) {
       return Optional.empty();
     }
@@ -121,8 +102,8 @@ public class FollowersFollowingsRepo {
   /** Delete following (A following B, B's follower A) **/
   public boolean deleteFollowing(Following following) {
     try {
-      bucket.remove(composeKey(following.getOwnerId(), following.getId(), Type.FOLLOWING));
-      bucket.remove(composeKey(following.getId(), following.getOwnerId(), Type.FOLLOWER));
+      bucket.remove(FollowRelationship.composeKey(following.getOwnerId(), following.getId(), Type.FOLLOWING));
+      bucket.remove(FollowRelationship.composeKey(following.getId(), following.getOwnerId(), Type.FOLLOWER));
       return true;
     } catch (Exception e) {
       return false;

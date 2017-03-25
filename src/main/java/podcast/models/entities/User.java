@@ -75,22 +75,22 @@ public class User extends Entity {
 
 
   /**
-   * See {@link Entity#toJsonObject()}
+   * See {@link Entity#toJsonDocument()}
    */
-  public JsonObject toJsonObject() {
-    JsonObject result = JsonObject.create();
-    result.put(TYPE, type.toString());
-    result.put(ID, id);
-    result.put(GOOGLE_ID, googleId);
-    result.put(EMAIL, email);
-    result.put(FIRST_NAME, firstName);
-    result.put(LAST_NAME, lastName);
-    result.put(IMAGE_URL, imageUrl);
-    result.put(USERNAME, username);
-    result.put(SESSION, session.toJsonObject());
-    result.put(NUMBER_FOLLOWERS, numberFollowers);
-    result.put(NUMBER_FOLLOWING, numberFollowing);
-    return result;
+  public JsonDocument toJsonDocument() {
+    JsonObject object = JsonObject.create()
+      .put(TYPE, type.toString())
+      .put(ID, id)
+      .put(GOOGLE_ID, googleId)
+      .put(EMAIL, email)
+      .put(FIRST_NAME, firstName)
+      .put(LAST_NAME, lastName)
+      .put(IMAGE_URL, imageUrl)
+      .put(USERNAME, username)
+      .put(SESSION, session.toJsonObject())
+      .put(NUMBER_FOLLOWERS, numberFollowers)
+      .put(NUMBER_FOLLOWING, numberFollowing);
+    return JsonDocument.create(composeKey(this), object);
   }
 
 
@@ -118,10 +118,10 @@ public class User extends Entity {
   /** User documents to be inserted **/
   public List<JsonDocument> docs() {
     List<JsonDocument> docs = new ArrayList<JsonDocument>();
-    docs.add(JsonDocument.create(getId(), toJsonObject()));
-    docs.add(JsonDocument.create(getUsername(), makeUsernameToUser().toJsonObject()));
+    docs.add(toJsonDocument());
+    docs.add(makeUsernameToUser().toJsonDocument());
     if (getGoogleId() != null) {
-      docs.add(JsonDocument.create(getGoogleId(), makeGoogleIdToUser().toJsonObject()));
+      docs.add(makeGoogleIdToUser().toJsonDocument());
     }
     // TODO check fb
     return docs;
@@ -131,13 +131,19 @@ public class User extends Entity {
   /** Keys **/
   public List<String> keys() {
     List<String> keys = new ArrayList<String>();
-    keys.add(getId());
+    keys.add(composeKey(this));
     keys.add(getUsername());
     if (getGoogleId() != null) {
       keys.add(getGoogleId());
     }
     // TODO check fb
     return keys;
+  }
+
+
+  /** Compose key from user **/
+  public static String composeKey(User user) {
+    return user.getId();
   }
 
 
@@ -195,12 +201,13 @@ public class User extends Entity {
       this.userId = object.getString(USER_ID);
     }
 
-    /** See {@link Entity#toJsonObject()} **/
-    public JsonObject toJsonObject() {
-      return JsonObject.create()
+    /** See {@link Entity#toJsonDocument()} **/
+    public JsonDocument toJsonDocument() {
+      JsonObject object = JsonObject.create()
         .put(TYPE, type.toString())
         .put(USERNAME, username)
         .put(USER_ID, userId);
+      return JsonDocument.create(username, object);
     }
   }
 
@@ -226,12 +233,13 @@ public class User extends Entity {
       this.userId = object.getString(USER_ID);
     }
 
-    /** See {@link Entity#toJsonObject()} **/
-    public JsonObject toJsonObject() {
-      return JsonObject.create()
+    /** See {@link Entity#toJsonDocument()} **/
+    public JsonDocument toJsonDocument() {
+      JsonObject object = JsonObject.create()
         .put(TYPE, type.toString())
         .put(GOOGLE_ID, googleId)
         .put(USER_ID, userId);
+      return JsonDocument.create(googleId, object);
     }
   }
 
@@ -240,10 +248,17 @@ public class User extends Entity {
    * FacebookId to a User
    */
   public static class FacebookIdToUser extends Entity {
-    /** See {@link Entity#toJsonObject()} **/
-    public JsonObject toJsonObject() {
-      // TODO
-      return JsonObject.create();
+    @Getter private UserLookupType type = UserLookupType.FACEBOOK_ID_TO_USER;
+    @Getter private String facebookId;
+    @Getter private String userId;
+
+    /** See {@link Entity#toJsonDocument()} **/
+    public JsonDocument toJsonDocument() {
+      JsonObject object = JsonObject.create()
+        .put(TYPE, type.toString())
+        .put(FACEBOOK_ID, facebookId)
+        .put(USER_ID, userId);
+      return JsonDocument.create(facebookId, object);
     }
   }
 

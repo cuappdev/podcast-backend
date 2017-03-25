@@ -1,6 +1,6 @@
 package podcast.models.entities;
 
-import com.couchbase.client.java.document.json.JsonObject;
+import com.couchbase.client.java.document.JsonDocument;
 
 /**
  * An Entity stored in Couchbase
@@ -8,9 +8,9 @@ import com.couchbase.client.java.document.json.JsonObject;
 public abstract class Entity {
 
   /**
-   * Convert this into a JsonObject for storage in Couchbase
-   * @return - Couchbase JsonObject
+   * Convert this into a JsonDocument for storage in Couchbase
+   * @return - Couchbase JsonDocument
    */
-  public abstract JsonObject toJsonObject();
+  public abstract JsonDocument toJsonDocument();
 
 }

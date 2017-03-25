@@ -1,5 +1,6 @@
 package podcast.models.entities;
 
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import static podcast.utils.Constants.*;
 
@@ -24,6 +25,7 @@ public class Follower extends FollowRelationship {
       follower.getImageUrl());
   }
 
+  /** Constructor from JsonObject **/
   public Follower(JsonObject object) {
     super(
       Type.FOLLOWER,
@@ -34,6 +36,11 @@ public class Follower extends FollowRelationship {
       object.getString(USERNAME),
       object.getString(IMAGE_URL)
     );
+  }
+
+  /** See {@link Entity#toJsonDocument()} **/
+  public JsonDocument toJsonDocument() {
+    return super.toJsonDocument(composeKey(this));
   }
 
 }

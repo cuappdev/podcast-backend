@@ -53,6 +53,8 @@ public class Constants {
   public static final String DELETED_FOLLOWING = "deletedFollowing";
   public static final String SUBSCRIPTION = "subscription";
   public static final String USER_ID = "userId";
+  public static final String EPISODE_ID = "episodeId";
+  public static final String FACEBOOK_ID = "facebookId";
   // TODO - more
 
   public static final String AUTHORIZATION = "Authorization";
