@@ -59,7 +59,6 @@ public class FollowersFollowingsRepo {
       .where(
         (x(TYPE)).eq(s(FOLLOWER))
         .and(x(OWNER_ID).eq(s(ownerId)))
-        .and(x(TYPE).eq(s(FOLLOWER)))
       )
     );
 
@@ -76,7 +75,6 @@ public class FollowersFollowingsRepo {
       .where(
         (x(TYPE).eq(s(FOLLOWING)))
         .and(x(OWNER_ID).eq(s(ownerId)))
-        .and(x(TYPE).eq(s(FOLLOWING)))
       )
     );
 
@@ -88,7 +86,7 @@ public class FollowersFollowingsRepo {
 
   /** Get following by users **/
   public Optional<Following> getFollowingByUsers(User owner, User followed) {
-    JsonDocument doc = bucket.get(FollowRelationship.composeKey(owner, followed, Type.FOLLOWING));
+    JsonDocument doc = bucket.get(FollowRelationship.composeKey(owner, followed, Type.following));
     if (doc == null) {
       return Optional.empty();
     } else {
@@ -104,8 +102,8 @@ public class FollowersFollowingsRepo {
     followed.incrementFollowers();
     // Bach remove + update of users
     List<Object> keys = Arrays.asList(
-      FollowRelationship.composeKey(following.getOwnerId(), following.getId(), Type.FOLLOWING),
-      FollowRelationship.composeKey(following.getId(), following.getOwnerId(), Type.FOLLOWER),
+      FollowRelationship.composeKey(following.getOwnerId(), following.getId(), Type.following),
+      FollowRelationship.composeKey(following.getId(), following.getOwnerId(), Type.follower),
       owner.toJsonDocument(),
       followed.toJsonDocument()
     );

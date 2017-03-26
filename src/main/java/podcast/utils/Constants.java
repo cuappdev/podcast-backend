@@ -69,19 +69,15 @@ public class Constants {
 
   /** Types of various entities **/
   public static enum Type {
-    USER,
-    SESSION,
-    SERIES,
-    EPISODE,
-    FOLLOWER,
-    FOLLOWING,
-    RELEASE,
-    RECOMMENDATION,
-    SUBSCRIPTION;
-
-    @Override
-    public String toString() {
-      return super.toString().toLowerCase();
-    }
+    user,
+    session,
+    series,
+    episode,
+    follower,
+    following,
+    recommendation,
+    subscription,
+    recommendationElement,
+    releaseElement
   }
 }

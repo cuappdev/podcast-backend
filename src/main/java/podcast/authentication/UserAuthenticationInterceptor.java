@@ -83,7 +83,7 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
       }
 
       /* Check expiration date */
-      if (user.getSession().getExpiresAt().before(new Date())) {
+      if (new Date(user.getSession().getExpiresAt() * 1000).before(new Date())) {
         throw new ExpiredSessionException();
       }
 

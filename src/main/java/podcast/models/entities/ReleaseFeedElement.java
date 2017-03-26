@@ -9,7 +9,7 @@ import podcast.utils.Constants;
  */
 public class ReleaseFeedElement extends FeedElement {
 
-  @Getter private Constants.Type type = Constants.Type.RELEASE;
+  @Getter private Constants.Type type = Constants.Type.releaseElement;
   @Getter private Episode episode;
 
   /**

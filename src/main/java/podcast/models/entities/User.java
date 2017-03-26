@@ -15,7 +15,7 @@ import static podcast.utils.Constants.*;
  */
 public class User extends Entity {
 
-  @Getter private Type type = Type.USER;
+  @Getter private Type type = Type.user;
   @Getter private String id;
   @Getter private String googleId;
   @Getter private String email;
@@ -78,19 +78,7 @@ public class User extends Entity {
    * See {@link Entity#toJsonDocument()}
    */
   public JsonDocument toJsonDocument() {
-    JsonObject object = JsonObject.create()
-      .put(TYPE, type.toString())
-      .put(ID, id)
-      .put(GOOGLE_ID, googleId)
-      .put(EMAIL, email)
-      .put(FIRST_NAME, firstName)
-      .put(LAST_NAME, lastName)
-      .put(IMAGE_URL, imageUrl)
-      .put(USERNAME, username)
-      .put(SESSION, session.toJsonObject())
-      .put(NUMBER_FOLLOWERS, numberFollowers)
-      .put(NUMBER_FOLLOWING, numberFollowing);
-    return JsonDocument.create(composeKey(this), object);
+    return JsonDocument.create(composeKey(this), super.toJsonObject());
   }
 
 
@@ -191,15 +179,11 @@ public class User extends Entity {
    * Various types that can be used to lookup entities in the DB
    */
   public static enum UserLookupType {
-    USERNAME_TO_USER,
-    GOOGLE_ID_TO_USER,
-    FACEBOOK_ID_TO_USER;
+    usernameToUser,
+    googleIdToUser,
+    facebookIdToUser
     // TODO - More?
 
-    @Override
-    public String toString() {
-      return super.toString().toLowerCase();
-    }
 
   }
 
@@ -209,7 +193,7 @@ public class User extends Entity {
    */
   public static class UsernameToUser extends Entity {
 
-    @Getter private UserLookupType type = UserLookupType.USERNAME_TO_USER;
+    @Getter private UserLookupType type = UserLookupType.usernameToUser;
     @Getter private String username;
     @Getter private String userId;
 
@@ -227,11 +211,7 @@ public class User extends Entity {
 
     /** See {@link Entity#toJsonDocument()} **/
     public JsonDocument toJsonDocument() {
-      JsonObject object = JsonObject.create()
-        .put(TYPE, type.toString())
-        .put(USERNAME, username)
-        .put(USER_ID, userId);
-      return JsonDocument.create(username, object);
+      return JsonDocument.create(username, super.toJsonObject());
     }
   }
 
@@ -241,7 +221,7 @@ public class User extends Entity {
    */
   public static class GoogleIdToUser extends Entity {
 
-    @Getter private UserLookupType type = UserLookupType.GOOGLE_ID_TO_USER;
+    @Getter private UserLookupType type = UserLookupType.googleIdToUser;
     @Getter private String googleId;
     @Getter private String userId;
 
@@ -259,11 +239,7 @@ public class User extends Entity {
 
     /** See {@link Entity#toJsonDocument()} **/
     public JsonDocument toJsonDocument() {
-      JsonObject object = JsonObject.create()
-        .put(TYPE, type.toString())
-        .put(GOOGLE_ID, googleId)
-        .put(USER_ID, userId);
-      return JsonDocument.create(googleId, object);
+      return JsonDocument.create(googleId, super.toJsonObject());
     }
   }
 
@@ -272,17 +248,13 @@ public class User extends Entity {
    * FacebookId to a User
    */
   public static class FacebookIdToUser extends Entity {
-    @Getter private UserLookupType type = UserLookupType.FACEBOOK_ID_TO_USER;
+    @Getter private UserLookupType type = UserLookupType.facebookIdToUser;
     @Getter private String facebookId;
     @Getter private String userId;
 
     /** See {@link Entity#toJsonDocument()} **/
     public JsonDocument toJsonDocument() {
-      JsonObject object = JsonObject.create()
-        .put(TYPE, type.toString())
-        .put(FACEBOOK_ID, facebookId)
-        .put(USER_ID, userId);
-      return JsonDocument.create(facebookId, object);
+      return JsonDocument.create(facebookId, super.toJsonObject());
     }
   }
 

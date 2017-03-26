@@ -31,8 +31,7 @@ public class SessionsController {
 
   /** Update the session of a user + return the whole user **/
   @RequestMapping(method = RequestMethod.POST, value = "update")
-  public ResponseEntity<Result> updateSession(
-    @RequestHeader(value = "UpdateToken", required = true) String updatetoken) {
+  public ResponseEntity<Result> updateSession(@RequestHeader(value = "UpdateToken", required = true) String updatetoken) {
     try {
       User user = sessionsService.updateSession(updatetoken);
       return ResponseEntity.status(200).body(new Success(Constants.USER, user));

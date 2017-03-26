@@ -14,7 +14,7 @@ import static podcast.utils.Constants.*;
  */
 public class Recommendation extends Entity {
 
-  @Getter private Type type = Type.RECOMMENDATION;
+  @Getter private Type type = Type.recommendation;
   @Getter private String episodeId;
   @Getter private String seriesTitle;
   @Getter private String title;
@@ -57,16 +57,7 @@ public class Recommendation extends Entity {
    * See {@link Entity#toJsonDocument()}
    */
   public JsonDocument toJsonDocument() {
-    JsonObject object = JsonObject.create()
-      .put(TYPE, type.toString())
-      .put(EPISODE_ID, episodeId)
-      .put(SERIES_TITLE, seriesTitle)
-      .put(TITLE, title)
-      .put(IMAGE_URL_SM, imageUrlSm)
-      .put(IMAGE_URL_LG, imageUrlLg)
-      .put(USER, user)
-      .put(CREATED_AT, createdAt);
-    return JsonDocument.create(composeKey(this), object);
+    return JsonDocument.create(composeKey(this), super.toJsonObject());
   }
 
 

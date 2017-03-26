@@ -2,12 +2,15 @@ package podcast.models.entities;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+import org.codehaus.jackson.map.ObjectMapper;
 import podcast.models.utils.Crypto;
 import podcast.models.utils.TokenGenerator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
+
 import static podcast.utils.Constants.*;
 
 /**
@@ -16,9 +19,9 @@ import static podcast.utils.Constants.*;
 public class Session {
 
   /* Fields */
-  @Getter private Type type = Type.SESSION;
+  @Getter private Type type = Type.session;
   @Getter private String sessionToken;
-  @Getter private Date expiresAt;
+  @Getter private Long expiresAt;
   @Getter private String updateToken;
 
 
@@ -49,7 +52,7 @@ public class Session {
 
     /* Expires At */
     LocalDate nextWeek = LocalDate.now().plus(1, ChronoUnit.WEEKS);
-    this.expiresAt = java.sql.Date.valueOf(nextWeek);
+    this.expiresAt = java.sql.Date.valueOf(nextWeek).getTime() / 1000;
 
     /* Update Token */
     this.updateToken = Session.tokenFromUser(user);
@@ -62,18 +65,15 @@ public class Session {
    */
   public Session(JsonObject object) {
     this.sessionToken = object.getString(SESSION_TOKEN);
-    this.expiresAt = new Date(object.getLong(EXPIRES_AT) * 1000);
+    this.expiresAt = object.getLong(EXPIRES_AT);
     this.updateToken = object.getString(UPDATE_TOKEN);
   }
 
 
   /** To JsonObject **/
   public JsonObject toJsonObject() {
-    return JsonObject.create()
-      .put(TYPE, type.toString())
-      .put(SESSION_TOKEN, sessionToken)
-      .put(EXPIRES_AT, expiresAt.getTime() / 1000) // Store long -> unix time
-      .put(UPDATE_TOKEN, updateToken);
+    ObjectMapper mapper = new ObjectMapper();
+    return JsonObject.from(mapper.convertValue(this, Map.class));
   }
 
 

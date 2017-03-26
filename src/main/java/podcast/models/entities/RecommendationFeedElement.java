@@ -3,17 +3,15 @@ package podcast.models.entities;
 import com.couchbase.client.java.document.JsonDocument;
 import lombok.Getter;
 import podcast.utils.Constants;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Recommended podcast feed element
  */
 public class RecommendationFeedElement extends FeedElement {
 
-  @Getter private Constants.Type type = Constants.Type.RECOMMENDATION;
+  @Getter private Constants.Type type = Constants.Type.recommendationElement;
   @Getter private Episode episode;
   @Getter private List<User> users;
 
