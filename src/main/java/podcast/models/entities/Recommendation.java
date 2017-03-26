@@ -66,6 +66,4 @@ public class Recommendation extends Entity {
     return String.format("%s:%s:%s", r.getEpisodeId(), r.user.getId(), r.getType().toString());
   }
 
-  // TODO - maybe more compose keys
-
 }

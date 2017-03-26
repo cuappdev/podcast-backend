@@ -50,11 +50,12 @@ public class Constants {
   public static final String AUDIO_URL = "audioUrl";
   public static final String OWNER_ID = "ownerId";
   public static final String CREATED_AT = "createdAt";
-  public static final String DELETED_FOLLOWING = "deletedFollowing";
   public static final String SUBSCRIPTION = "subscription";
   public static final String USER_ID = "userId";
   public static final String EPISODE_ID = "episodeId";
   public static final String FACEBOOK_ID = "facebookId";
+  public static final String RECOMMENDATIONS = "recommendations";
+  public static final String SUBSCRIPTIONS = "subscriptions";
   // TODO - more
 
   public static final String AUTHORIZATION = "Authorization";

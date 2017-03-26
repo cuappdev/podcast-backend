@@ -21,10 +21,10 @@ CUAppDev's podcast app API documentation
               "session": {
                 "expiresAt": 1489636800000,
                 "sessionToken": "myLongSessionToken",
-                "type": "SESSION",
+                "type": "session",
                 "updateToken": "myLongUpdateToken"
               },
-              "type": "USER",
+              "type": "user",
               "username": "johndoe"
             },
             "newUser": true
@@ -58,10 +58,10 @@ CUAppDev's podcast app API documentation
               "session": {
                 "expiresAt": 1489636800000,
                 "sessionToken": "myLongSessionToken",
-                "type": "SESSION",
+                "type": "session",
                 "updateToken": "myLongUpdateToken"
               },
-              "type": "USER",
+              "type": "user",
               "username": "johnDoesNewUsername"
             }
           },
@@ -123,10 +123,10 @@ CUAppDev's podcast app API documentation
               "session": {
                 "expiresAt": 1489636800000,
                 "sessionToken": "myLongSessionToken",
-                "type": "SESSION",
+                "type": "session",
                 "updateToken": "myLongUpdateToken"
               },
-              "type": "USER",
+              "type": "user",
               "username": "johndoe"
             }
           },
@@ -134,8 +134,8 @@ CUAppDev's podcast app API documentation
         }
 
 # Group Followers Followings
-## Followings CRUD [/api/v1/followings?id={id}]
-### New Following [POST]
+## Followings CRUD [/api/v1/followings/{id}]
+### Create Following [POST]
 
 + Request
 
@@ -262,7 +262,7 @@ CUAppDev's podcast app API documentation
           "data": {
             "episodes": [
               {
-                "type": "EPISODE",
+                "type": "episode",
                 "seriesId": 1008577710,
                 "seriesTitle": "A Captivating Podcast Series",
                 "imageUrlSm": "https://goo.gl/L37gfS",
@@ -281,7 +281,7 @@ CUAppDev's podcast app API documentation
 
 
 ## Search Series [/api/v1/search/series/{query}?offset={offset}&max={max}]
-### Search Episodes [GET]
+### Search Series [GET]
 
 + Request
 
@@ -296,7 +296,7 @@ CUAppDev's podcast app API documentation
           "data": {
             "series": [
               {
-                "type": "SERIES",
+                "type": "series",
                 "id": 207698746,
                 "title": "Piazza, a Platform for Vengeance",
                 "country": "USA",
@@ -356,7 +356,7 @@ CUAppDev's podcast app API documentation
           "data": {
             "episodes": [
               {
-                "type": "EPISODE",
+                "type": "episode",
                 "seriesId": 1008577710,
                 "seriesTitle": "A Captivating Podcast Series",
                 "imageUrlSm": "https://goo.gl/L37gfS",
@@ -372,7 +372,7 @@ CUAppDev's podcast app API documentation
             ],
             "series": [
               {
-                "type": "SERIES",
+                "type": "series",
                 "id": 207698746,
                 "title": "Piazza, a Platform for Vengeance",
                 "country": "USA",

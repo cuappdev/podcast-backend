@@ -45,6 +45,36 @@ public class RecommendationsController {
   }
 
 
+  /** Get recommendations of an episode (paginated) **/
+  @RequestMapping(method = RequestMethod.GET, value = "/{episode_id}")
+  public ResponseEntity<Result> getRecommendations(HttpServletRequest request,
+                                                   @PathVariable("episode_id") String episodeId,
+                                                   @RequestParam("offset") Integer offset,
+                                                   @RequestParam("max") Integer max) {
+    /* Grab the user from the corresponding request */
+    User user = (User) request.getAttribute(USER);
+    try {
+      // TODO - grab the recommendations
+      return ResponseEntity.status(200).body(new Success(RECOMMENDATIONS, null));
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
 
+
+  /** Delete a recommendation **/
+  @RequestMapping(method = RequestMethod.DELETE, value = "/{episode_id}")
+  public ResponseEntity<Result> deleteRecommendation(HttpServletRequest request,
+                                                     @PathVariable("episode_id") String episodeId) {
+    /* Grab the user from the corresponding request */
+    User user = (User) request.getAttribute(USER);
+    try {
+      // TODO - grab the recommendation to delete
+      // DELETE IT
+      return ResponseEntity.status(200).body(new Success());
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
 
 }

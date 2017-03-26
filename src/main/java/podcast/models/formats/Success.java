@@ -12,6 +12,11 @@ public class Success extends Result {
   @Getter private HashMap<String, Object> data;
 
   /** Constructor **/
+  public Success() {
+    // Nothing
+  }
+
+  /** Constructor **/
   public Success(String key, Object value) {
     HashMap<String, Object> data = new HashMap<String, Object>();
     data.put(key, value);
