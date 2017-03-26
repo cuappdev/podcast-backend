@@ -26,7 +26,7 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   public void before() throws Exception {
     super.before();
     followEveryone();
-    TimeUnit.SECONDS.sleep(3);
+    TimeUnit.SECONDS.sleep(2);
   }
 
   private String notMeId() {

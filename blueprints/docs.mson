@@ -161,7 +161,8 @@ CUAppDev's podcast app API documentation
                 "pubDate": 1452080745,
                 "duration": "17:39",
                 "audioUrl": "An mp3 URL of some sort",
-                "tags": ["David", "Gries"]
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
               }
             ]
           }
@@ -308,7 +309,8 @@ CUAppDev's podcast app API documentation
                 "pubDate": 1452080745,
                 "duration": "17:39",
                 "audioUrl": "An mp3 URL of some sort",
-                "tags": ["David", "Gries"]
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
               }
             ]
           }
@@ -402,7 +404,8 @@ CUAppDev's podcast app API documentation
                 "pubDate": 1452080745,
                 "duration": "17:39",
                 "audioUrl": "An mp3 URL of some sort",
-                "tags": ["David", "Gries"]
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
               }
             ],
             "series": [
