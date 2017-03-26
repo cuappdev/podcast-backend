@@ -53,7 +53,6 @@ public class SearchTest extends BaseIntegrationTest {
           .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
         .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
     );
-    System.out.println(response);
   }
 
 

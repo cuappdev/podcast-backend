@@ -41,5 +41,8 @@ public class Series extends Podcast {
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }
 
+  public static class SeriesDoesNotExistException extends Exception {
+    public SeriesDoesNotExistException() { super("Series does not exist"); }
+  }
 
 }

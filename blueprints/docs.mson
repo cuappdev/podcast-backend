@@ -133,6 +133,41 @@ CUAppDev's podcast app API documentation
           "success": true
         }
 
+
+# Group Podcasts
+## Episodes by Series ID [/api/v1/podcasts/episodes/{series_id}?offset={offset}&max={max}]
+### Episodes by Series ID [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "episodes": [
+              {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"]
+              }
+            ]
+          }
+        }
+
+
 # Group Followers Followings
 ## Followings CRUD [/api/v1/followings/{id}]
 ### Create Following [POST]

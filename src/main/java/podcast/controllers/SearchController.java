@@ -13,6 +13,7 @@ import podcast.search.PodcastsSearch;
 import podcast.search.UsersSearch;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import static podcast.utils.Constants.*;
 
 /**
  * Search REST API controller
@@ -44,7 +45,7 @@ public class SearchController {
                                                @RequestParam(MAX) Integer max) {
     try {
       List<Episode> episodes = podcastsSearch.searchEpisodes(query, offset, max);
-      return ResponseEntity.status(200).body(new Success("episodes", episodes));
+      return ResponseEntity.status(200).body(new Success(EPISODES, episodes));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
@@ -60,7 +61,7 @@ public class SearchController {
                                              @RequestParam(MAX) Integer max) {
     try {
       List<Series> series = podcastsSearch.searchSeries(query, offset, max);
-      return ResponseEntity.status(200).body(new Success("series", series));
+      return ResponseEntity.status(200).body(new Success(SERIES, series));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
@@ -77,7 +78,7 @@ public class SearchController {
     try {
       List<Person> users = usersSearch.searchUsers(query, offset, max);
       return ResponseEntity.status(200)
-        .body(new Success("users", users));
+        .body(new Success(USERS, users));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
@@ -96,9 +97,9 @@ public class SearchController {
       List<Episode> episodes = podcastsSearch.searchEpisodes(query, offset, max);
       List<Person> users = usersSearch.searchUsers(query, offset, max);
       return ResponseEntity.status(200).body(
-        new Success("series", series)
-          .addField("episodes", episodes)
-          .addField("users", users)
+        new Success(SERIES, series)
+          .addField(EPISODES, episodes)
+          .addField(USERS, users)
       );
     } catch (Exception e) {
       e.printStackTrace();

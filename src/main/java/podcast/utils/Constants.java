@@ -56,6 +56,8 @@ public class Constants {
   public static final String FACEBOOK_ID = "facebookId";
   public static final String RECOMMENDATIONS = "recommendations";
   public static final String SUBSCRIPTIONS = "subscriptions";
+  public static final String EPISODES = "episodes";
+  public static final String USERS = "users";
   // TODO - more
 
   public static final String AUTHORIZATION = "Authorization";

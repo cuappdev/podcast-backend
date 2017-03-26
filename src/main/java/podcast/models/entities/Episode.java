@@ -66,5 +66,11 @@ public class Episode extends Podcast {
     }
   }
 
+  /** When an episode does not exist **/
+  public static class EpisodeDoesNotExistException extends Exception {
+    public EpisodeDoesNotExistException() {
+      super("Episode does not exist");
+    }
+  }
 
 }

@@ -13,7 +13,7 @@ public class UsersTest extends BaseIntegrationTest {
   public void getUserById() throws Exception {
     // Check everyone
     for (User u : getMockUsers()) {
-      JsonNode respose = mvcResultAsJson(
+      JsonNode response = mvcResultAsJson(
         getMockMvc()
           .perform(MockMvcRequestBuilders.get("/api/v1/users/" + u.getId())
             .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
