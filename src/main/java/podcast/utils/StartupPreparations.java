@@ -27,21 +27,19 @@ public class StartupPreparations implements InitializingBean {
   private static final Logger LOGGER = LoggerFactory.getLogger(StartupPreparations.class);
 
   /* Buckets */
-  private final Bucket usersBucket;
+  private final Bucket dbBucket;
   private final Bucket podcastsBucket;
-  private final Bucket followersfollowingsBucket;
 
 
   /** Constructor **/
-  public StartupPreparations(@Qualifier("usersBucket") Bucket usersBucket,
-                             @Qualifier("podcastsBucket") Bucket podcastsBucket,
-                             @Qualifier("followersfollowingsBucket") Bucket followersfollowingsBucket) {
-    this.usersBucket = usersBucket;
+  public StartupPreparations(@Qualifier("dbBucket") Bucket dbBucket,
+                             @Qualifier("podcastsBucket") Bucket podcastsBucket) {
+    this.dbBucket = dbBucket;
     this.podcastsBucket = podcastsBucket;
-    this.followersfollowingsBucket = followersfollowingsBucket;
   }
 
 
+  /** Ensure indexes **/
   @Override
   public void afterPropertiesSet() throws Exception {
     ensureIndexes();
@@ -51,18 +49,24 @@ public class StartupPreparations implements InitializingBean {
   /** Overall index function **/
   private void ensureIndexes() throws Exception {
     // User indexes
-    ArrayList<String> usersIndexes =
-      new ArrayList<String>(Arrays.asList("def_googleId", "def_firstName", "def_lastName", "def_username"));
-    ensureBucketIndexes(usersBucket, usersIndexes);
+    ArrayList<String> dbIndexes =
+      new ArrayList<String>(Arrays.asList(
+        "def_type",
+        "def_googleId",
+        "def_firstName",
+        "def_lastName",
+        "def_username",
+        "def_ownerId"));
+    ensureBucketIndexes(dbBucket, dbIndexes);
 
     // Podcast indexes
     ArrayList<String> podcastIndexes =
-      new ArrayList<String>(Arrays.asList("def_title", "def_seriesTitle", "def_type"));
+      new ArrayList<String>(Arrays.asList(
+        "def_type",
+        "def_title",
+        "def_seriesTitle",
+        "def_type"));
     ensureBucketIndexes(podcastsBucket, podcastIndexes);
-
-    ArrayList<String> followersfollowingsIndexes =
-        new ArrayList<String>(Arrays.asList("def_ownerId", "def_type"));
-    ensureBucketIndexes(followersfollowingsBucket, followersfollowingsIndexes);
 
     // -- More buckets
   }

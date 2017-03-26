@@ -1,12 +1,10 @@
 package podcast.models.entities;
 
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
-
 import java.util.Date;
-
 import static podcast.utils.Constants.*;
-
 
 /**
  * A user's subscription ('following') of a podcast series.
@@ -22,6 +20,7 @@ public class Subscription extends Entity {
   @Getter private Person user;
   @Getter private Date createdAt = new Date();
 
+
   /**
    * Constructor from user and series
    * @param user - User
@@ -35,6 +34,8 @@ public class Subscription extends Entity {
     this.user = new Person(user);
   }
 
+
+  /** Constructor from JsonObject **/
   public Subscription(JsonObject object) {
     this.seriesTitle = object.getString(SERIES_TITLE);
     this.seriesId = object.getLong(SERIES_ID);
@@ -43,15 +44,23 @@ public class Subscription extends Entity {
     this.user = new Person(object.getObject(USER));
   }
 
-  public JsonObject toJsonObject() {
-    return JsonObject.create()
-        .put(TYPE, type)
-        .put(SERIES_ID, seriesId)
-        .put(SERIES_TITLE, seriesTitle)
-        .put(IMAGE_URL_SM, imageUrlSm)
-        .put(IMAGE_URL_LG, imageUrlLg)
-        .put(USER, user)
-        .put(CREATED_AT, createdAt);
+  /** See {@link Entity#toJsonDocument()} **/
+  public JsonDocument toJsonDocument() {
+    JsonObject object = JsonObject.create()
+      .put(TYPE, type.toString())
+      .put(SERIES_TITLE, seriesTitle)
+      .put(IMAGE_URL_SM, imageUrlSm)
+      .put(IMAGE_URL_LG, imageUrlLg)
+      .put(USER, user)
+      .put(CREATED_AT, createdAt);
+    return JsonDocument.create(composeKey(this), object);
   }
+
+
+  /** Compose Key from Subscription **/
+  public static String composeKey(Subscription s) {
+    return String.format("%s:%s:%s", s.getSeriesTitle(), s.getUser().getId(), s.getType().toString());
+  }
+
 
 }

@@ -1,12 +1,9 @@
 package podcast.configs;
 
-import com.couchbase.client.core.env.QueryServiceConfig;
 import com.couchbase.client.core.retry.FailFastRetryStrategy;
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
-import com.couchbase.client.java.cluster.ClusterManager;
-import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,23 +17,17 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Database {
 
-  @Value("${storage.usersBucket}")
-  private String usersBucket;
+  @Value("${storage.dbBucket}")
+  private String dbBucket;
 
-  @Value("${storage.usersBucketPassword}")
-  private String usersBucketPassword;
+  @Value("${storage.dbBucketPassword}")
+  private String dbBucketPassword;
 
   @Value("${storage.podcastsBucket}")
   private String podcastsBucket;
 
   @Value("${storage.podcastsBucketPassword}")
   private String podcastsBucketPassword;
-
-  @Value("${storage.followersfollowingsBucket}")
-  private String followersfollowingsBucket;
-
-  @Value("${storage.followersfollowingsBucketPassword}")
-  private String followersfollowingsBucketPassword;
 
   private Cluster couchbaseCluster;
 
@@ -59,11 +50,11 @@ public class Database {
 
 
   @Bean
-  public Bucket usersBucket() {
-    if (usersBucketPassword == null || usersBucketPassword.length() == 0) {
-      return couchbaseCluster.openBucket(usersBucket);
+  public Bucket dbBucket() {
+    if (dbBucketPassword == null || dbBucketPassword.length() == 0) {
+      return couchbaseCluster.openBucket(dbBucket);
     } else {
-      return couchbaseCluster.openBucket(usersBucket, usersBucketPassword);
+      return couchbaseCluster.openBucket(dbBucket, dbBucketPassword);
     }
   }
 
@@ -78,14 +69,6 @@ public class Database {
   }
 
 
-  @Bean
-  public Bucket followersfollowingsBucket() {
-    if (followersfollowingsBucketPassword == null || followersfollowingsBucketPassword.length() == 0) {
-      return couchbaseCluster.openBucket(followersfollowingsBucket);
-    } else {
-      return couchbaseCluster.openBucket(followersfollowingsBucket, followersfollowingsBucketPassword);
-    }
-  }
 
 
 }

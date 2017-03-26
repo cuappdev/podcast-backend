@@ -1,5 +1,6 @@
 package podcast.models.entities;
 
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import static podcast.utils.Constants.*;
@@ -7,7 +8,8 @@ import static podcast.utils.Constants.*;
 /**
  * Abstract parent of followers / followings (relationships)
  */
-public abstract class FollowRelationship extends Entity{
+public abstract class FollowRelationship extends Entity {
+
   @Getter protected Type type;
   @Getter protected String ownerId;
   @Getter protected String id;
@@ -33,11 +35,9 @@ public abstract class FollowRelationship extends Entity{
     this.imageUrl = imageUrl;
   }
 
-  /**
-   * See {@link Entity#toJsonObject()}
-   */
-  public JsonObject toJsonObject() {
-    return JsonObject.create()
+  /** See {@link Entity#toJsonDocument()} **/
+  protected JsonDocument toJsonDocument(String key) {
+    JsonObject object = JsonObject.create()
       .put(TYPE, type.toString())
       .put(OWNER_ID, ownerId)
       .put(ID, id)
@@ -45,5 +45,33 @@ public abstract class FollowRelationship extends Entity{
       .put(LAST_NAME, lastName)
       .put(IMAGE_URL, imageUrl)
       .put(USERNAME, username);
+    return JsonDocument.create(key, object);
   }
+
+
+  /** Given id's and following relationship type, compose key **/
+  public static String composeKey(String ownerId, String corrId, Type type) {
+    return String.format("%s:%s:%s", ownerId, corrId, type.toString());
+  }
+
+
+  /** Given an owning user, a correspondent, and a following
+   * relationship type, compose key **/
+  public static String composeKey(User owner, User correspondent, Type type) {
+    return composeKey(owner.getId(), correspondent.getId(), type);
+  }
+
+
+  /** Given a relationship, compose a key **/
+  public static String composeKey(FollowRelationship fr) {
+    return composeKey(fr.getOwnerId(), fr.getId(), fr.getType());
+  }
+
+  /** When the relationship is not found **/
+  public static class NonExistentFollowingException extends Exception {
+    public NonExistentFollowingException() {
+      super("No following relationship exists of this nature");
+    }
+  }
+
 }

@@ -15,17 +15,17 @@ import podcast.authentication.UserAuthenticationInterceptor;
 @ComponentScan("podcast")
 public class AppConfig extends WebMvcConfigurerAdapter {
 
-  private Bucket userBucket;
+  private Bucket dbBucket;
 
   @Autowired
-  public AppConfig(@Qualifier("usersBucket") Bucket userBucket) {
-    this.userBucket = userBucket;
+  public AppConfig(@Qualifier("dbBucket") Bucket dbBucket) {
+    this.dbBucket = dbBucket;
   }
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(
-      new UserAuthenticationInterceptor(userBucket))
+      new UserAuthenticationInterceptor(dbBucket))
       .addPathPatterns("/**")
       .excludePathPatterns("/api/v1/users/google_sign_in")
       .excludePathPatterns("/api/v1/sessions/update");

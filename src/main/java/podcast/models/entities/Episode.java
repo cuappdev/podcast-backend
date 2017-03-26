@@ -47,4 +47,9 @@ public class Episode extends Podcast {
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }
 
+  /** Establishes a UUID for episodes for client **/
+  public String getId() {
+    return String.format("%s:%s", getSeriesId(), getPubDate().getTime());
+  }
+
 }

@@ -55,19 +55,16 @@ public class UsersService {
 
   /** Update the username of a user **/
   public User updateUsername(User user,
-                             String username) throws User.InvalidUsernameException {
+                             String username) throws Exception {
     // Must be atomic, we can't have one thread check and update while
     // the other is
     synchronized (this) {
-      Optional<User> op = usersRepo.getUserByGoogleId(username);
-
-      if (op.isPresent()) {
-        throw new User.InvalidUsernameException();
+      if (usersRepo.usernameAvailable(username)) {
+        usersRepo.updateUsername(user, username);
+        return user;
+      } else {
+        throw new User.UsernameTakenException();
       }
-
-      user.setUsername(username);
-      usersRepo.storeUser(user);
-      return user;
     }
   }
 

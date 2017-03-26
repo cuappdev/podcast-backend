@@ -24,16 +24,14 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
   public void afterCompletion(HttpServletRequest request,
                               HttpServletResponse response,
                               Object handler,
-                              Exception exception)
-    throws Exception {
+                              Exception exception) throws Exception {
   }
 
   @Override
   public void postHandle(HttpServletRequest request,
                          HttpServletResponse response,
                          Object handler,
-                         ModelAndView modelAndView)
-    throws Exception {
+                         ModelAndView modelAndView) throws Exception {
   }
 
   @Override
