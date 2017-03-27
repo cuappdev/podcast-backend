@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import podcast.models.entities.Subscription;
 
+import java.util.Arrays;
+import java.util.List;
+import rx.Observable;
+
 public class SubscriptionsRepo {
 
   private Bucket bucket;
@@ -29,5 +33,26 @@ public class SubscriptionsRepo {
     JsonDocument doc = subscription.toJsonDocument();
     bucket.upsert(doc);
     return subscription;
+  }
+
+
+  public boolean deleteSubscription(Subscription subscription) {
+    List<Object> keys = Arrays.asList(
+      Subscription.composeKey(subscription)
+    );
+    Observable
+        .from(keys)
+        .flatMap(x -> {
+          if(x instanceof String) {
+            return bucket.async().remove((String) x);
+          }
+          else {
+            return bucket.async().remove((JsonDocument) x);
+          }
+        })
+        .last()
+        .toBlocking()
+        .single();
+    return true;
   }
 }
