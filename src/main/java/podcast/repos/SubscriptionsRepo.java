@@ -26,7 +26,7 @@ public class SubscriptionsRepo {
 
   /** Stores a subscription **/
   public Subscription storeSubscription(Subscription subscription) {
-    JsonDocument doc = JsonDocument.create(composeKey(subscription), subscription.toJsonObject());
+    JsonDocument doc = subscription.toJsonDocument();
     bucket.upsert(doc);
     return subscription;
   }
