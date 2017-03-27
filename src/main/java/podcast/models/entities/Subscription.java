@@ -11,8 +11,7 @@ import static podcast.utils.Constants.*;
  */
 public class Subscription extends Entity {
 
-  @Getter private Type type = Type.SUBSCRIPTION;
-
+  @Getter private Type type = Type.subscription;
   @Getter private String seriesTitle;
   @Getter private Long seriesId;
   @Getter private String imageUrlSm;
@@ -46,14 +45,7 @@ public class Subscription extends Entity {
 
   /** See {@link Entity#toJsonDocument()} **/
   public JsonDocument toJsonDocument() {
-    JsonObject object = JsonObject.create()
-      .put(TYPE, type.toString())
-      .put(SERIES_TITLE, seriesTitle)
-      .put(IMAGE_URL_SM, imageUrlSm)
-      .put(IMAGE_URL_LG, imageUrlLg)
-      .put(USER, user)
-      .put(CREATED_AT, createdAt);
-    return JsonDocument.create(composeKey(this), object);
+    return JsonDocument.create(composeKey(this), super.toJsonObject());
   }
 
 

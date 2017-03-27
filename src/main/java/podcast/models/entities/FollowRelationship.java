@@ -35,17 +35,10 @@ public abstract class FollowRelationship extends Entity {
     this.imageUrl = imageUrl;
   }
 
+
   /** See {@link Entity#toJsonDocument()} **/
   protected JsonDocument toJsonDocument(String key) {
-    JsonObject object = JsonObject.create()
-      .put(TYPE, type.toString())
-      .put(OWNER_ID, ownerId)
-      .put(ID, id)
-      .put(FIRST_NAME, firstName)
-      .put(LAST_NAME, lastName)
-      .put(IMAGE_URL, imageUrl)
-      .put(USERNAME, username);
-    return JsonDocument.create(key, object);
+    return JsonDocument.create(key, super.toJsonObject());
   }
 
 

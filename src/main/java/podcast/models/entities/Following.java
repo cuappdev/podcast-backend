@@ -16,7 +16,7 @@ public class Following extends FollowRelationship {
    */
   public Following(User owner, User following) {
     super(
-      Type.FOLLOWING,
+      Type.following,
       owner.getId(),
       following.getId(),
       following.getFirstName(),
@@ -28,7 +28,7 @@ public class Following extends FollowRelationship {
   /** Constructor from JsonObject **/
   public Following(JsonObject object) {
     super(
-      Type.FOLLOWING,
+      Type.following,
       object.getString(OWNER_ID),
       object.getString(ID),
       object.getString(FIRST_NAME),

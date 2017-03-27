@@ -2,10 +2,7 @@ package podcast.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import podcast.models.entities.Episode;
 import podcast.models.entities.Recommendation;
 import podcast.models.entities.User;
@@ -31,15 +28,14 @@ public class RecommendationsController {
   }
 
   /** Create a recommendation **/
-  @RequestMapping(method = RequestMethod.POST, value = "/create")
+  @RequestMapping(method = RequestMethod.POST, value = "/{episode_id}")
   public ResponseEntity<Result> createRecommendation(HttpServletRequest request,
-                                                     @RequestParam("series_id") Long seriesId,
-                                                     @RequestParam("timestamp") Long timestamp) {
+                                                     @PathVariable("episode_id") String episodeId) {
     /* Grab the user from the corresponding request */
     User user = (User) request.getAttribute(USER);
-
     try {
-      Episode episode = podcastsService.getEpisode(seriesId, timestamp);
+      Episode.CompositeEpisodeKey ck = Episode.getSeriesIdAndPubDate(episodeId);
+      Episode episode = podcastsService.getEpisode(ck.getSeriesId(), ck.getPubDate());
       Recommendation recommendation = new Recommendation(user, episode);
       // TODO - Save recommendation
       return ResponseEntity.status(200).body(new Success(RECOMMENDATION, recommendation));
@@ -49,6 +45,36 @@ public class RecommendationsController {
   }
 
 
+  /** Get recommendations of an episode (paginated) **/
+  @RequestMapping(method = RequestMethod.GET, value = "/{episode_id}")
+  public ResponseEntity<Result> getRecommendations(HttpServletRequest request,
+                                                   @PathVariable("episode_id") String episodeId,
+                                                   @RequestParam("offset") Integer offset,
+                                                   @RequestParam("max") Integer max) {
+    /* Grab the user from the corresponding request */
+    User user = (User) request.getAttribute(USER);
+    try {
+      // TODO - grab the recommendations
+      return ResponseEntity.status(200).body(new Success(RECOMMENDATIONS, null));
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
 
+
+  /** Delete a recommendation **/
+  @RequestMapping(method = RequestMethod.DELETE, value = "/{episode_id}")
+  public ResponseEntity<Result> deleteRecommendation(HttpServletRequest request,
+                                                     @PathVariable("episode_id") String episodeId) {
+    /* Grab the user from the corresponding request */
+    User user = (User) request.getAttribute(USER);
+    try {
+      // TODO - grab the recommendation to delete
+      // DELETE IT
+      return ResponseEntity.status(200).body(new Success());
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
 
 }

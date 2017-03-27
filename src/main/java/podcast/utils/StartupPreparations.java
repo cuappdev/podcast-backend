@@ -65,7 +65,9 @@ public class StartupPreparations implements InitializingBean {
         "def_type",
         "def_title",
         "def_seriesTitle",
-        "def_type"));
+        "def_type",
+        "def_seriesId",
+        "def_pubDate"));
     ensureBucketIndexes(podcastsBucket, podcastIndexes);
 
     // -- More buckets

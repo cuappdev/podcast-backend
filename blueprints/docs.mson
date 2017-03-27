@@ -21,10 +21,10 @@ CUAppDev's podcast app API documentation
               "session": {
                 "expiresAt": 1489636800000,
                 "sessionToken": "myLongSessionToken",
-                "type": "SESSION",
+                "type": "session",
                 "updateToken": "myLongUpdateToken"
               },
-              "type": "USER",
+              "type": "user",
               "username": "johndoe"
             },
             "newUser": true
@@ -58,10 +58,10 @@ CUAppDev's podcast app API documentation
               "session": {
                 "expiresAt": 1489636800000,
                 "sessionToken": "myLongSessionToken",
-                "type": "SESSION",
+                "type": "session",
                 "updateToken": "myLongUpdateToken"
               },
-              "type": "USER",
+              "type": "user",
               "username": "johnDoesNewUsername"
             }
           },
@@ -123,19 +123,55 @@ CUAppDev's podcast app API documentation
               "session": {
                 "expiresAt": 1489636800000,
                 "sessionToken": "myLongSessionToken",
-                "type": "SESSION",
+                "type": "session",
                 "updateToken": "myLongUpdateToken"
               },
-              "type": "USER",
+              "type": "user",
               "username": "johndoe"
             }
           },
           "success": true
         }
 
+
+# Group Podcasts
+## Episodes by Series ID [/api/v1/podcasts/episodes/{series_id}?offset={offset}&max={max}]
+### Episodes by Series ID [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "episodes": [
+              {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              }
+            ]
+          }
+        }
+
+
 # Group Followers Followings
-## Followings CRUD [/api/v1/followings?id={id}]
-### New Following [POST]
+## Followings CRUD [/api/v1/followings/{id}]
+### Create Following [POST]
 
 + Request
 
@@ -262,7 +298,7 @@ CUAppDev's podcast app API documentation
           "data": {
             "episodes": [
               {
-                "type": "EPISODE",
+                "type": "episode",
                 "seriesId": 1008577710,
                 "seriesTitle": "A Captivating Podcast Series",
                 "imageUrlSm": "https://goo.gl/L37gfS",
@@ -273,7 +309,8 @@ CUAppDev's podcast app API documentation
                 "pubDate": 1452080745,
                 "duration": "17:39",
                 "audioUrl": "An mp3 URL of some sort",
-                "tags": ["David", "Gries"]
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
               }
             ]
           }
@@ -281,7 +318,7 @@ CUAppDev's podcast app API documentation
 
 
 ## Search Series [/api/v1/search/series/{query}?offset={offset}&max={max}]
-### Search Episodes [GET]
+### Search Series [GET]
 
 + Request
 
@@ -296,7 +333,7 @@ CUAppDev's podcast app API documentation
           "data": {
             "series": [
               {
-                "type": "SERIES",
+                "type": "series",
                 "id": 207698746,
                 "title": "Piazza, a Platform for Vengeance",
                 "country": "USA",
@@ -356,7 +393,7 @@ CUAppDev's podcast app API documentation
           "data": {
             "episodes": [
               {
-                "type": "EPISODE",
+                "type": "episode",
                 "seriesId": 1008577710,
                 "seriesTitle": "A Captivating Podcast Series",
                 "imageUrlSm": "https://goo.gl/L37gfS",
@@ -367,12 +404,13 @@ CUAppDev's podcast app API documentation
                 "pubDate": 1452080745,
                 "duration": "17:39",
                 "audioUrl": "An mp3 URL of some sort",
-                "tags": ["David", "Gries"]
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
               }
             ],
             "series": [
               {
-                "type": "SERIES",
+                "type": "series",
                 "id": 207698746,
                 "title": "Piazza, a Platform for Vengeance",
                 "country": "USA",

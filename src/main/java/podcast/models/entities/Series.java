@@ -12,7 +12,7 @@ import static podcast.utils.Constants.*;
  */
 public class Series extends Podcast {
 
-  @Getter private Type type = Type.SERIES;
+  @Getter private Type type = Type.series;
   @Getter private Long id;
   @Getter private String title;
   @Getter private String country;
@@ -41,5 +41,8 @@ public class Series extends Podcast {
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }
 
+  public static class SeriesDoesNotExistException extends Exception {
+    public SeriesDoesNotExistException() { super("Series does not exist"); }
+  }
 
 }

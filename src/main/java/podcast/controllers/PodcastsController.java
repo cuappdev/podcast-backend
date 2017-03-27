@@ -1,7 +1,17 @@
 package podcast.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import podcast.models.entities.Episode;
+import podcast.models.entities.User;
+import podcast.models.formats.Failure;
+import podcast.models.formats.Result;
+import podcast.models.formats.Success;
+import podcast.services.PodcastsService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import static podcast.utils.Constants.*;
 
 /**
  * Podcasts (series, episodes) REST API controller
@@ -10,6 +20,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/podcasts")
 public class PodcastsController {
 
-  // TODO - subscribing to series, recommending episodes, etc.
+  private final PodcastsService podcastsService;
+
+  @Autowired
+  public PodcastsController(PodcastsService podcastsService) {
+    this.podcastsService = podcastsService;
+  }
+
+
+  /** Get episodes by seriesId **/
+  @RequestMapping(method = RequestMethod.GET, value = "/episodes/{series_id}")
+  public ResponseEntity<Result> getEpisodesBySeriesId(HttpServletRequest request,
+                                                      @PathVariable("series_id") Long seriesId,
+                                                      @RequestParam("offset") Integer offset,
+                                                      @RequestParam("max") Integer max) {
+    /* Grab the user from the corresponding request */
+    User user = (User) request.getAttribute(USER);
+    try {
+      List<Episode> episodes = podcastsService.getEpisodesBySeriesId(seriesId, offset, max);
+      return ResponseEntity.status(200).body(new Success(EPISODES, episodes));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
 
 }
