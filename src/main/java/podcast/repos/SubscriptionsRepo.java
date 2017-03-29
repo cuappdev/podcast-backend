@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import podcast.models.entities.Subscription;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import podcast.models.entities.User;
 import rx.Observable;
 
 public class SubscriptionsRepo {
@@ -54,5 +57,9 @@ public class SubscriptionsRepo {
         .toBlocking()
         .single();
     return true;
+  }
+
+  public List<Subscription> getUserSubscriptions(User user) {
+    return new ArrayList<Subscription>();
   }
 }

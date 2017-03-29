@@ -9,6 +9,8 @@ import podcast.repos.PodcastsRepo;
 import podcast.repos.SubscriptionsRepo;
 import podcast.repos.UsersRepo;
 
+import java.util.List;
+
 @Service
 public class SubscriptionsService {
 
@@ -34,6 +36,11 @@ public class SubscriptionsService {
     synchronized (this) {
       return subscriptionsRepo.deleteSubscription(subscription);
     }
+  }
+
+  public List<Subscription> getUserSubscriptions(String userId) throws Exception {
+    User user = usersRepo.getUserById(userId);
+    return subscriptionsRepo.getUserSubscriptions(user);
   }
 
 }
