@@ -225,7 +225,7 @@ CUAppDev's podcast app API documentation
           "success": true
         }
 
-## Subscriptions CRUD [/api/v1/subscriptions?id={id}]
+## Get User Subscriptions [/api/v1/subscriptions?id={id}]
 ### Get User Subscriptions [GET]
 
 + Request
