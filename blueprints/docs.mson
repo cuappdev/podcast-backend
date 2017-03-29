@@ -135,6 +135,33 @@ CUAppDev's podcast app API documentation
 
 
 # Group Podcasts
+## Series by Series ID [/api/v1/podcasts/series/{series_id}]
+### Series by Series ID [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "series": {
+              "type": "series",
+              "id": 207698746,
+              "title": "Piazza, a Platform for Vengeance",
+              "country": "USA",
+              "author": "Anonymous",
+              "imageUrlSm": "https://goo.gl/L37gfS",
+              "imageUrlLg": "https://goo.gl/L37gfS",
+              "feedUrl": "A RSS Feed URL",
+              "genres": ["Loop Invariants", "56 Years of Programming Experience"]
+            }
+          }
+        }
+
 ## Episodes by Series ID [/api/v1/podcasts/episodes/{series_id}?offset={offset}&max={max}]
 ### Episodes by Series ID [GET]
 
