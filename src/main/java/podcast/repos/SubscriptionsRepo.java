@@ -4,6 +4,7 @@ import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import podcast.models.entities.Series;
 import podcast.models.entities.Subscription;
 
 import java.util.ArrayList;
@@ -32,16 +33,29 @@ public class SubscriptionsRepo {
   }
 
   /** Stores a subscription **/
-  public Subscription storeSubscription(Subscription subscription) {
-    JsonDocument doc = subscription.toJsonDocument();
-    bucket.upsert(doc);
+  public Subscription storeSubscription(Subscription subscription, Series series) {
+    series.incrementSubscriberCount();
+    List<Object> keys = Arrays.asList(
+      Subscription.composeKey(subscription),
+      Series.composeKey(series.getId(), new Long(0))
+    );
+    Observable
+        .from(keys)
+        .flatMap(x -> {
+          return bucket.async().upsert((JsonDocument) x);
+        })
+        .last()
+        .toBlocking()
+        .single();
     return subscription;
   }
 
 
-  public boolean deleteSubscription(Subscription subscription) {
+  public boolean deleteSubscription(Subscription subscription, Series series) {
+    series.decrementSubscriberCount();
     List<Object> keys = Arrays.asList(
-      Subscription.composeKey(subscription)
+      Subscription.composeKey(subscription),
+      Series.composeKey(series.getId(), new Long(0)) // TODO - figure out what to do here - series don't have pubdates
     );
     Observable
         .from(keys)

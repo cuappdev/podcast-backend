@@ -27,14 +27,14 @@ public class SubscriptionsService {
   public Subscription createSubscription(User owner, Series series) {
     synchronized (this) {
       Subscription sub = new Subscription(owner, series);
-      subscriptionsRepo.storeSubscription(sub);
+      subscriptionsRepo.storeSubscription(sub, series);
       return sub;
     }
   }
 
   public boolean deleteSubscription(Subscription subscription) {
     synchronized (this) {
-      return subscriptionsRepo.deleteSubscription(subscription);
+      return subscriptionsRepo.deleteSubscription(subscription, podcastsRepo.getSeries(subscription.getSeriesId()));
     }
   }
 

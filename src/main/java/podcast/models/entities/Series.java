@@ -45,4 +45,12 @@ public class Series extends Podcast {
     public SeriesDoesNotExistException() { super("Series does not exist"); }
   }
 
+  public void incrementSubscriberCount() {
+    numberSubscribers += 1;
+  }
+
+  public void decrementSubscriberCount() {
+    numberSubscribers -= 1;
+  }
+
 }
