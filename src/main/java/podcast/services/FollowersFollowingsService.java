@@ -50,7 +50,6 @@ public class FollowersFollowingsService {
     }
   }
 
-
   /** Get a user's followings by ownerId **/
   public List<Following> getUserFollowings(String ownerId) throws Exception {
     return followersFollowingsRepo.getUserFollowings(ownerId);

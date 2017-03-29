@@ -11,8 +11,11 @@ import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
 import podcast.services.PodcastsService;
+import podcast.services.SubscriptionsService;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 import static podcast.utils.Constants.*;
 
@@ -24,10 +27,12 @@ import static podcast.utils.Constants.*;
 public class SubscriptionsController {
 
   private final PodcastsService podcastsService;
+  private final SubscriptionsService subscriptionsService;
 
   @Autowired
-  public SubscriptionsController(PodcastsService podcastsService) {
+  public SubscriptionsController(PodcastsService podcastsService, SubscriptionsService subscriptionsService) {
     this.podcastsService = podcastsService;
+    this.subscriptionsService = subscriptionsService;
   }
 
   /** Create a subscription **/
@@ -38,8 +43,7 @@ public class SubscriptionsController {
 
     try {
       Series series = podcastsService.getSeries(seriesId);
-      Subscription subscription = new Subscription(user, series);
-      // TODO - Save subscription
+      Subscription subscription = subscriptionsService.createSubscription(user, series);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
@@ -52,13 +56,23 @@ public class SubscriptionsController {
                                                    @RequestParam("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
 
-
-    // TODO - discuss how to implement this
-
     try {
       Series series = podcastsService.getSeries(seriesId);
       Subscription subscription = new Subscription(user, series);
+      subscriptionsService.deleteSubscription(subscription);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
+
+  @RequestMapping(method = RequestMethod.GET, value = "/")
+  public ResponseEntity<Result> getUserSubscriptions(HttpServletRequest request,
+                                                   @RequestParam("id") String userId) {
+
+    try {
+      List<Subscription> subs = subscriptionsService.getUserSubscriptions(userId);
+      return ResponseEntity.status(200).body(new Success(SUBSCRIPTIONS, subs));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }

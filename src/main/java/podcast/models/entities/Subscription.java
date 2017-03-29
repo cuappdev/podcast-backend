@@ -13,6 +13,7 @@ public class Subscription extends Entity {
 
   @Getter private Type type = Type.subscription;
   @Getter private String seriesTitle;
+  @Getter private Long seriesId;
   @Getter private String imageUrlSm;
   @Getter private String imageUrlLg;
   @Getter private Person user;
@@ -26,6 +27,7 @@ public class Subscription extends Entity {
    */
   public Subscription(User user, Series series) {
     this.seriesTitle = series.getTitle();
+    this.seriesId = series.getId();
     this.imageUrlSm = series.getImageUrlSm();
     this.imageUrlLg = series.getImageUrlLg();
     this.user = new Person(user);
@@ -35,11 +37,11 @@ public class Subscription extends Entity {
   /** Constructor from JsonObject **/
   public Subscription(JsonObject object) {
     this.seriesTitle = object.getString(SERIES_TITLE);
+    this.seriesId = object.getLong(SERIES_ID);
     this.imageUrlSm = object.getString(IMAGE_URL_SM);
     this.imageUrlLg = object.getString(IMAGE_URL_LG);
     this.user = new Person(object.getObject(USER));
   }
-
 
   /** See {@link Entity#toJsonDocument()} **/
   public JsonDocument toJsonDocument() {
@@ -49,7 +51,7 @@ public class Subscription extends Entity {
 
   /** Compose Key from Subscription **/
   public static String composeKey(Subscription s) {
-    return String.format("%s:%s:%s", s.getSeriesTitle(), s.getUser().getId(), s.getType().toString());
+    return String.format("%s:%s:%s", s.getSeriesTitle(), s.getUser().getId(), Type.SUBSCRIPTION.toString());
   }
 
 

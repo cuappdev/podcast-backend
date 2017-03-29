@@ -196,6 +196,99 @@ CUAppDev's podcast app API documentation
         }
 
 
+# Group Subscriptions
+## Subscriptions CRUD [/api/v1/subscriptions?series_id={id}]
+### Create Subscription [POST]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "subscription": {
+              {
+                "userId": 123,
+                "seriesId": 456,
+                "username": "abc",
+                "userImageUrl": "image1.jpg",
+                "userFirstName": "name",
+                "userLastName": "name",
+                "seriesTitle": "title",
+                "seriesImageUrlSm": "image2.jpg"
+              }
+            }
+          },
+          "success": true
+        }
+
+### Delete Subscription [POST]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "subscription": {
+                "userId": 123,
+                "seriesId": 456,
+                "username": "abc",
+                "userImageUrl": "image1.jpg",
+                "userFirstName": "name",
+                "userLastName": "name",
+                "seriesTitle": "title",
+                "seriesImageUrlSm": "image2.jpg"
+            }
+          },
+          "success": true
+        }
+
+## Get User Subscriptions [/api/v1/subscriptions?id={id}]
+### Get User Subscriptions [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "subscriptions": [{
+                "userId": 123,
+                "seriesId": 456,
+                "username": "abc",
+                "userImageUrl": "image1.jpg",
+                "userFirstName": "name",
+                "userLastName": "name",
+                "seriesTitle": "title",
+                "seriesImageUrlSm": "image2.jpg"
+            },
+            {
+              "userId": 123,
+              "seriesId": 555,
+              "username": "abc",
+              "userImageUrl": "image1.jpg",
+              "userFirstName": "name",
+              "userLastName": "name",
+              "seriesTitle": "another title",
+              "seriesImageUrlSm": "image3.jpg"
+            }]
+          },
+          "success": true
+        }
+
 # Group Followers Followings
 ## Followings CRUD [/api/v1/followings/{id}]
 ### Create Following [POST]
