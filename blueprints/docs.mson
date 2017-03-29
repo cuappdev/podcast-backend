@@ -211,22 +211,20 @@ CUAppDev's podcast app API documentation
         {
           "data": {
             "subscription": {
-              {
-                "userId": 123,
-                "seriesId": 456,
-                "username": "abc",
-                "userImageUrl": "image1.jpg",
-                "userFirstName": "name",
-                "userLastName": "name",
-                "seriesTitle": "title",
-                "seriesImageUrlSm": "image2.jpg"
-              }
+              "userId": 123,
+              "seriesId": 456,
+              "username": "abc",
+              "userImageUrl": "image1.jpg",
+              "userFirstName": "name",
+              "userLastName": "name",
+              "seriesTitle": "title",
+              "seriesImageUrlSm": "image2.jpg"
             }
           },
           "success": true
         }
 
-### Delete Subscription [POST]
+### Delete Subscription [DELETE]
 
 + Request
 
@@ -328,7 +326,7 @@ CUAppDev's podcast app API documentation
 
         {
           "data": {
-            "deleted_following": 123 // user id who you've just unfollowed
+            "deleted_following": 123 
           },
           "success": true
         }
