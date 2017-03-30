@@ -36,7 +36,7 @@ public class SubscriptionsController {
   }
 
   /** Create a subscription **/
-  @RequestMapping(method = RequestMethod.POST, value = "/")
+  @RequestMapping(method = RequestMethod.POST, value = "")
   public ResponseEntity<Result> createSubscription(HttpServletRequest request,
                                                      @RequestParam("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
@@ -46,12 +46,13 @@ public class SubscriptionsController {
       Subscription subscription = subscriptionsService.createSubscription(user, series);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
 
   /** Delete a subscription **/
-  @RequestMapping(method = RequestMethod.DELETE, value = "/")
+  @RequestMapping(method = RequestMethod.DELETE, value = "")
   public ResponseEntity<Result> deleteSubscription(HttpServletRequest request,
                                                    @RequestParam("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
@@ -62,18 +63,20 @@ public class SubscriptionsController {
       subscriptionsService.deleteSubscription(subscription);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/")
+  /** Get a series of subscriptions of a user **/
+  @RequestMapping(method = RequestMethod.GET, value = "")
   public ResponseEntity<Result> getUserSubscriptions(HttpServletRequest request,
                                                    @RequestParam("id") String userId) {
-
     try {
       List<Subscription> subs = subscriptionsService.getUserSubscriptions(userId);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTIONS, subs));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }

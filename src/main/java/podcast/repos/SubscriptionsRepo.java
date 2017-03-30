@@ -4,22 +4,22 @@ import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import podcast.models.entities.Series;
 import podcast.models.entities.Subscription;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import podcast.models.entities.User;
 import rx.Observable;
 
+@Component
 public class SubscriptionsRepo {
 
   private Bucket bucket;
 
   @Autowired
-  public SubscriptionsRepo(@Qualifier("subscriptionsBucket") Bucket subscriptionsBucket) {
+  public SubscriptionsRepo(@Qualifier("dbBucket") Bucket subscriptionsBucket) {
     this.bucket = subscriptionsBucket;
   }
 
