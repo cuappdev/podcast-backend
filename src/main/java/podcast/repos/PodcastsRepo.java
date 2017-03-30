@@ -34,8 +34,7 @@ public class PodcastsRepo {
 
   /** Get series by id **/
   public Series getSeries(Long seriesId) {
-    // TODO
-    return null;
+    return new Series(bucket.get(Podcast.composeKey(seriesId, 9223372036854775807L)).content());
   }
 
 
