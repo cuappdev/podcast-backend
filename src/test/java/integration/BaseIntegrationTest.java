@@ -10,6 +10,7 @@ import org.springframework.web.context.WebApplicationContext;
 import podcast.models.entities.Series;
 import podcast.models.entities.User;
 import podcast.services.UsersService;
+import podcast.services.PodcastsService;
 import utils.BaseTest;
 import utils.MockGoogleCreds;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
 
   /* Services */
   @Autowired @Getter UsersService usersService;
+  @Autowired @Getter PodcastsService podcastsService;
 
   /* Mock Data */
   @Getter private List<User> mockUsers;
@@ -51,6 +53,8 @@ public abstract class BaseIntegrationTest extends BaseTest {
       MockGoogleCreds creds = new MockGoogleCreds(i);
       mockUsers.add(usersService.getOrCreateUser(creds.toJsonNode(), creds.getSub()).getValue());
     }
+
+    mockSeries.add(podcastsService.getSeries(new Long(1)));
 
     this.session = mockUsers.get(0).getSession().getSessionToken();
 

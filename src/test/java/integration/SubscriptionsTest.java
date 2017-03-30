@@ -2,6 +2,7 @@ package integration;
 
 import org.codehaus.jackson.JsonNode;
 import lombok.Getter;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,15 @@ public class SubscriptionsTest extends BaseIntegrationTest {
     TimeUnit.SECONDS.sleep(2);
   }
 
-  private void subscribeAll () throws Exception {
-    for(User u : getMockUsers()) {
-      if(u.getSession().getSessionToken().equals(getSession())) {
+  private void subscribeAll() throws Exception {
+    for (User u : getMockUsers()) {
+      if (u.getSession().getSessionToken().equals(getSession())) {
         for (Series s : getMockSeries()) {
           JsonNode response = mvcResultAsJson(
               getMockMvc()
-                  .perform(MockMvcRequestBuilders.post("/api/v1/subscriptions?id="+u.getId())
-                  .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
-              .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+                  .perform(MockMvcRequestBuilders.post("/api/v1/subscriptions?id=" + s.getId())
+                      .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+                  .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
           );
         }
       }
@@ -43,6 +44,38 @@ public class SubscriptionsTest extends BaseIntegrationTest {
 
   @Test
   public void createSubscription() throws Exception {
+    subscribeAll();
+  }
 
+  @Test
+  public void deleteSubscription() throws Exception {
+    for (User u : getMockUsers()) {
+      if (u.getSession().getSessionToken().equals(getSession())) {
+        for (Series s : getMockSeries()) {
+          JsonNode response = mvcResultAsJson(
+              getMockMvc()
+                  .perform(MockMvcRequestBuilders.delete("/api/v1/subscriptions?id=" + s.getId())
+                      .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+                  .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+          );
+        }
+      }
+    }
+  }
+
+  @After
+  public void cleanup() throws Exception {
+    for (User u : getMockUsers()) {
+      if (u.getSession().getSessionToken().equals(getSession())) {
+        for (Series s : getMockSeries()) {
+          try {
+            subService.deleteSubscription(u, s);
+          } catch (Exception e) {
+
+          }
+        }
+      }
+    }
+    super.cleanup();
   }
 }
