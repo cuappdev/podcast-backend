@@ -22,7 +22,7 @@ public class SubscriptionsService {
   public SubscriptionsService(PodcastsRepo podcastsRepo, SubscriptionsRepo subscriptionsRepo, UsersRepo usersRepo) {
     this.podcastsRepo = podcastsRepo;
     this.subscriptionsRepo = subscriptionsRepo;
-    this.usersRepo = usersRepo; 
+    this.usersRepo = usersRepo;
   }
 
   public Subscription createSubscription(User owner, Series series) {
