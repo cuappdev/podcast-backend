@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import podcast.models.entities.Series;
 import podcast.models.entities.User;
 import podcast.services.UsersService;
 import utils.BaseTest;
@@ -29,6 +30,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
 
   /* Mock Data */
   @Getter private List<User> mockUsers;
+  @Getter private List<Series> mockSeries;
 
   /** Session to use in every request **/
   @Getter private String session;
@@ -40,8 +42,9 @@ public abstract class BaseIntegrationTest extends BaseTest {
     // Setup connection
     mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-    // Contains seeded users
+    // Contain seeded users and series
     mockUsers = new ArrayList<User>();
+    mockSeries = new ArrayList<Series>();
 
     // Seed the DB with users
     for (int i = 0; i < 10; i++) {
