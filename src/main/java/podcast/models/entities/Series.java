@@ -4,7 +4,6 @@ import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,8 +24,11 @@ public class Series extends Podcast {
   @Getter private String feedUrl;
   @Getter private Integer numberSubscribers;
   @Getter private List<String> genres;
-  @Getter @Setter private boolean isSubscribed = false;
+  @Setter private boolean isSubscribed = false;
 
+  public boolean getIsSubscribed() { // Format for client
+    return this.isSubscribed;
+  }
 
   /**
    * Constructor from Couchbase JsonObject
