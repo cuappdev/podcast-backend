@@ -62,7 +62,7 @@ public class SimplePodcastsSearch extends PodcastsSearch {
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
 
-    return rows.stream()
+    List<Podcast> podcasts = rows.stream()
       .map(r -> {
         JsonObject object = r.value().getObject(PODCASTS);
         if (object.getString(Constants.TYPE).equals(EPISODE)) {
@@ -71,6 +71,7 @@ public class SimplePodcastsSearch extends PodcastsSearch {
           return (Podcast) new Series(object);
         }
       }).collect(Collectors.toList());
+    return podcasts;
   }
 
 
