@@ -13,6 +13,7 @@ import utils.BaseTest;
 import utils.MockGoogleCreds;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public abstract class BaseIntegrationTest extends BaseTest {
@@ -57,10 +58,13 @@ public abstract class BaseIntegrationTest extends BaseTest {
   /** Clean up the DB **/
   @After
   public void cleanup() throws Exception {
+
     // Remove all seeded users
     for (User u : getMockUsers()) {
       usersService.removeUserById(u.getId());
     }
+    TimeUnit.SECONDS.sleep(1);
+
   }
 
 }

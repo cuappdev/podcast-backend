@@ -113,7 +113,7 @@ public class FollowersFollowingsRepo {
         if (x instanceof String) {
           return bucket.async().remove((String) x);
         } else { // If it's a JsonDocument
-          return bucket.async().remove((JsonDocument) x);
+          return bucket.async().upsert((JsonDocument) x);
         }
       })
       .last()

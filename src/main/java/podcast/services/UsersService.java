@@ -71,7 +71,9 @@ public class UsersService {
 
   /** Remove user by ID **/
   public void removeUserById(String id) throws Exception {
-    usersRepo.removeUserById(id);
+    synchronized (this) {
+      usersRepo.removeUserById(id);
+    }
   }
 
 

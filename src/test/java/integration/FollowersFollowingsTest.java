@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
 /** Followers-followings tests **/
 public class FollowersFollowingsTest extends BaseIntegrationTest {
 
+
   @Autowired
   @Getter
   FollowersFollowingsService ffService;
@@ -26,7 +27,7 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   public void before() throws Exception {
     super.before();
     followEveryone();
-    TimeUnit.SECONDS.sleep(2);
+    TimeUnit.SECONDS.sleep(1);
   }
 
   private String notMeId() {
@@ -55,6 +56,7 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
   public void createFollowing() throws Exception {
     followEveryone();
   }
+
 
   @Test
   public void getMyFollowings() throws Exception {
