@@ -32,7 +32,6 @@ public class PodcastsService {
     }
   }
 
-
   /** Getch a series given its seriesId **/
   public Series getSeries(Long seriesId) throws Exception {
     try {

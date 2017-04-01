@@ -69,6 +69,7 @@ public class Constants {
 
   /* Number of bytes in a UUID */
   public static final Integer UUID_BYTES = 36;
+  public static final Long SERIES_PUB_DATE = 9223372036854775807L;
 
   /** Types of various entities **/
   public static enum Type {

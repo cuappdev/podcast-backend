@@ -1,5 +1,6 @@
 package podcast.models.entities;
 
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class Series extends Podcast {
     this.imageUrlSm = object.getString(IMAGE_URL_SM);
     this.imageUrlLg = object.getString(IMAGE_URL_LG);
     this.feedUrl = object.getString(FEED_URL);
-    this.numberSubscribers = object.getInt(NUMBER_SUBSCRIBERS);
+    this.numberSubscribers = object.getInt(NUMBER_SUBSCRIBERS) == null ? 0 : object.getInt(NUMBER_SUBSCRIBERS);
     this.genres = object.getArray(GENRES) == null ? new ArrayList<String>() : object.getArray(GENRES).toList()
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }
@@ -52,5 +53,11 @@ public class Series extends Podcast {
   public void decrementSubscriberCount() {
     numberSubscribers -= 1;
   }
+
+  public JsonDocument toJsonDocument() {
+    return JsonDocument.create(composeKey(id, SERIES_PUB_DATE), super.toJsonObject());
+  }
+
+
 
 }

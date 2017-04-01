@@ -39,6 +39,13 @@ public class SubscriptionsService {
     }
   }
 
+  public boolean deleteSubscription(User owner, Series series) {
+    synchronized(this) {
+      Subscription sub = new Subscription(owner, series);
+      return subscriptionsRepo.deleteSubscription(sub, series);
+    }
+  }
+
   public List<Subscription> getUserSubscriptions(String userId) throws Exception {
     User user = usersRepo.getUserById(userId);
     return subscriptionsRepo.getUserSubscriptions(user);

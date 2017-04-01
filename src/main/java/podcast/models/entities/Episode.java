@@ -1,5 +1,6 @@
 package podcast.models.entities;
 
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import java.util.ArrayList;
@@ -71,6 +72,10 @@ public class Episode extends Podcast {
     public EpisodeDoesNotExistException() {
       super("Episode does not exist");
     }
+  }
+
+  public JsonDocument toJsonDocument() {
+    return JsonDocument.create(composeKey(seriesId, pubDate), super.toJsonObject());
   }
 
 }
