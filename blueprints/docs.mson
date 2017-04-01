@@ -157,7 +157,8 @@ CUAppDev's podcast app API documentation
               "imageUrlSm": "https://goo.gl/L37gfS",
               "imageUrlLg": "https://goo.gl/L37gfS",
               "feedUrl": "A RSS Feed URL",
-              "genres": ["Loop Invariants", "56 Years of Programming Experience"]
+              "genres": ["Loop Invariants", "56 Years of Programming Experience"],
+              "isSubscribed": true
             }
           }
         }
@@ -237,14 +238,14 @@ CUAppDev's podcast app API documentation
         {
           "data": {
             "subscription": {
-                "userId": 123,
-                "seriesId": 456,
-                "username": "abc",
-                "userImageUrl": "image1.jpg",
-                "userFirstName": "name",
-                "userLastName": "name",
-                "seriesTitle": "title",
-                "seriesImageUrlSm": "image2.jpg"
+              "userId": 123,
+              "seriesId": 456,
+              "username": "abc",
+              "userImageUrl": "image1.jpg",
+              "userFirstName": "name",
+              "userLastName": "name",
+              "seriesTitle": "title",
+              "seriesImageUrlSm": "image2.jpg"
             }
           },
           "success": true
@@ -264,14 +265,14 @@ CUAppDev's podcast app API documentation
         {
           "data": {
             "subscriptions": [{
-                "userId": 123,
-                "seriesId": 456,
-                "username": "abc",
-                "userImageUrl": "image1.jpg",
-                "userFirstName": "name",
-                "userLastName": "name",
-                "seriesTitle": "title",
-                "seriesImageUrlSm": "image2.jpg"
+              "userId": 123,
+              "seriesId": 456,
+              "username": "abc",
+              "userImageUrl": "image1.jpg",
+              "userFirstName": "name",
+              "userLastName": "name",
+              "seriesTitle": "title",
+              "seriesImageUrlSm": "image2.jpg"
             },
             {
               "userId": 123,
@@ -326,7 +327,7 @@ CUAppDev's podcast app API documentation
 
         {
           "data": {
-            "deleted_following": 123 
+            "deleted_following": 123
           },
           "success": true
         }
@@ -459,7 +460,8 @@ CUAppDev's podcast app API documentation
                 "imageUrlSm": "https://goo.gl/L37gfS",
                 "imageUrlLg": "https://goo.gl/L37gfS",
                 "feedUrl": "A RSS Feed URL",
-                "genres": ["Loop Invariants", "56 Years of Programming Experience"]
+                "genres": ["Loop Invariants", "56 Years of Programming Experience"],
+                "isSubscribed": true
               }
             ]
           }
@@ -536,7 +538,8 @@ CUAppDev's podcast app API documentation
                 "imageUrlSm": "https://goo.gl/L37gfS",
                 "imageUrlLg": "https://goo.gl/L37gfS",
                 "feedUrl": "A RSS Feed URL",
-                "genres": ["Loop Invariants", "56 Years of Programming Experience"]
+                "genres": ["Loop Invariants", "56 Years of Programming Experience"],
+                "isSubscribed": true
               }
             ],
             "users": [

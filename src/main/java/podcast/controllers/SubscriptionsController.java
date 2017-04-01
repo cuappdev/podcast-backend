@@ -12,11 +12,8 @@ import podcast.models.formats.Result;
 import podcast.models.formats.Success;
 import podcast.services.PodcastsService;
 import podcast.services.SubscriptionsService;
-
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.List;
-
 import static podcast.utils.Constants.*;
 
 /**
@@ -42,7 +39,7 @@ public class SubscriptionsController {
     User user = (User) request.getAttribute(USER);
 
     try {
-      Series series = podcastsService.getSeries(seriesId);
+      Series series = podcastsService.getSeries(user, seriesId);
       Subscription subscription = subscriptionsService.createSubscription(user, series);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));
     } catch (Exception e) {
@@ -58,7 +55,7 @@ public class SubscriptionsController {
     User user = (User) request.getAttribute(USER);
 
     try {
-      Series series = podcastsService.getSeries(seriesId);
+      Series series = podcastsService.getSeries(user, seriesId);
       Subscription subscription = new Subscription(user, series);
       subscriptionsService.deleteSubscription(subscription);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));

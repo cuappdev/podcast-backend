@@ -22,59 +22,42 @@ import static podcast.utils.Constants.*;
 public class SubscriptionsRepo {
 
   private Bucket bucket;
+  private Bucket podcastsBucket;
 
   @Autowired
-  public SubscriptionsRepo(@Qualifier("dbBucket") Bucket subscriptionsBucket) {
+  public SubscriptionsRepo(@Qualifier("dbBucket") Bucket subscriptionsBucket,
+                           @Qualifier("podcastsBucket") Bucket podcastsBucket) {
     this.bucket = subscriptionsBucket;
+    this.podcastsBucket = podcastsBucket;
   }
-
-
-  public String composeKey(Subscription s) {
-    return s.getSeriesId() + ":" + s.getUser().getId();
-  }
-
-
 
   /** Stores a subscription **/
   public Subscription storeSubscription(Subscription subscription, Series series) {
     series.incrementSubscriberCount();
-    List<JsonDocument> docs = Arrays.asList(
-      subscription.toJsonDocument(),
-      series.toJsonDocument()
-    );
-    Observable
-      .from(docs)
-      .flatMap(doc -> {
-        return bucket.async().upsert(doc);
-      })
-      .last()
-      .toBlocking()
-      .single();
+    bucket.upsert(subscription.toJsonDocument());
+    podcastsBucket.upsert(series.toJsonDocument());
     return subscription;
   }
 
-
+  /** Deletes a subscription **/
   public boolean deleteSubscription(Subscription subscription, Series series) {
     series.decrementSubscriberCount();
-    List<Object> keys = Arrays.asList(
-      Subscription.composeKey(subscription),
-      Series.composeKey(series.getId(), SERIES_PUB_DATE)
-    );
-    Observable
-      .from(keys)
-      .flatMap(x -> {
-        if(x instanceof String) {
-          return bucket.async().remove((String) x);
-        } else {
-          return bucket.async().upsert((JsonDocument) x);
-        }
-      })
-      .last()
-      .toBlocking()
-      .single();
+    bucket.remove(Subscription.composeKey(subscription));
+    podcastsBucket.upsert(series.toJsonDocument());
     return true;
   }
 
+  /** Get a subscription by user and seriesId **/
+  public Subscription getSubscription(User user, Long seriesId) {
+    JsonDocument doc = bucket.get(Subscription.composeKey(user.getId(), seriesId));
+    if (doc == null) {
+      return null;
+    } else {
+      return new Subscription(doc.content());
+    }
+  }
+
+  /** Get a user's subscriptions **/
   public List<Subscription> getUserSubscriptions(User user) {
     N1qlQuery q = N1qlQuery.simple(
       select("*").from("`"+DB+"`")

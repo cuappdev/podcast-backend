@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import podcast.models.entities.Episode;
 import podcast.models.entities.Series;
+import podcast.models.entities.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
@@ -31,8 +32,9 @@ public class PodcastsController {
   @RequestMapping(method = RequestMethod.GET, value = "/series/{series_id}")
   public ResponseEntity<Result> getSeriesById(HttpServletRequest request,
                                               @PathVariable("series_id") Long seriesId) {
+    User user = (User) request.getAttribute(USER);
     try {
-      Series series = podcastsService.getSeries(seriesId);
+      Series series = podcastsService.getSeries(user, seriesId);
       return ResponseEntity.status(200).body(new Success(SERIES, series));
     } catch (Exception e) {
       e.printStackTrace();
