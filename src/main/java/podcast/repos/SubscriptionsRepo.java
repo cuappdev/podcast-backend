@@ -13,6 +13,8 @@ import java.util.List;
 import podcast.models.entities.User;
 import rx.Observable;
 
+import static podcast.utils.Constants.*;
+
 @Component
 public class SubscriptionsRepo {
 
@@ -55,7 +57,7 @@ public class SubscriptionsRepo {
     series.decrementSubscriberCount();
     List<Object> keys = Arrays.asList(
       Subscription.composeKey(subscription),
-      Series.composeKey(series.getId(), new Long(0)) // TODO - figure out what to do here - series don't have pubdates
+      Series.composeKey(series.getId(), SERIES_PUB_DATE)
     );
     Observable
         .from(keys)
