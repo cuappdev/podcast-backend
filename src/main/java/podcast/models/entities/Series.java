@@ -24,11 +24,8 @@ public class Series extends Podcast {
   @Getter private String feedUrl;
   @Getter private Integer numberSubscribers;
   @Getter private List<String> genres;
-  @Setter private boolean isSubscribed = false;
+  @Setter @Getter private Boolean isSubscribed;
 
-  public boolean getIsSubscribed() { // Format for client
-    return this.isSubscribed;
-  }
 
   /**
    * Constructor from Couchbase JsonObject

@@ -43,7 +43,7 @@ public class PodcastsService {
     try {
       Series series = podcastsRepo.getSeries(seriesId);
       Subscription sub = subscriptionsRepo.getSubscription(loggedInUser, seriesId);
-      series.setSubscribed(sub != null);
+      series.setIsSubscribed(sub != null);
       return series;
     } catch (Exception e) {
       throw new Series.SeriesDoesNotExistException();
