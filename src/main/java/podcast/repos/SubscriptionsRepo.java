@@ -35,14 +35,14 @@ public class SubscriptionsRepo {
   /** Stores a subscription **/
   public Subscription storeSubscription(Subscription subscription, Series series) {
     series.incrementSubscriberCount();
-    List<Object> keys = Arrays.asList(
-      Subscription.composeKey(subscription),
-      Series.composeKey(series.getId(), new Long(0))
+    List<JsonDocument> docs = Arrays.asList(
+      subscription.toJsonDocument(),
+      series.toJsonDocument()
     );
     Observable
-        .from(keys)
-        .flatMap(x -> {
-          return bucket.async().upsert((JsonDocument) x);
+        .from(docs)
+        .flatMap(doc -> {
+            return bucket.async().upsert(doc);
         })
         .last()
         .toBlocking()

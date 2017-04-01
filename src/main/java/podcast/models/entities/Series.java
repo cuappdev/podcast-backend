@@ -1,5 +1,6 @@
 package podcast.models.entities;
 
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import java.util.ArrayList;
@@ -52,5 +53,11 @@ public class Series extends Podcast {
   public void decrementSubscriberCount() {
     numberSubscribers -= 1;
   }
+
+  public JsonDocument toJsonDocument() {
+    return JsonDocument.create(composeKey(id, SERIES_PUB_DATE), super.toJsonObject());
+  }
+
+
 
 }
