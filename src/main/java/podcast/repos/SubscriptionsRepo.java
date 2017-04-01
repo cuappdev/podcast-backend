@@ -2,6 +2,8 @@ package podcast.repos;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.query.N1qlQuery;
+import com.couchbase.client.java.query.N1qlQueryRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -10,8 +12,12 @@ import podcast.models.entities.Subscription;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import podcast.models.entities.User;
 import rx.Observable;
+import static com.couchbase.client.java.query.Select.select;
+import static com.couchbase.client.java.query.dsl.Expression.*;
 
 import static podcast.utils.Constants.*;
 
@@ -76,6 +82,16 @@ public class SubscriptionsRepo {
   }
 
   public List<Subscription> getUserSubscriptions(User user) {
-    return new ArrayList<Subscription>();
+    N1qlQuery q = N1qlQuery.simple(
+        select("*").from("`"+DB+"`")
+        .where(
+            (x(TYPE).eq(s(SUBSCRIPTION)))
+            .and(x(USER_ID).eq(s(user.getId()))
+            )
+        )
+    );
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+    return rows.stream()
+        .map(r -> new Subscription(r.value().getObject(DB))).collect(Collectors.toList());
   }
 }
