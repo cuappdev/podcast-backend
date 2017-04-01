@@ -35,15 +35,13 @@ public class SubscriptionsService {
 
   public boolean deleteSubscription(Subscription subscription) {
     synchronized (this) {
-      return subscriptionsRepo.deleteSubscription(subscription, podcastsRepo.getSeries(subscription.getSeriesId()));
+      return subscriptionsRepo.deleteSubscription(subscription,
+        podcastsRepo.getSeries(subscription.getSeriesId()));
     }
   }
 
   public boolean deleteSubscription(User owner, Series series) {
-    synchronized(this) {
-      Subscription sub = new Subscription(owner, series);
-      return subscriptionsRepo.deleteSubscription(sub, series);
-    }
+    return deleteSubscription(new Subscription(owner, series));
   }
 
   public List<Subscription> getUserSubscriptions(String userId) throws Exception {

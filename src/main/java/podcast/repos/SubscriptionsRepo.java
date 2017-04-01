@@ -41,6 +41,9 @@ public class SubscriptionsRepo {
 
   /** Deletes a subscription **/
   public boolean deleteSubscription(Subscription subscription, Series series) {
+    if (subscription == null) {
+      return false;
+    }
     series.decrementSubscriberCount();
     bucket.remove(Subscription.composeKey(subscription));
     podcastsBucket.upsert(series.toJsonDocument());
