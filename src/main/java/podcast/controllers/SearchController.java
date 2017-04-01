@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import podcast.models.entities.Episode;
 import podcast.models.entities.Person;
 import podcast.models.entities.Series;
+import podcast.models.entities.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
@@ -43,8 +44,10 @@ public class SearchController {
                                                @PathVariable(QUERY) String query,
                                                @RequestParam(OFFSET) Integer offset,
                                                @RequestParam(MAX) Integer max) {
+    /* Grab the user corresponding to the request */
+    User user = (User) request.getAttribute(USER);
     try {
-      List<Episode> episodes = podcastsSearch.searchEpisodes(query, offset, max);
+      List<Episode> episodes = podcastsSearch.searchEpisodes(query, offset, max, user);
       return ResponseEntity.status(200).body(new Success(EPISODES, episodes));
     } catch (Exception e) {
       e.printStackTrace();
@@ -59,8 +62,10 @@ public class SearchController {
                                              @PathVariable(QUERY) String query,
                                              @RequestParam(OFFSET) Integer offset,
                                              @RequestParam(MAX) Integer max) {
+    /* Grab the user corresponding to the request */
+    User user = (User) request.getAttribute(USER);
     try {
-      List<Series> series = podcastsSearch.searchSeries(query, offset, max);
+      List<Series> series = podcastsSearch.searchSeries(query, offset, max, user);
       return ResponseEntity.status(200).body(new Success(SERIES, series));
     } catch (Exception e) {
       e.printStackTrace();
@@ -75,6 +80,8 @@ public class SearchController {
                                             @PathVariable(QUERY) String query,
                                             @RequestParam(OFFSET) Integer offset,
                                             @RequestParam(MAX) Integer max) {
+    /* Grab the user corresponding to the request */
+    User user = (User) request.getAttribute(USER);
     try {
       List<Person> users = usersSearch.searchUsers(query, offset, max);
       return ResponseEntity.status(200)
@@ -92,9 +99,11 @@ public class SearchController {
                                           @PathVariable(QUERY) String query,
                                           @RequestParam(OFFSET) Integer offset,
                                           @RequestParam(MAX) Integer max) {
+    /* Grab the user corresponding to the request */
+    User user = (User) request.getAttribute(USER);
     try {
-      List<Series> series = podcastsSearch.searchSeries(query, offset, max);
-      List<Episode> episodes = podcastsSearch.searchEpisodes(query, offset, max);
+      List<Series> series = podcastsSearch.searchSeries(query, offset, max, user);
+      List<Episode> episodes = podcastsSearch.searchEpisodes(query, offset, max, user);
       List<Person> users = usersSearch.searchUsers(query, offset, max);
       return ResponseEntity.status(200).body(
         new Success(SERIES, series)

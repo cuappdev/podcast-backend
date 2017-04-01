@@ -47,6 +47,10 @@ public class SubscriptionsService {
 
   public List<Subscription> getUserSubscriptions(String userId) throws Exception {
     User user = usersRepo.getUserById(userId);
+    return getUserSubscriptions(user);
+  }
+
+  public List<Subscription> getUserSubscriptions(User user) throws Exception {
     return subscriptionsRepo.getUserSubscriptions(user);
   }
 

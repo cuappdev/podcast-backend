@@ -7,6 +7,6 @@ import java.util.List;
 public abstract class UsersSearch {
 
   /** Given a query, search and return resultant users **/
-  public abstract List<Person> searchUsers(String query, Integer offset, Integer max);
+  public abstract List<Person> searchUsers(String query, Integer offset, Integer max) throws Exception;
 
 }
