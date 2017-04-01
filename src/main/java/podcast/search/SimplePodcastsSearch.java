@@ -9,12 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import podcast.models.entities.*;
 import podcast.services.SubscriptionsService;
-import podcast.utils.Constants;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import static podcast.utils.Constants.*;
 

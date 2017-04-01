@@ -3,7 +3,6 @@ package podcast.search;
 import org.springframework.beans.factory.annotation.Autowired;
 import podcast.models.entities.*;
 import podcast.services.SubscriptionsService;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +28,7 @@ public abstract class PodcastsSearch {
   public abstract List<Podcast> searchEverything(String query, Integer offset, Integer max, User user) throws Exception;
 
 
+  /** Add the isSubscribed field to a list of series **/
   public List<Series> addSubscribed(List<Series> series, User user) throws Exception {
     List<Long> subs = subscriptionsService.getUserSubscriptions(user).stream()
       .map(Subscription::getSeriesId).collect(Collectors.toList());
@@ -38,5 +38,7 @@ public abstract class PodcastsSearch {
       return s;
     }).collect(Collectors.toList());
   }
+
+  // TODO - /** add the didRecommend field to a list of episodes **/
 
 }
