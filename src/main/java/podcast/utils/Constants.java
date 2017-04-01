@@ -58,6 +58,7 @@ public class Constants {
   public static final String SUBSCRIPTIONS = "subscriptions";
   public static final String EPISODES = "episodes";
   public static final String USERS = "users";
+  public static final String IS_SUBSCRIBED = "isSubscribed";
   // TODO - more
 
   public static final String AUTHORIZATION = "Authorization";

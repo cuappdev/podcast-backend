@@ -60,7 +60,9 @@ public class Series extends Podcast {
   }
 
   public JsonDocument toJsonDocument() {
-    return JsonDocument.create(composeKey(id, SERIES_PUB_DATE), super.toJsonObject());
+    JsonObject object = super.toJsonObject();
+    object.removeKey(IS_SUBSCRIBED);
+    return JsonDocument.create(composeKey(id, SERIES_PUB_DATE), object);
   }
 
 

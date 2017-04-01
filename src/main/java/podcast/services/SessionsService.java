@@ -1,7 +1,5 @@
 package podcast.services;
 
-import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.document.JsonDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import podcast.models.entities.Session;

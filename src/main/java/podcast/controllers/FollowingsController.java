@@ -70,7 +70,6 @@ public class FollowingsController {
 
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
-
     try {
       boolean deleted = ffService.deleteFollowing(user, id);
       return ResponseEntity.status(200).body(new Success());

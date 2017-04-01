@@ -8,7 +8,6 @@ import podcast.models.entities.User;
 import podcast.repos.PodcastsRepo;
 import podcast.repos.SubscriptionsRepo;
 import podcast.repos.UsersRepo;
-
 import java.util.List;
 
 @Service
@@ -19,7 +18,9 @@ public class SubscriptionsService {
   private SubscriptionsRepo subscriptionsRepo;
 
   @Autowired
-  public SubscriptionsService(PodcastsRepo podcastsRepo, SubscriptionsRepo subscriptionsRepo, UsersRepo usersRepo) {
+  public SubscriptionsService(PodcastsRepo podcastsRepo,
+                              SubscriptionsRepo subscriptionsRepo,
+                              UsersRepo usersRepo) {
     this.podcastsRepo = podcastsRepo;
     this.subscriptionsRepo = subscriptionsRepo;
     this.usersRepo = usersRepo;
