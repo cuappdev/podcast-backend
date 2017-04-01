@@ -24,7 +24,6 @@ public class SubscriptionsTest extends BaseIntegrationTest {
   @Before
   public void before() throws Exception {
     super.before();
-    TimeUnit.SECONDS.sleep(2);
   }
 
   private void subscribeAll() throws Exception {
@@ -32,10 +31,10 @@ public class SubscriptionsTest extends BaseIntegrationTest {
       if (u.getSession().getSessionToken().equals(getSession())) {
         for (Series s : getMockSeries()) {
           JsonNode response = mvcResultAsJson(
-              getMockMvc()
-                  .perform(MockMvcRequestBuilders.post("/api/v1/subscriptions?id=" + s.getId())
-                      .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
-                  .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+            getMockMvc()
+              .perform(MockMvcRequestBuilders.post("/api/v1/subscriptions?id=" + s.getId())
+                .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+              .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
           );
         }
       }
@@ -53,10 +52,10 @@ public class SubscriptionsTest extends BaseIntegrationTest {
       if (u.getSession().getSessionToken().equals(getSession())) {
         for (Series s : getMockSeries()) {
           JsonNode response = mvcResultAsJson(
-              getMockMvc()
-                  .perform(MockMvcRequestBuilders.delete("/api/v1/subscriptions?id=" + s.getId())
-                      .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
-                  .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+            getMockMvc()
+              .perform(MockMvcRequestBuilders.delete("/api/v1/subscriptions?id=" + s.getId())
+                .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+              .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
           );
         }
       }
