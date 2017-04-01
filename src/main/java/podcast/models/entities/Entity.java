@@ -3,7 +3,6 @@ package podcast.models.entities;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import org.codehaus.jackson.map.ObjectMapper;
-
 import java.util.Map;
 
 /**
@@ -21,11 +20,21 @@ public abstract class Entity {
 
   /**
    * To JsonObject, via converting to a map
-   * @return
+   * @return - Couchbase JsonObject
    */
   public JsonObject toJsonObject() {
     Map<String, Object> props = mapper.convertValue(this, Map.class);
     return JsonObject.from(props);
+  }
+
+  /**
+   * Base composeKey function
+   * @param key - Key to attach type info to
+   * @param type - Type information in the form of a String
+   * @return - Key string
+   */
+  public static String composeKey(String key, String type) {
+    return String.format("%s:%s", key, type);
   }
 
 }

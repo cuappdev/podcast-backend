@@ -40,7 +40,7 @@ public class UsersRepo {
 
   /** Remove User by ID (+ return the user just deleted) **/
   public void removeUserById(String id) throws Exception {
-    JsonDocument doc = bucket.get(id);
+    JsonDocument doc = bucket.get(User.composeKey(id));
     if (doc == null) {
       throw new Exception("This user does not exist");
     }
@@ -59,7 +59,7 @@ public class UsersRepo {
 
   /** Checks to see if this username is available **/
   public boolean usernameAvailable(String username) {
-    JsonDocument doc = bucket.get(username);
+    JsonDocument doc = bucket.get(User.UsernameToUser.composeKey(username));
     return doc == null;
   }
 
@@ -67,7 +67,7 @@ public class UsersRepo {
   /** Update user username **/
   public User updateUsername(User user, String username) throws Exception {
     // Remove previous lookup for username
-    bucket.remove(user.getUsername());
+    bucket.remove(User.UsernameToUser.composeKey(user.getUsername()));
     // Sets username, ensures it's valid
     user.setUsername(username);
     // Stores user as a whole + returns the user
@@ -77,7 +77,7 @@ public class UsersRepo {
 
   /** Get User by ID **/
   public User getUserById(String id) throws Exception {
-    JsonDocument doc = bucket.get(id);
+    JsonDocument doc = bucket.get(User.composeKey(id));
     if (doc == null) {
       throw new Exception();
     } else {
@@ -88,12 +88,12 @@ public class UsersRepo {
 
   /** Get User by Google ID (optional) **/
   public Optional<User> getUserByGoogleId(String googleId) {
-    JsonDocument doc = bucket.get(googleId);
+    JsonDocument doc = bucket.get(User.GoogleIdToUser.composeKey(googleId));
     if (doc == null) {
       return Optional.empty();
     } else {
       User.GoogleIdToUser idToUser = new User.GoogleIdToUser(doc.content());
-      User user = new User(bucket.get(idToUser.getUserId()).content());
+      User user = new User(bucket.get(User.composeKey(idToUser.getUserId())).content());
       return Optional.of(user);
     }
   }

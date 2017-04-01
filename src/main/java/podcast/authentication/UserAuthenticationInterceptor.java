@@ -74,7 +74,7 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
     try {
       /* Attempt to get the user */
       String userId = Session.tokenToUserId(sessionToken);
-      JsonDocument result = bucket.get(userId);
+      JsonDocument result = bucket.get(User.composeKey(userId));
       user = new User(result.content());
 
       /* Check session equality */

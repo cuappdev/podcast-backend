@@ -54,7 +54,7 @@ public class Subscription extends Entity {
 
   /** Compose Key from Subscription **/
   public static String composeKey(Subscription s) {
-    return String.format("%s:%s:%s", s.getSeriesTitle(), s.getUserId(), Type.subscription);
+    return Entity.composeKey(String.format("%s:%s", s.getSeriesTitle(), s.getUserId()), Type.subscription.toString());
   }
 
 

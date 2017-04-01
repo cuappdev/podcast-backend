@@ -43,4 +43,19 @@ public class Following extends FollowRelationship {
     return super.toJsonDocument(composeKey(this));
   }
 
+  /** Compose key from ownerId and correspondentId **/
+  public static String composeKey(String ownerId, String corrId) {
+    return Entity.composeKey(String.format("%s:%s", ownerId, corrId), Type.following.toString());
+  }
+
+  /** Compose key from owner and correspondent **/
+  public static String composeKey(User owner, User correspondent) {
+    return composeKey(owner.getId(), correspondent.getId());
+  }
+
+  /** Compose key from following **/
+  public static String composeKey(Following f) {
+    return composeKey(f.getOwnerId(), f.getId());
+  }
+
 }

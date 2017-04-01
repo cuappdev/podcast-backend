@@ -86,7 +86,7 @@ public class FollowersFollowingsRepo {
 
   /** Get following by users **/
   public Optional<Following> getFollowingByUsers(User owner, User followed) {
-    JsonDocument doc = bucket.get(FollowRelationship.composeKey(owner, followed, Type.following));
+    JsonDocument doc = bucket.get(Following.composeKey(owner, followed));
     if (doc == null) {
       return Optional.empty();
     } else {
@@ -102,8 +102,8 @@ public class FollowersFollowingsRepo {
     followed.incrementFollowers();
     // Bach remove + update of users
     List<Object> keys = Arrays.asList(
-      FollowRelationship.composeKey(following.getOwnerId(), following.getId(), Type.following),
-      FollowRelationship.composeKey(following.getId(), following.getOwnerId(), Type.follower),
+      Following.composeKey(following.getOwnerId(), following.getId()),
+      Follower.composeKey(following.getId(), following.getOwnerId()),
       owner.toJsonDocument(),
       followed.toJsonDocument()
     );

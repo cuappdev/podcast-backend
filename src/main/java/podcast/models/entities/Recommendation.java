@@ -60,10 +60,19 @@ public class Recommendation extends Entity {
     return JsonDocument.create(composeKey(this), super.toJsonObject());
   }
 
+  /** Compose a key from episodeId and userId **/
+  public static String composeKey(String episodeId, String userId) {
+    return Entity.composeKey(String.format("%s:%s", episodeId, userId), Type.recommendation.toString());
+  }
+
+  /** Compose a key from episode and user **/
+  public static String composeKey(Episode episode, User user) {
+    return composeKey(episode.getId(), user.getId());
+  }
 
   /** Compose key from Recommendation **/
   public static String composeKey(Recommendation r) {
-    return String.format("%s:%s:%s", r.getEpisodeId(), r.user.getId(), r.getType().toString());
+    return composeKey(r.getEpisodeId(), r.getUser().getId());
   }
 
 }

@@ -144,20 +144,23 @@ public class User extends Entity {
   public List<String> keys() {
     List<String> keys = new ArrayList<String>();
     keys.add(composeKey(this));
-    keys.add(getUsername());
+    keys.add(UsernameToUser.composeKey(getUsername()));
     if (getGoogleId() != null) {
-      keys.add(getGoogleId());
+      keys.add(GoogleIdToUser.composeKey(getGoogleId()));
     }
     // TODO check fb
     return keys;
   }
 
+  /** Compose key from userId **/
+  public static String composeKey(String userId) {
+    return Entity.composeKey(userId, Type.user.toString());
+  }
 
   /** Compose key from user **/
   public static String composeKey(User user) {
-    return user.getId();
+    return composeKey(user.getId());
   }
-
 
   /** Thrown when the username is not valid **/
   public static class InvalidUsernameException extends Exception {
@@ -211,8 +214,19 @@ public class User extends Entity {
 
     /** See {@link Entity#toJsonDocument()} **/
     public JsonDocument toJsonDocument() {
-      return JsonDocument.create(username, super.toJsonObject());
+      return JsonDocument.create(composeKey(this), super.toJsonObject());
     }
+
+    /** Compose key from username **/
+    public static String composeKey(String username) {
+      return Entity.composeKey(username, UserLookupType.usernameToUser.toString());
+    }
+
+    /** Compose key from object **/
+    public static String composeKey(UsernameToUser utu) {
+      return composeKey(utu.getUsername());
+    }
+
   }
 
   /**
@@ -239,8 +253,19 @@ public class User extends Entity {
 
     /** See {@link Entity#toJsonDocument()} **/
     public JsonDocument toJsonDocument() {
-      return JsonDocument.create(googleId, super.toJsonObject());
+      return JsonDocument.create(composeKey(this), super.toJsonObject());
     }
+
+    /** Compose key from googleId **/
+    public static String composeKey(String googleId) {
+      return Entity.composeKey(googleId, UserLookupType.googleIdToUser.toString());
+    }
+
+    /** Compose key from object **/
+    public static String composeKey(GoogleIdToUser gitu) {
+      return composeKey(gitu.getGoogleId());
+    }
+
   }
 
   /**
@@ -254,7 +279,17 @@ public class User extends Entity {
 
     /** See {@link Entity#toJsonDocument()} **/
     public JsonDocument toJsonDocument() {
-      return JsonDocument.create(facebookId, super.toJsonObject());
+      return JsonDocument.create(composeKey(this), super.toJsonObject());
+    }
+
+    /** Compose key from facebookId **/
+    public static String composeKey(String facebookId) {
+      return Entity.composeKey(facebookId, UserLookupType.facebookIdToUser.toString());
+    }
+
+    /** Compose key from object **/
+    public static String composeKey(FacebookIdToUser gitu) {
+      return composeKey(gitu.getFacebookId());
     }
   }
 

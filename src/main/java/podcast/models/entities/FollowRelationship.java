@@ -41,25 +41,6 @@ public abstract class FollowRelationship extends Entity {
     return JsonDocument.create(key, super.toJsonObject());
   }
 
-
-  /** Given id's and following relationship type, compose key **/
-  public static String composeKey(String ownerId, String corrId, Type type) {
-    return String.format("%s:%s:%s", ownerId, corrId, type.toString());
-  }
-
-
-  /** Given an owning user, a correspondent, and a following
-   * relationship type, compose key **/
-  public static String composeKey(User owner, User correspondent, Type type) {
-    return composeKey(owner.getId(), correspondent.getId(), type);
-  }
-
-
-  /** Given a relationship, compose a key **/
-  public static String composeKey(FollowRelationship fr) {
-    return composeKey(fr.getOwnerId(), fr.getId(), fr.getType());
-  }
-
   /** When the relationship is not found **/
   public static class NonExistentFollowingException extends Exception {
     public NonExistentFollowingException() {
