@@ -16,7 +16,7 @@ public class Subscription extends Entity {
   @Getter private Long seriesId;
   @Getter private String imageUrlSm;
   @Getter private String imageUrlLg;
-  @Getter private Person user;
+  @Getter private AssociatedUser user;
   @Getter private Date createdAt = new Date();
   @Getter private String userId;
 
@@ -31,7 +31,7 @@ public class Subscription extends Entity {
     this.seriesId = series.getId();
     this.imageUrlSm = series.getImageUrlSm();
     this.imageUrlLg = series.getImageUrlLg();
-    this.user = new Person(user);
+    this.user = new AssociatedUser(user);
     this.userId = this.user.getId();
   }
 
@@ -42,9 +42,10 @@ public class Subscription extends Entity {
     this.seriesId = object.getLong(SERIES_ID);
     this.imageUrlSm = object.getString(IMAGE_URL_SM);
     this.imageUrlLg = object.getString(IMAGE_URL_LG);
-    this.user = new Person(object.getObject(USER));
+    this.user = new AssociatedUser(object.getObject(USER));
     this.userId = this.user.getId();
   }
+
 
   /** See {@link Entity#toJsonDocument()} **/
   public JsonDocument toJsonDocument() {
