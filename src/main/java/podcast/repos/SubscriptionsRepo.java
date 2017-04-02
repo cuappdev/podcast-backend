@@ -64,7 +64,7 @@ public class SubscriptionsRepo {
       select("*").from("`"+DB+"`")
         .where(
           (x(TYPE).eq(s(SUBSCRIPTION)))
-            .and(x(USER_ID).eq(s(user.getId())))
+            .and(x("`" + USER + "`.`" + ID + "`").eq(s(user.getId())))
         )
     );
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
