@@ -26,7 +26,6 @@ public class Series extends Podcast {
   @Getter private List<String> genres;
   @Setter @Getter private Boolean isSubscribed;
 
-
   /**
    * Constructor from Couchbase JsonObject
    * @param object - JsonObject
@@ -44,24 +43,25 @@ public class Series extends Podcast {
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }
 
-  public static class SeriesDoesNotExistException extends Exception {
-    public SeriesDoesNotExistException() { super("Series does not exist"); }
-  }
-
+  /** Increment the number of people who are subscribed to this series */
   public void incrementSubscriberCount() {
     numberSubscribers += 1;
   }
 
+  /** Decrement the number of people who are subscribed to this series */
   public void decrementSubscriberCount() {
     numberSubscribers -= 1;
   }
 
+  /** See {@link Entity#toJsonDocument()} */
   public JsonDocument toJsonDocument() {
     JsonObject object = super.toJsonObject();
     object.removeKey(IS_SUBSCRIBED);
     return JsonDocument.create(composeKey(id, SERIES_PUB_DATE), object);
   }
 
-
-
+  /** When the series does not exist */
+  public static class SeriesDoesNotExistException extends Exception {
+    public SeriesDoesNotExistException() { super("Series does not exist"); }
+  }
 }

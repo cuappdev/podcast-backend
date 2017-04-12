@@ -59,8 +59,10 @@ public class Constants {
   public static final String EPISODES = "episodes";
   public static final String USERS = "users";
   public static final String IS_SUBSCRIBED = "isSubscribed";
-  // TODO - more
+  public static final String NUMBER_RECOMMENDERS = "numberRecommenders";
+  public static final String HAS_RECOMMENDED = "hasRecommended";
 
+  /* Header constants */
   public static final String AUTHORIZATION = "Authorization";
   public static final String BEARER = "Bearer ";
 
