@@ -9,6 +9,7 @@ import podcast.models.entities.users.User;
 import podcast.repos.PodcastsRepo;
 import podcast.repos.RecommendationsRepo;
 import podcast.repos.UsersRepo;
+import java.util.List;
 
 @Service
 public class RecommendationsService {
@@ -29,6 +30,7 @@ public class RecommendationsService {
     this.recommendationsRepo = recommendationsRepo;
   }
 
+  /** Create a recommendation and broadcast the creation event */
   public Recommendation createRecommendation(User owner, String episodeId) {
     Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
     Episode episode = podcastsRepo.getEpisodeBySeriesIdAndTimestamp(comp.getSeriesId(), comp.getPubDate());
@@ -37,12 +39,24 @@ public class RecommendationsService {
     return recommendationsRepo.storeRecommendation(recommendation, episode);
   }
 
-  public boolean deleteRecommendation(User owner, String episodeId) {
+  /** Delete a recommendation and broadcast the deletion event */
+  public Recommendation deleteRecommendation(User owner, String episodeId) {
     Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
     Episode episode = podcastsRepo.getEpisodeBySeriesIdAndTimestamp(comp.getSeriesId(), comp.getPubDate());
     Recommendation recommendation = recommendationsRepo.getRecommendation(owner, episodeId);
     publisher.publishEvent(new RecommendationDeletionEvent(recommendation, episode, owner));
     return recommendationsRepo.deleteRecommendation(recommendation, episode);
+  }
+
+  /** Get a user's recommendations by the user's ID */
+  public List<Recommendation> getUserRecommendations(String userId) throws Exception {
+    User user = usersRepo.getUserById(userId);
+    return getUserRecommendations(user);
+  }
+
+  /** Get a user's recommendations by the user */
+  public List<Recommendation> getUserRecommendations(User user) throws Exception {
+    return recommendationsRepo.getUserRecommendations(user);
   }
 
   // MARK - events

@@ -20,34 +20,25 @@ import static podcast.utils.Constants.*;
 public class RecommendationsRepo {
 
   private Bucket bucket;
-  private Bucket podcastsBucket;
 
   @Autowired
-  public RecommendationsRepo(@Qualifier("dbBucket") Bucket bucket,
-                             @Qualifier("podcastsBucket") Bucket podcastsBucket) {
+  public RecommendationsRepo(@Qualifier("dbBucket") Bucket bucket) {
     this.bucket = bucket;
-    this.podcastsBucket = podcastsBucket;
   }
 
   /** Stores a recommendation */
   public Recommendation storeRecommendation(Recommendation recommendation,
                                             Episode episode) {
-    episode.incrementNumberRecommenders();
     bucket.upsert(recommendation.toJsonDocument());
-    podcastsBucket.upsert(episode.toJsonDocument());
     return recommendation;
   }
 
   /** Deletes a recommendation */
-  public boolean deleteRecommendation(Recommendation recommendation,
+  public Recommendation deleteRecommendation(Recommendation recommendation,
                                       Episode episode) {
-    if (recommendation == null) {
-      return false;
-    }
-    episode.decrementNumberRecommenders();
+    if (recommendation == null) return null;
     bucket.remove(Recommendation.composeKey(recommendation));
-    podcastsBucket.upsert(episode.toJsonDocument());
-    return true;
+    return recommendation;
   }
 
   /** Get a recommendation by user and episodeId */

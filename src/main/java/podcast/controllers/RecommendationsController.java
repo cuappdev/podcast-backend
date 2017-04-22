@@ -3,14 +3,14 @@ package podcast.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.recommendations.Recommendation;
 import podcast.models.entities.users.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
-import podcast.services.PodcastsService;
+import podcast.services.RecommendationsService;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import static podcast.utils.Constants.*;
 
 /**
@@ -20,11 +20,11 @@ import static podcast.utils.Constants.*;
 @RequestMapping("/api/v1/recommendations")
 public class RecommendationsController {
 
-  private final PodcastsService podcastsService;
+  private final RecommendationsService recommendationsService;
 
   @Autowired
-  public RecommendationsController(PodcastsService podcastsService) {
-    this.podcastsService = podcastsService;
+  public RecommendationsController(RecommendationsService recommendationsService) {
+    this.recommendationsService = recommendationsService;
   }
 
   /** Create a recommendation **/
@@ -34,16 +34,12 @@ public class RecommendationsController {
     /* Grab the user from the corresponding request */
     User user = (User) request.getAttribute(USER);
     try {
-      Episode.CompositeEpisodeKey ck = Episode.getSeriesIdAndPubDate(episodeId);
-      Episode episode = podcastsService.getEpisode(ck.getSeriesId(), ck.getPubDate());
-      Recommendation recommendation = new Recommendation(user, episode);
-      // TODO - Save recommendation
+      Recommendation recommendation = recommendationsService.createRecommendation(user, episodeId);
       return ResponseEntity.status(200).body(new Success(RECOMMENDATION, recommendation));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
-
 
   /** Get recommendations of an episode (paginated) **/
   @RequestMapping(method = RequestMethod.GET, value = "/{episode_id}")
@@ -51,27 +47,34 @@ public class RecommendationsController {
                                                    @PathVariable("episode_id") String episodeId,
                                                    @RequestParam("offset") Integer offset,
                                                    @RequestParam("max") Integer max) {
-    /* Grab the user from the corresponding request */
-    User user = (User) request.getAttribute(USER);
     try {
-      // TODO - grab the recommendations
+      // TODO
       return ResponseEntity.status(200).body(new Success(RECOMMENDATIONS, null));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
 
-
   /** Delete a recommendation **/
   @RequestMapping(method = RequestMethod.DELETE, value = "/{episode_id}")
   public ResponseEntity<Result> deleteRecommendation(HttpServletRequest request,
                                                      @PathVariable("episode_id") String episodeId) {
-    /* Grab the user from the corresponding request */
     User user = (User) request.getAttribute(USER);
     try {
-      // TODO - grab the recommendation to delete
-      // DELETE IT
-      return ResponseEntity.status(200).body(new Success());
+      Recommendation recommendation = recommendationsService.deleteRecommendation(user, episodeId);
+      return ResponseEntity.status(200).body(new Success(RECOMMENDATION, recommendation));
+    } catch (Exception e) {
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
+
+  /** Get the recommendations of a user by Id */
+  @RequestMapping(method = RequestMethod.GET, value = "/user/{user_id}")
+  public ResponseEntity<Result> getUserRecommendations(HttpServletRequest request,
+                                                       @PathVariable("user_id") String userId) {
+    try {
+      List<Recommendation> recommendations = recommendationsService.getUserRecommendations(userId);
+      return ResponseEntity.status(200).body(new Success(RECOMMENDATIONS, recommendations));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
