@@ -10,7 +10,6 @@ import podcast.models.entities.*;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
-import podcast.services.PodcastsService;
 import podcast.services.SubscriptionsService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -23,12 +22,10 @@ import static podcast.utils.Constants.*;
 @RequestMapping("/api/v1/subscriptions")
 public class SubscriptionsController {
 
-  private final PodcastsService podcastsService;
   private final SubscriptionsService subscriptionsService;
 
   @Autowired
-  public SubscriptionsController(PodcastsService podcastsService, SubscriptionsService subscriptionsService) {
-    this.podcastsService = podcastsService;
+  public SubscriptionsController(SubscriptionsService subscriptionsService) {
     this.subscriptionsService = subscriptionsService;
   }
 
@@ -37,10 +34,8 @@ public class SubscriptionsController {
   public ResponseEntity<Result> createSubscription(HttpServletRequest request,
                                                      @RequestParam("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
-
     try {
-      Series series = podcastsService.getSeries(user, seriesId);
-      Subscription subscription = subscriptionsService.createSubscription(user, series);
+      Subscription subscription = subscriptionsService.createSubscription(user, seriesId);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));
     } catch (Exception e) {
       e.printStackTrace();
@@ -55,9 +50,7 @@ public class SubscriptionsController {
     User user = (User) request.getAttribute(USER);
 
     try {
-      Series series = podcastsService.getSeries(user, seriesId);
-      Subscription subscription = new Subscription(user, series);
-      subscriptionsService.deleteSubscription(subscription);
+      Subscription subscription = subscriptionsService.deleteSubscription(user, seriesId);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));
     } catch (Exception e) {
       e.printStackTrace();

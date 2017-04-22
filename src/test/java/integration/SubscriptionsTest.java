@@ -13,8 +13,6 @@ import podcast.models.entities.User;
 import podcast.services.SubscriptionsService;
 import podcast.utils.Constants;
 
-import java.util.concurrent.TimeUnit;
-
 public class SubscriptionsTest extends BaseIntegrationTest {
 
   @Autowired
@@ -68,7 +66,7 @@ public class SubscriptionsTest extends BaseIntegrationTest {
       if (u.getSession().getSessionToken().equals(getSession())) {
         for (Series s : getMockSeries()) {
           try {
-            subService.deleteSubscription(u, s);
+            subService.deleteSubscription(u, s.getId());
           } catch (Exception e) {
 
           }

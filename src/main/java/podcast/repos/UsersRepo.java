@@ -21,7 +21,6 @@ public class UsersRepo {
     this.bucket = dbBucket;
   }
 
-
   /** Store a user in the bucket **/
   public User storeUser(User user) {
     // Add docs for batch insert
@@ -36,7 +35,6 @@ public class UsersRepo {
 
     return user;
   }
-
 
   /** Remove User by ID (+ return the user just deleted) **/
   public void removeUserById(String id) throws Exception {
@@ -56,13 +54,11 @@ public class UsersRepo {
       .single();
   }
 
-
   /** Checks to see if this username is available **/
   public boolean usernameAvailable(String username) {
     JsonDocument doc = bucket.get(User.UsernameToUser.composeKey(username));
     return doc == null;
   }
-
 
   /** Update user username **/
   public User updateUsername(User user, String username) throws Exception {
@@ -74,7 +70,6 @@ public class UsersRepo {
     return storeUser(user);
   }
 
-
   /** Get User by ID **/
   public User getUserById(String id) throws Exception {
     JsonDocument doc = bucket.get(User.composeKey(id));
@@ -84,7 +79,6 @@ public class UsersRepo {
       return new User(doc.content());
     }
   }
-
 
   /** Get User by Google ID (optional) **/
   public Optional<User> getUserByGoogleId(String googleId) {

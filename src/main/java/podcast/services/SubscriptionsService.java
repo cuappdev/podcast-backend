@@ -1,6 +1,7 @@
 package podcast.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import podcast.models.entities.Series;
 import podcast.models.entities.Subscription;
@@ -13,45 +14,81 @@ import java.util.List;
 @Service
 public class SubscriptionsService {
 
-  private PodcastsRepo podcastsRepo;
-  private UsersRepo usersRepo;
-  private SubscriptionsRepo subscriptionsRepo;
+  private final ApplicationEventPublisher publisher;
+  private final PodcastsRepo podcastsRepo;
+  private final UsersRepo usersRepo;
+  private final SubscriptionsRepo subscriptionsRepo;
 
   @Autowired
-  public SubscriptionsService(PodcastsRepo podcastsRepo,
+  public SubscriptionsService(ApplicationEventPublisher publisher,
+                              PodcastsRepo podcastsRepo,
                               SubscriptionsRepo subscriptionsRepo,
                               UsersRepo usersRepo) {
+    this.publisher = publisher;
     this.podcastsRepo = podcastsRepo;
     this.subscriptionsRepo = subscriptionsRepo;
     this.usersRepo = usersRepo;
   }
 
-  public Subscription createSubscription(User owner, Series series) {
-    synchronized (this) {
-      Subscription sub = new Subscription(owner, series);
-      subscriptionsRepo.storeSubscription(sub, series);
-      return sub;
-    }
+  /** Create a subscription and broadcast the creation event */
+  public Subscription createSubscription(User owner, Long seriesId) {
+    Series series = podcastsRepo.getSeries(seriesId);
+    Subscription subscription = new Subscription(owner, series);
+    publisher.publishEvent(new SubscriptionCreationEvent(subscription, series, owner));
+    return subscriptionsRepo.storeSubscription(subscription);
   }
 
-  public boolean deleteSubscription(Subscription subscription) {
-    synchronized (this) {
-      return subscriptionsRepo.deleteSubscription(subscription,
-        podcastsRepo.getSeries(subscription.getSeriesId()));
-    }
+  /** Delete a subscription and broadcast the deletion event */
+  public Subscription deleteSubscription(User owner, Long seriesId) {
+    Series series = podcastsRepo.getSeries(seriesId);
+    Subscription subscription = new Subscription(owner, series);
+    publisher.publishEvent(new SubscriptionDeletionEvent(subscription, series, owner));
+    return subscriptionsRepo.deleteSubscription(subscription);
   }
 
-  public boolean deleteSubscription(User owner, Series series) {
-    return deleteSubscription(new Subscription(owner, series));
-  }
-
+  /** Get a user's subscriptions by the user's ID */
   public List<Subscription> getUserSubscriptions(String userId) throws Exception {
     User user = usersRepo.getUserById(userId);
     return getUserSubscriptions(user);
   }
 
+  /** Get a user's subscriptions by the user */
   public List<Subscription> getUserSubscriptions(User user) throws Exception {
     return subscriptionsRepo.getUserSubscriptions(user);
+  }
+
+
+  // MARK - events
+
+  private static abstract class SubscriptionEvent {
+    Subscription subscription;
+    Series series;
+    User user;
+
+    /** Constructor */
+    protected SubscriptionEvent(Subscription subscription,
+                                Series series,
+                                User user) {
+      this.subscription = subscription;
+      this.series = series;
+      this.user = user;
+    }
+  }
+
+  static class SubscriptionCreationEvent extends SubscriptionEvent {
+    private SubscriptionCreationEvent(Subscription subscription,
+                                      Series series,
+                                      User user) {
+      super(subscription, series, user);
+    }
+  }
+
+  static class SubscriptionDeletionEvent extends SubscriptionEvent {
+    private SubscriptionDeletionEvent(Subscription subscription,
+                                      Series series,
+                                      User user) {
+      super(subscription, series, user);
+    }
   }
 
 }

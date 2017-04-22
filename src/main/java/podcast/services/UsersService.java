@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import podcast.models.entities.Session;
 import podcast.models.entities.User;
 import podcast.repos.UsersRepo;
-
 import java.util.AbstractMap;
 import java.util.Optional;
 
@@ -25,7 +24,6 @@ public class UsersService {
     this.usersRepo = usersRepo;
   }
 
-
   /** Get or create User, given a response from Google API -
    * boolean indicates whether or not the user is new **/
   public AbstractMap.SimpleEntry<Boolean, User> getOrCreateUser(JsonNode response, String googleId) {
@@ -40,18 +38,15 @@ public class UsersService {
     }
   }
 
-
   /** Get user by Id **/
   public User getUserById(String id) throws Exception {
     return usersRepo.getUserById(id);
   }
 
-
   /** Get user by googleId **/
   public Optional<User> getUserByGoogleId(String googleId) {
     return usersRepo.getUserByGoogleId(googleId);
   }
-
 
   /** Update the username of a user **/
   public User updateUsername(User user,
@@ -68,13 +63,11 @@ public class UsersService {
     }
   }
 
-
   /** Remove user by ID **/
   public void removeUserById(String id) throws Exception {
     synchronized (this) {
       usersRepo.removeUserById(id);
     }
   }
-
 
 }

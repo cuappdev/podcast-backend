@@ -1,6 +1,7 @@
 package podcast.repos;
 
 import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryRow;
 import com.couchbase.client.java.query.dsl.Sort;
@@ -25,18 +26,27 @@ public class PodcastsRepo {
     this.bucket = podcastsBucket;
   }
 
+  /** Update episode */
+  public Episode replaceEpisode(Episode episode) {
+    bucket.replace(episode.toJsonDocument());
+    return episode;
+  }
+
+  /** Update series */
+  public Series replaceSeries(Series series) {
+    bucket.replace(series.toJsonDocument());
+    return series;
+  }
 
   /** Get episode by seriesId and timestamp **/
   public Episode getEpisodeBySeriesIdAndTimestamp(Long seriesId, Long timestamp) {
     return new Episode(bucket.get(Podcast.composeKey(seriesId, timestamp)).content());
   }
 
-
   /** Get series by id **/
   public Series getSeries(Long seriesId) {
     return new Series(bucket.get(Podcast.composeKey(seriesId, SERIES_PUB_DATE)).content());
   }
-
 
   /** Get episodes by seriesId (paginated) **/
   public List<Episode> getEpisodesBySeriesId(Long seriesId,

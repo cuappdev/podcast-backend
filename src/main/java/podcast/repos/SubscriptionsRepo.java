@@ -7,7 +7,6 @@ import com.couchbase.client.java.query.N1qlQueryRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import podcast.models.entities.Series;
 import podcast.models.entities.Subscription;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,32 +19,23 @@ import static podcast.utils.Constants.*;
 public class SubscriptionsRepo {
 
   private Bucket bucket;
-  private Bucket podcastsBucket;
 
   @Autowired
-  public SubscriptionsRepo(@Qualifier("dbBucket") Bucket subscriptionsBucket,
-                           @Qualifier("podcastsBucket") Bucket podcastsBucket) {
+  public SubscriptionsRepo(@Qualifier("dbBucket") Bucket subscriptionsBucket) {
     this.bucket = subscriptionsBucket;
-    this.podcastsBucket = podcastsBucket;
   }
 
   /** Stores a subscription **/
-  public Subscription storeSubscription(Subscription subscription, Series series) {
-    series.incrementSubscriberCount();
+  public Subscription storeSubscription(Subscription subscription) {
     bucket.upsert(subscription.toJsonDocument());
-    podcastsBucket.upsert(series.toJsonDocument());
     return subscription;
   }
 
   /** Deletes a subscription **/
-  public boolean deleteSubscription(Subscription subscription, Series series) {
-    if (subscription == null) {
-      return false;
-    }
-    series.decrementSubscriberCount();
-    bucket.remove(Subscription.composeKey(subscription));
-    podcastsBucket.upsert(series.toJsonDocument());
-    return true;
+  public Subscription deleteSubscription(Subscription subscription) {
+    if (subscription == null) return null;
+    bucket.remove(subscription.toJsonDocument().id());
+    return subscription;
   }
 
   /** Get a subscription by user and seriesId **/
@@ -61,7 +51,7 @@ public class SubscriptionsRepo {
   /** Get a user's subscriptions **/
   public List<Subscription> getUserSubscriptions(User user) {
     N1qlQuery q = N1qlQuery.simple(
-      select("*").from("`"+DB+"`")
+      select("*").from("`" + DB + "`")
         .where(
           (x(TYPE).eq(s(SUBSCRIPTION)))
             .and(x("`" + USER + "`.`" + ID + "`").eq(s(user.getId())))

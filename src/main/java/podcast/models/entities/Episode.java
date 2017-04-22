@@ -3,7 +3,6 @@ package podcast.models.entities;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
-import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +26,6 @@ public class Episode extends Podcast {
   @Getter private String audioUrl;
   @Getter private Integer numberRecommenders;
   @Getter private List<String> tags;
-  @Setter @Getter private Boolean hasRecommended;
 
   /**
    * Constructor from Couchbase JsonObject
@@ -46,7 +44,7 @@ public class Episode extends Podcast {
     this.audioUrl = object.getString(AUDIO_URL);
     this.numberRecommenders = object.getInt(NUMBER_RECOMMENDERS);
     this.tags = object.getArray(TAGS) == null ? new ArrayList<String>() : object.getArray(TAGS).toList()
-      .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
+      .stream().map(o -> ((String) o)).collect(Collectors.toList());
   }
 
   /** Establishes a UUID for episodes for client **/
@@ -84,7 +82,6 @@ public class Episode extends Podcast {
   /** See {@link Entity#toJsonDocument()} */
   public JsonDocument toJsonDocument() {
     JsonObject object = super.toJsonObject();
-    object.removeKey(HAS_RECOMMENDED);
     return JsonDocument.create(composeKey(seriesId, pubDate), object);
   }
 
