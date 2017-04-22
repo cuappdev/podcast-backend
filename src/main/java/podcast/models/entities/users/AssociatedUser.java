@@ -1,7 +1,8 @@
-package podcast.models.entities;
+package podcast.models.entities.users;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+
 import static podcast.utils.Constants.*;
 
 /** User data nested in a model that requires some User data **/

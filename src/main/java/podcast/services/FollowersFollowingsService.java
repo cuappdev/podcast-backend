@@ -2,10 +2,10 @@ package podcast.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import podcast.models.entities.FollowRelationship;
-import podcast.models.entities.Follower;
-import podcast.models.entities.Following;
-import podcast.models.entities.User;
+import podcast.models.entities.followings.FollowRelationship;
+import podcast.models.entities.followings.Follower;
+import podcast.models.entities.followings.Following;
+import podcast.models.entities.users.User;
 import podcast.repos.FollowersFollowingsRepo;
 import podcast.repos.UsersRepo;
 import java.util.List;

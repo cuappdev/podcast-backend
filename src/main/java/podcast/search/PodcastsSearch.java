@@ -1,7 +1,11 @@
 package podcast.search;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import podcast.models.entities.*;
+import podcast.models.entities.podcasts.Episode;
+import podcast.models.entities.podcasts.Podcast;
+import podcast.models.entities.podcasts.Series;
+import podcast.models.entities.subscriptions.Subscription;
+import podcast.models.entities.users.User;
 import podcast.services.SubscriptionsService;
 import java.util.HashSet;
 import java.util.List;
@@ -34,8 +38,7 @@ public abstract class PodcastsSearch {
       .map(Subscription::getSeriesId).collect(Collectors.toList());
     Set<Long> subSeriesIdSet = new HashSet<Long>(subs);
     return series.stream().map(s -> {
-      s.setIsSubscribed(subSeriesIdSet.contains(s.getId()));
-      return s;
+      return s; // TODO - fix this
     }).collect(Collectors.toList());
   }
 

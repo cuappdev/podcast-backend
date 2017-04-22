@@ -1,4 +1,4 @@
-package podcast.models.entities;
+package podcast.models.entities.users;
 
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
@@ -6,6 +6,9 @@ import com.fasterxml.uuid.Generators;
 import lombok.Getter;
 import lombok.Setter;
 import org.codehaus.jackson.JsonNode;
+import podcast.models.entities.Entity;
+import podcast.models.entities.sessions.Session;
+
 import java.util.ArrayList;
 import java.util.List;
 import static podcast.utils.Constants.*;

@@ -1,4 +1,6 @@
-package podcast.models.entities;
+package podcast.models.entities.podcasts;
+
+import podcast.models.entities.Entity;
 
 /** Abstract parent of podcast entities (series, episodes, etc.) **/
 public abstract class Podcast extends Entity {

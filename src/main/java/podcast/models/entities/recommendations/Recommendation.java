@@ -1,8 +1,12 @@
-package podcast.models.entities;
+package podcast.models.entities.recommendations;
 
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+import podcast.models.entities.Entity;
+import podcast.models.entities.podcasts.Episode;
+import podcast.models.entities.users.Person;
+import podcast.models.entities.users.User;
 
 import java.util.Date;
 

@@ -3,10 +3,10 @@ package podcast.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import podcast.models.entities.Episode;
-import podcast.models.entities.Series;
-import podcast.models.entities.Subscription;
-import podcast.models.entities.User;
+import podcast.models.entities.podcasts.Episode;
+import podcast.models.entities.podcasts.Series;
+import podcast.models.entities.subscriptions.Subscription;
+import podcast.models.entities.users.User;
 import podcast.repos.PodcastsRepo;
 import podcast.repos.SubscriptionsRepo;
 import rx.Observable;
@@ -45,7 +45,6 @@ public class PodcastsService {
     try {
       Series series = podcastsRepo.getSeries(seriesId);
       Subscription sub = subscriptionsRepo.getSubscription(loggedInUser, seriesId);
-      series.setIsSubscribed(sub != null);
       return series;
     } catch (Exception e) {
       throw new Series.SeriesDoesNotExistException();

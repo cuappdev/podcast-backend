@@ -2,9 +2,9 @@ package podcast.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import podcast.models.entities.Episode;
-import podcast.models.entities.Recommendation;
-import podcast.models.entities.User;
+import podcast.models.entities.podcasts.Episode;
+import podcast.models.entities.recommendations.Recommendation;
+import podcast.models.entities.users.User;
 import podcast.repos.PodcastsRepo;
 import podcast.repos.RecommendationsRepo;
 import podcast.repos.UsersRepo;

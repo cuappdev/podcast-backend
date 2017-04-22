@@ -1,7 +1,8 @@
-package podcast.models.entities;
+package podcast.models.entities.users;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+
 import static podcast.utils.Constants.*;
 
 /** Person scopes down the fields in User **/

@@ -1,14 +1,14 @@
-package podcast.models.entities;
+package podcast.models.entities.sessions;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import org.codehaus.jackson.map.ObjectMapper;
+import podcast.models.entities.users.User;
 import podcast.models.utils.Crypto;
 import podcast.models.utils.TokenGenerator;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Map;
 
 import static podcast.utils.Constants.*;

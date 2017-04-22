@@ -1,4 +1,6 @@
-package podcast.models.entities;
+package podcast.models.entities.feeds;
+
+import podcast.models.entities.Entity;
 
 /**
  * FeedElement base abstract class

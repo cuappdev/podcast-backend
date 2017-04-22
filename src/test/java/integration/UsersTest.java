@@ -4,7 +4,7 @@ import org.codehaus.jackson.JsonNode;
 import org.junit.Test;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import podcast.models.entities.User;
+import podcast.models.entities.users.User;
 import podcast.utils.Constants;
 
 public class UsersTest extends BaseIntegrationTest {

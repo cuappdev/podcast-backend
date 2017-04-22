@@ -1,8 +1,10 @@
-package podcast.models.entities;
+package podcast.models.entities.followings;
 
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+import podcast.models.entities.Entity;
+
 import static podcast.utils.Constants.*;
 
 /**

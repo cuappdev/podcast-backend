@@ -1,15 +1,14 @@
 package podcast.repos;
 
 import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryRow;
 import com.couchbase.client.java.query.dsl.Sort;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import podcast.models.entities.Episode;
-import podcast.models.entities.Podcast;
-import podcast.models.entities.Series;
+import podcast.models.entities.podcasts.Episode;
+import podcast.models.entities.podcasts.Podcast;
+import podcast.models.entities.podcasts.Series;
 import java.util.stream.Collectors;
 import java.util.List;
 import static com.couchbase.client.java.query.Select.select;

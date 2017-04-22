@@ -4,8 +4,8 @@ import org.codehaus.jackson.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import podcast.models.entities.Person;
-import podcast.models.entities.User;
+import podcast.models.entities.users.Person;
+import podcast.models.entities.users.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
@@ -13,7 +13,7 @@ import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.AbstractMap;
-import java.util.Optional;
+
 import static podcast.utils.Constants.*;
 
 

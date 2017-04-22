@@ -1,9 +1,11 @@
-package podcast.models.entities;
+package podcast.models.entities.podcasts;
 
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
-import lombok.Setter;
+import podcast.models.entities.Entity;
+import podcast.models.entities.podcasts.Podcast;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +26,6 @@ public class Series extends Podcast {
   @Getter private String feedUrl;
   @Getter private Integer numberSubscribers;
   @Getter private List<String> genres;
-  @Setter @Getter private Boolean isSubscribed;
 
   /**
    * Constructor from Couchbase JsonObject
@@ -56,7 +57,6 @@ public class Series extends Podcast {
   /** See {@link Entity#toJsonDocument()} */
   public JsonDocument toJsonDocument() {
     JsonObject object = super.toJsonObject();
-    object.removeKey(IS_SUBSCRIBED);
     return JsonDocument.create(composeKey(id, SERIES_PUB_DATE), object);
   }
 

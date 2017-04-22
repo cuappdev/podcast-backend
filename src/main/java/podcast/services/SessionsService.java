@@ -2,8 +2,8 @@ package podcast.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import podcast.models.entities.Session;
-import podcast.models.entities.User;
+import podcast.models.entities.sessions.Session;
+import podcast.models.entities.users.User;
 import podcast.repos.UsersRepo;
 
 /**

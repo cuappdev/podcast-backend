@@ -8,12 +8,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import podcast.models.entities.User;
+import podcast.models.entities.users.User;
 import podcast.services.FollowersFollowingsService;
 import podcast.utils.Constants;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.*;
 
 /** Followers-followings tests **/
 public class FollowersFollowingsTest extends BaseIntegrationTest {

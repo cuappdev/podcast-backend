@@ -1,6 +1,6 @@
 package podcast.search;
 
-import podcast.models.entities.Person;
+import podcast.models.entities.users.Person;
 import java.util.List;
 
 /** Abstract parent of all user search implementations **/

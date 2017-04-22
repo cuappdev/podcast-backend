@@ -1,8 +1,11 @@
-package podcast.models.entities;
+package podcast.models.entities.podcasts;
 
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
+import podcast.models.entities.Entity;
+import podcast.models.entities.podcasts.Podcast;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
