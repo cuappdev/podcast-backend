@@ -1,6 +1,7 @@
 package podcast.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.recommendations.Recommendation;
@@ -12,34 +13,68 @@ import podcast.repos.UsersRepo;
 @Service
 public class RecommendationsService {
 
-  private PodcastsRepo podcastsRepo;
-  private UsersRepo usersRepo;
-  private RecommendationsRepo recommendationsRepo;
+  private final ApplicationEventPublisher publisher;
+  private final PodcastsRepo podcastsRepo;
+  private final UsersRepo usersRepo;
+  private final RecommendationsRepo recommendationsRepo;
 
   @Autowired
-  public RecommendationsService(PodcastsRepo podcastsRepo,
+  public RecommendationsService(ApplicationEventPublisher publisher,
+                                PodcastsRepo podcastsRepo,
                                 UsersRepo usersRepo,
                                 RecommendationsRepo recommendationsRepo) {
+    this.publisher = publisher;
     this.podcastsRepo = podcastsRepo;
     this.usersRepo = usersRepo;
     this.recommendationsRepo = recommendationsRepo;
   }
 
-  public Recommendation createRecommendation(User owner, Episode episode) {
-    synchronized (this) {
-      Recommendation recommendation = new Recommendation(owner, episode);
-      recommendationsRepo.storeRecommendation(recommendation, episode);
-      return recommendation;
+  public Recommendation createRecommendation(User owner, String episodeId) {
+    Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
+    Episode episode = podcastsRepo.getEpisodeBySeriesIdAndTimestamp(comp.getSeriesId(), comp.getPubDate());
+    Recommendation recommendation = new Recommendation(owner, episode);
+    publisher.publishEvent(new RecommendationCreationEvent(recommendation, episode, owner));
+    return recommendationsRepo.storeRecommendation(recommendation, episode);
+  }
+
+  public boolean deleteRecommendation(User owner, String episodeId) {
+    Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
+    Episode episode = podcastsRepo.getEpisodeBySeriesIdAndTimestamp(comp.getSeriesId(), comp.getPubDate());
+    Recommendation recommendation = recommendationsRepo.getRecommendation(owner, episodeId);
+    publisher.publishEvent(new RecommendationDeletionEvent(recommendation, episode, owner));
+    return recommendationsRepo.deleteRecommendation(recommendation, episode);
+  }
+
+  // MARK - events
+
+  private static abstract class RecommendationEvent {
+    Recommendation recommendation;
+    Episode episode;
+    User user;
+
+    protected RecommendationEvent(Recommendation recommendation,
+                                  Episode episode,
+                                  User user) {
+      this.recommendation = recommendation;
+      this.episode = episode;
+      this.user = user;
     }
   }
 
-  public boolean deleteRecommendation(Recommendation recommendation) {
-    synchronized (this) {
-      Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(recommendation.getEpisodeId());
-      return recommendationsRepo.deleteRecommendation(recommendation,
-        podcastsRepo.getEpisodeBySeriesIdAndTimestamp(comp.getSeriesId(), comp.getPubDate()));
+  static class RecommendationCreationEvent extends RecommendationEvent {
+    private RecommendationCreationEvent(Recommendation recommendation,
+                                        Episode episode,
+                                        User user) {
+      super(recommendation, episode, user);
     }
   }
 
+  static class RecommendationDeletionEvent extends RecommendationEvent {
+    private RecommendationDeletionEvent(Recommendation recommendation,
+                                        Episode episode,
+                                        User user) {
+      super(recommendation, episode, user);
+    }
+  }
 
 }

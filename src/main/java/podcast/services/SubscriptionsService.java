@@ -41,7 +41,7 @@ public class SubscriptionsService {
   /** Delete a subscription and broadcast the deletion event */
   public Subscription deleteSubscription(User owner, Long seriesId) {
     Series series = podcastsRepo.getSeries(seriesId);
-    Subscription subscription = new Subscription(owner, series);
+    Subscription subscription = subscriptionsRepo.getSubscription(owner, seriesId);
     publisher.publishEvent(new SubscriptionDeletionEvent(subscription, series, owner));
     return subscriptionsRepo.deleteSubscription(subscription);
   }

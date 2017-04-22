@@ -92,4 +92,14 @@ public class PodcastsService {
       .subscribe();
   }
 
+  @EventListener
+  private void handleRecommendationCreation(RecommendationsService.RecommendationCreationEvent creationEvent) {
+    // TODO
+  }
+
+  @EventListener
+  private void handleRecommendationDeletion(RecommendationsService.RecommendationDeletionEvent deletionEvent) {
+    // TODO 
+  }
+
 }
