@@ -33,13 +33,9 @@ public class FollowersFollowingsRepo {
   /** Creates a following from user A to B. Also creates a follower from B to A. **/
   public Following storeFollowing(Following following, User owner, User followed) throws Exception {
     Follower follower = new Follower(followed, owner);
-    owner.incrementFollowings();
-    followed.incrementFollowers();
     List<JsonDocument> docs = Arrays.asList(
       following.toJsonDocument(),
-      follower.toJsonDocument(),
-      owner.toJsonDocument(),
-      followed.toJsonDocument()
+      follower.toJsonDocument()
     );
     Observable
       .from(docs)
@@ -96,15 +92,10 @@ public class FollowersFollowingsRepo {
 
   /** Delete following (A following B, B's follower A) **/
   public boolean deleteFollowing(Following following, User owner, User followed) throws Exception {
-    // Augment the users as such
-    owner.decrementFollowings();
-    followed.incrementFollowers();
     // Bach remove + update of users
     List<Object> keys = Arrays.asList(
       Following.composeKey(following.getOwnerId(), following.getId()),
-      Follower.composeKey(following.getId(), following.getOwnerId()),
-      owner.toJsonDocument(),
-      followed.toJsonDocument()
+      Follower.composeKey(following.getId(), following.getOwnerId())
     );
     Observable
       .from(keys)

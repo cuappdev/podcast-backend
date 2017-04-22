@@ -36,6 +36,12 @@ public class UsersRepo {
     return user;
   }
 
+  /** Replace user */
+  public User replaceUser(User user) {
+    bucket.replace(user.toJsonDocument());
+    return user;
+  }
+
   /** Remove User by ID (+ return the user just deleted) **/
   public void removeUserById(String id) throws Exception {
     JsonDocument doc = bucket.get(User.composeKey(id));
