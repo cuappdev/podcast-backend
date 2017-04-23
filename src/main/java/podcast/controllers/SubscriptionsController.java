@@ -2,10 +2,7 @@ package podcast.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import podcast.models.entities.subscriptions.Subscription;
 import podcast.models.entities.users.User;
 import podcast.models.formats.Failure;
@@ -31,9 +28,9 @@ public class SubscriptionsController {
   }
 
   /** Create a subscription **/
-  @RequestMapping(method = RequestMethod.POST, value = "")
+  @RequestMapping(method = RequestMethod.POST, value = "/{series_id}")
   public ResponseEntity<Result> createSubscription(HttpServletRequest request,
-                                                     @RequestParam("series_id") Long seriesId) {
+                                                     @PathVariable("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
     try {
       Subscription subscription = subscriptionsService.createSubscription(user, seriesId);
@@ -45,9 +42,9 @@ public class SubscriptionsController {
   }
 
   /** Delete a subscription **/
-  @RequestMapping(method = RequestMethod.DELETE, value = "")
+  @RequestMapping(method = RequestMethod.DELETE, value = "/{series_id}")
   public ResponseEntity<Result> deleteSubscription(HttpServletRequest request,
-                                                   @RequestParam("series_id") Long seriesId) {
+                                                   @PathVariable("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
 
     try {
@@ -60,9 +57,9 @@ public class SubscriptionsController {
   }
 
   /** Get a series of subscriptions of a user **/
-  @RequestMapping(method = RequestMethod.GET, value = "")
+  @RequestMapping(method = RequestMethod.GET, value = "/users/{id}")
   public ResponseEntity<Result> getUserSubscriptions(HttpServletRequest request,
-                                                   @RequestParam("id") String userId) {
+                                                     @PathVariable("id") String userId) {
     try {
       List<Subscription> subs = subscriptionsService.getUserSubscriptions(userId);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTIONS, subs));

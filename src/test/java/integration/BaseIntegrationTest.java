@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.podcasts.Series;
 import podcast.models.entities.users.User;
 import podcast.services.UsersService;
@@ -17,28 +18,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
 public abstract class BaseIntegrationTest extends BaseTest {
 
-  /* Web application context */
+  // Context for requesting
   @Autowired
   private WebApplicationContext wac;
 
-  /* Mock MVC */
   @Getter private MockMvc mockMvc;
-
-  /* Services */
   @Autowired @Getter UsersService usersService;
   @Autowired @Getter PodcastsService podcastsService;
-
-  /* Mock Data */
   @Getter private List<User> mockUsers;
   @Getter private List<Series> mockSeries;
-
-  /** Session to use in every request **/
+  @Getter private List<Episode> mockEpisode;
   @Getter private String session;
 
-  /** Setup mock MVC connector + seed the DB **/
+  /** Setup mock MVC connector + seed the DB */
   @Before
   public void before() throws Exception {
 
@@ -46,8 +40,9 @@ public abstract class BaseIntegrationTest extends BaseTest {
     mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
     // Contain seeded users and series
-    mockUsers = new ArrayList<User>();
-    mockSeries = new ArrayList<Series>();
+    this.mockUsers = new ArrayList<User>();
+    this.mockSeries = new ArrayList<Series>();
+    this.mockEpisode = new ArrayList<Episode>();
 
     // Seed the DB with users
     for (int i = 0; i < 10; i++) {
@@ -55,9 +50,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
       mockUsers.add(usersService.getOrCreateUser(creds.toJsonNode(), creds.getSub()).getValue());
     }
     this.session = mockUsers.get(0).getSession().getSessionToken();
-
   }
-
 
   /** Clean up the DB **/
   @After
@@ -68,7 +61,5 @@ public abstract class BaseIntegrationTest extends BaseTest {
       usersService.removeUserById(u.getId());
     }
     TimeUnit.SECONDS.sleep(1);
-
   }
-
 }

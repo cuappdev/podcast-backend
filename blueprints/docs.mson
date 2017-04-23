@@ -563,6 +563,7 @@ CUAppDev's podcast app API documentation
 ## Recommendations CRUD [/api/v1/recommendations/{episode_id}]
 ### Create Recommendation [POST]
 
+
 ### Delete Recommendation [DELETE]
 
 ## User Recommendations [/api/v1/recommendations/users/{user_id}]

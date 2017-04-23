@@ -79,5 +79,4 @@ public class RecommendationsController {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
-
 }

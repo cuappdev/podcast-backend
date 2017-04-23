@@ -30,13 +30,11 @@ public class SearchController {
   private static final String OFFSET = "offset";
   private static final String MAX = "max";
 
-
   public SearchController(@Qualifier("simplePodcastsSearch") PodcastsSearch podcastsSearch,
                           @Qualifier("simpleUsersSearch") UsersSearch usersSearch) {
     this.podcastsSearch = podcastsSearch;
     this.usersSearch = usersSearch;
   }
-
 
   /** Search episodes **/
   @RequestMapping(method = RequestMethod.GET, value = "/episodes/{query}")
@@ -55,7 +53,6 @@ public class SearchController {
     }
   }
 
-
   /** Search series **/
   @RequestMapping(method = RequestMethod.GET, value = "/series/{query}")
   public ResponseEntity<Result> searchSeries(HttpServletRequest request,
@@ -72,7 +69,6 @@ public class SearchController {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
-
 
   /** Search users **/
   @RequestMapping(method = RequestMethod.GET, value = "/users/{query}")
@@ -91,7 +87,6 @@ public class SearchController {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
-
 
   /** Search everything **/
   @RequestMapping(method = RequestMethod.GET, value = "/all/{query}")
@@ -115,6 +110,4 @@ public class SearchController {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
-
-
 }

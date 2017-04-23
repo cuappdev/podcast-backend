@@ -30,7 +30,7 @@ public class SubscriptionsTest extends BaseIntegrationTest {
         for (Series s : getMockSeries()) {
           JsonNode response = mvcResultAsJson(
             getMockMvc()
-              .perform(MockMvcRequestBuilders.post("/api/v1/subscriptions?id=" + s.getId())
+              .perform(MockMvcRequestBuilders.post("/api/v1/subscriptions/" + s.getId())
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
               .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
           );
@@ -45,13 +45,29 @@ public class SubscriptionsTest extends BaseIntegrationTest {
   }
 
   @Test
+  public void getSubscriptions() throws Exception {
+    subscribeAll();
+    for (User u : getMockUsers()) {
+      if (u.getSession().getSessionToken().equals(getSession())) {
+        JsonNode response = mvcResultAsJson(
+          getMockMvc()
+            .perform(MockMvcRequestBuilders.get("/api/v1/subscriptions/users/" + u.getId())
+              .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
+            .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
+        );
+        System.out.println(response);
+      }
+    }
+  }
+
+  @Test
   public void deleteSubscription() throws Exception {
     for (User u : getMockUsers()) {
       if (u.getSession().getSessionToken().equals(getSession())) {
         for (Series s : getMockSeries()) {
           JsonNode response = mvcResultAsJson(
             getMockMvc()
-              .perform(MockMvcRequestBuilders.delete("/api/v1/subscriptions?id=" + s.getId())
+              .perform(MockMvcRequestBuilders.delete("/api/v1/subscriptions/" + s.getId())
                 .header(Constants.AUTHORIZATION, Constants.BEARER + getSession()))
               .andExpect(MockMvcResultMatchers.status().isOk()).andReturn()
           );

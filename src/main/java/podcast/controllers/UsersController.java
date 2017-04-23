@@ -34,7 +34,6 @@ public class UsersController {
     this.usersService = usersService;
   }
 
-
   /** Google Sign In endpoint **/
   @RequestMapping(method = RequestMethod.POST, value = "/google_sign_in")
   public ResponseEntity<Result> googleSignIn(@RequestParam(value="id_token") String idToken) {
@@ -49,9 +48,7 @@ public class UsersController {
       e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
-
   }
-
 
   /** Change username **/
   @RequestMapping(method = RequestMethod.POST, value = "/change_username")
@@ -69,7 +66,6 @@ public class UsersController {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
-
 
   /** Get a user by Id **/
   @RequestMapping(method = RequestMethod.GET, value = "/{id}")
@@ -89,6 +85,4 @@ public class UsersController {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
-
-
 }

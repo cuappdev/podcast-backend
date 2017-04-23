@@ -42,7 +42,6 @@ public class PodcastsController {
     }
   }
 
-
   /** Get episodes by seriesId **/
   @RequestMapping(method = RequestMethod.GET, value = "/episodes/{series_id}")
   public ResponseEntity<Result> getEpisodesBySeriesId(HttpServletRequest request,
@@ -57,5 +56,4 @@ public class PodcastsController {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
-
 }
