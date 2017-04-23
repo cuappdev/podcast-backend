@@ -32,8 +32,7 @@ public class RecommendationsService {
 
   /** Create a recommendation and broadcast the creation event */
   public Recommendation createRecommendation(User owner, String episodeId) {
-    Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
-    Episode episode = podcastsRepo.getEpisodeBySeriesIdAndTimestamp(comp.getSeriesId(), comp.getPubDate());
+    Episode episode = podcastsRepo.getEpisodeById(episodeId);
     Recommendation recommendation = new Recommendation(owner, episode);
     publisher.publishEvent(new RecommendationCreationEvent(recommendation, episode, owner));
     return recommendationsRepo.storeRecommendation(recommendation, episode);
@@ -41,8 +40,7 @@ public class RecommendationsService {
 
   /** Delete a recommendation and broadcast the deletion event */
   public Recommendation deleteRecommendation(User owner, String episodeId) {
-    Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
-    Episode episode = podcastsRepo.getEpisodeBySeriesIdAndTimestamp(comp.getSeriesId(), comp.getPubDate());
+    Episode episode = podcastsRepo.getEpisodeById(episodeId);
     Recommendation recommendation = recommendationsRepo.getRecommendation(owner, episodeId);
     publisher.publishEvent(new RecommendationDeletionEvent(recommendation, episode, owner));
     return recommendationsRepo.deleteRecommendation(recommendation, episode);

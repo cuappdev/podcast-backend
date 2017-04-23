@@ -32,9 +32,9 @@ public class PodcastsService {
   }
 
   /** Fetch a episode given its seriesId and timestamp **/
-  public Episode getEpisode(Long seriesId, Long timestamp) throws Exception {
+  public Episode getEpisode(Long seriesId, Long pubDate) throws Exception {
     try {
-      return podcastsRepo.getEpisodeBySeriesIdAndTimestamp(seriesId, timestamp);
+      return podcastsRepo.getEpisodeBySeriesIdAndPubDate(seriesId, pubDate);
     } catch (Exception e) {
       throw new Episode.EpisodeDoesNotExistException();
     }
@@ -96,10 +96,7 @@ public class PodcastsService {
   private void handleRecommendationCreation(RecommendationsService.RecommendationCreationEvent creationEvent) {
     Observable.defer(() -> {
       try {
-        return Observable.just(podcastsRepo.getEpisodeBySeriesIdAndTimestamp(
-          creationEvent.episode.getSeriesId(),
-          creationEvent.episode.getPubDate()
-        ));
+        return Observable.just(podcastsRepo.getEpisodeById(creationEvent.episode.getId()));
       } catch (Exception e) {
         return Observable.just(null);
       }
@@ -115,10 +112,7 @@ public class PodcastsService {
   private void handleRecommendationDeletion(RecommendationsService.RecommendationDeletionEvent deletionEvent) {
     Observable.defer(() -> {
       try {
-        return Observable.just(podcastsRepo.getEpisodeBySeriesIdAndTimestamp(
-          deletionEvent.episode.getSeriesId(),
-          deletionEvent.episode.getPubDate()
-        ));
+        return Observable.just(podcastsRepo.getEpisodeById(deletionEvent.episode.getId()));
       } catch (Exception e) {
         return Observable.just(null);
       }

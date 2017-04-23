@@ -30,9 +30,7 @@ public class FollowersController {
   @RequestMapping(method = RequestMethod.GET, value = "/show")
   public ResponseEntity<Result> getUserFollowings(HttpServletRequest request,
                                                   @RequestParam(value = "id") String id) {
-    /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
-
     try {
       List<Follower> followers = id.equals("me") ?
         ffService.getUserFollowers(user.getId()) :

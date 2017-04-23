@@ -18,7 +18,6 @@ import static podcast.utils.Constants.*;
 @Component
 public class PodcastsRepo {
 
-  /* Connection to DB */
   private Bucket bucket;
 
   public PodcastsRepo(@Qualifier("podcastsBucket") Bucket podcastsBucket) {
@@ -37,8 +36,14 @@ public class PodcastsRepo {
     return series;
   }
 
+  /** Get episode by Id */
+  public Episode getEpisodeById(String episodeId) {
+    Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
+    return getEpisodeBySeriesIdAndPubDate(comp.getSeriesId(), comp.getPubDate());
+  }
+
   /** Get episode by seriesId and timestamp **/
-  public Episode getEpisodeBySeriesIdAndTimestamp(Long seriesId, Long timestamp) {
+  public Episode getEpisodeBySeriesIdAndPubDate(Long seriesId, Long timestamp) {
     return new Episode(bucket.get(Podcast.composeKey(seriesId, timestamp)).content());
   }
 

@@ -22,7 +22,6 @@ import static podcast.utils.Constants.*;
 @Component
 public class FollowersFollowingsRepo {
 
-  /* Connection to DB */
   private Bucket bucket;
 
   @Autowired
@@ -46,7 +45,6 @@ public class FollowersFollowingsRepo {
     return following;
   }
 
-
   /** Get followers of a user (identified by ownerId) **/
   public List<Follower> getUserFollowers(String ownerId) throws Exception {
     N1qlQuery q = N1qlQuery.simple(
@@ -61,7 +59,6 @@ public class FollowersFollowingsRepo {
     return rows.stream()
       .map(r -> new Follower(r.value().getObject(DB))).collect(Collectors.toList());
   }
-
 
   /** Get followings of a user (identified by ownerId) **/
   public List<Following> getUserFollowings(String ownerId) throws Exception {
@@ -78,7 +75,6 @@ public class FollowersFollowingsRepo {
       .map(r -> new Following(r.value().getObject(DB))).collect(Collectors.toList());
   }
 
-
   /** Get following by users **/
   public Optional<Following> getFollowingByUsers(User owner, User followed) {
     JsonDocument doc = bucket.get(Following.composeKey(owner, followed));
@@ -89,28 +85,18 @@ public class FollowersFollowingsRepo {
     }
   }
 
-
   /** Delete following (A following B, B's follower A) **/
   public boolean deleteFollowing(Following following, User owner, User followed) throws Exception {
-    // Bach remove + update of users
-    List<Object> keys = Arrays.asList(
+    List<String> keys = Arrays.asList(
       Following.composeKey(following.getOwnerId(), following.getId()),
       Follower.composeKey(following.getId(), following.getOwnerId())
     );
     Observable
       .from(keys)
-      .flatMap(x -> {
-        if (x instanceof String) {
-          return bucket.async().remove((String) x);
-        } else { // If it's a JsonDocument
-          return bucket.async().upsert((JsonDocument) x);
-        }
-      })
+      .flatMap(x -> bucket.async().remove(x))
       .last()
       .toBlocking()
       .single();
     return true;
   }
-
-
 }
