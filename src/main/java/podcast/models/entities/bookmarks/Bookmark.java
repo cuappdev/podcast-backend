@@ -26,11 +26,6 @@ public class Bookmark extends Entity {
   @Getter private String audioUrl;
   @Getter private AssociatedUser user;
 
-  /** Id getter */
-  public String getId() {
-    return composeKey(this);
-  }
-
   /**
    * Constructor from user and episode
    * @param user - User

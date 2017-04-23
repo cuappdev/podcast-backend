@@ -61,6 +61,7 @@ public class Constants {
   public static final String IS_SUBSCRIBED = "isSubscribed";
   public static final String NUMBER_RECOMMENDERS = "numberRecommenders";
   public static final String HAS_RECOMMENDED = "hasRecommended";
+  public static final String BOOKMARK = "bookmark";
 
   /* Header constants */
   public static final String AUTHORIZATION = "Authorization";

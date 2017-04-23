@@ -57,7 +57,7 @@ public class RecommendationsRepo {
       select("*").from("`" + DB + "`")
         .where(
           (x(TYPE).eq(s(RECOMMENDATION)))
-          .and(x("`" + USER + "`.`" + ID + "`").eq(s(user.getId())))
+            .and(x("`" + USER + "`.`" + ID + "`").eq(s(user.getId())))
         )
     );
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
