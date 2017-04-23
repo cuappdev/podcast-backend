@@ -69,7 +69,7 @@ public class RecommendationsController {
   }
 
   /** Get the recommendations of a user by Id */
-  @RequestMapping(method = RequestMethod.GET, value = "/user/{user_id}")
+  @RequestMapping(method = RequestMethod.GET, value = "/users/{user_id}")
   public ResponseEntity<Result> getUserRecommendations(HttpServletRequest request,
                                                        @PathVariable("user_id") String userId) {
     try {

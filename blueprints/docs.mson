@@ -157,8 +157,7 @@ CUAppDev's podcast app API documentation
               "imageUrlSm": "https://goo.gl/L37gfS",
               "imageUrlLg": "https://goo.gl/L37gfS",
               "feedUrl": "A RSS Feed URL",
-              "genres": ["Loop Invariants", "56 Years of Programming Experience"],
-              "isSubscribed": true
+              "genres": ["Loop Invariants", "56 Years of Programming Experience"]
             }
           }
         }
@@ -465,8 +464,7 @@ CUAppDev's podcast app API documentation
                 "imageUrlSm": "https://goo.gl/L37gfS",
                 "imageUrlLg": "https://goo.gl/L37gfS",
                 "feedUrl": "A RSS Feed URL",
-                "genres": ["Loop Invariants", "56 Years of Programming Experience"],
-                "isSubscribed": true
+                "genres": ["Loop Invariants", "56 Years of Programming Experience"]
               }
             ]
           }
@@ -544,7 +542,6 @@ CUAppDev's podcast app API documentation
                 "imageUrlLg": "https://goo.gl/L37gfS",
                 "feedUrl": "A RSS Feed URL",
                 "genres": ["Loop Invariants", "56 Years of Programming Experience"],
-                "isSubscribed": true
               }
             ],
             "users": [
@@ -560,3 +557,24 @@ CUAppDev's podcast app API documentation
             ]
           }
         }
+
+
+# Group Recommendations
+## Recommendations CRUD [/api/v1/recommendations/{episode_id}]
+### Create Recommendation [POST]
+
+### Delete Recommendation [DELETE]
+
+## User Recommendations [/api/v1/recommendations/users/{user_id}]
+### User Recommendations [GET]
+
+
+# Group Bookmarks
+## Get Your Bookmarks [api/v1/bookmarks/]
+### Get Your Bookmarks [GET]
+
+
+## Bookmarks CRUD [/api/v1/bookmarks/{episode_id}]
+### Create Bookmark [POST]
+
+### Delete Bookmark [DELETE]
