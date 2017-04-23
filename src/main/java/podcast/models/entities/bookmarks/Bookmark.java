@@ -1,4 +1,4 @@
-package podcast.models.entities.recommendations;
+package podcast.models.entities.bookmarks;
 
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
@@ -7,36 +7,43 @@ import podcast.models.entities.Entity;
 import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.users.AssociatedUser;
 import podcast.models.entities.users.User;
-import java.util.Date;
+import podcast.utils.Constants;
 import static podcast.utils.Constants.*;
 
 /**
- * A user's recommendation of a particular
- * podcast episode (a.k.a. 'liking' the episode)
+ * A user's bookmark of a particular podcast episode
  */
-public class Recommendation extends Entity {
+public class Bookmark extends Entity {
 
-  @Getter private Type type = Type.recommendation;
+  // title, pubDate, duration, seriesTitle, id, numRecommendations, audioUrl
+  @Getter private Constants.Type type = Constants.Type.bookmark;
   @Getter private String episodeId;
-  @Getter private String seriesTitle;
   @Getter private String title;
-  @Getter private String imageUrlSm;
-  @Getter private String imageUrlLg;
+  @Getter private Long pubDate;
+  @Getter private String duration;
+  @Getter private String seriesTitle;
+  @Getter private Integer numberRecommenders;
+  @Getter private String audioUrl;
   @Getter private AssociatedUser user;
-  @Getter private Date createdAt = new Date();
 
+  /** Id getter */
+  public String getId() {
+    return composeKey(this);
+  }
 
   /**
    * Constructor from user and episode
    * @param user - User
    * @param episode _ Episode
    */
-  public Recommendation(User user, Episode episode) {
+  public Bookmark(User user, Episode episode) {
     this.episodeId = episode.getId();
-    this.seriesTitle = episode.getSeriesTitle();
     this.title = episode.getTitle();
-    this.imageUrlSm = episode.getImageUrlSm();
-    this.imageUrlLg = episode.getImageUrlLg();
+    this.pubDate = episode.getPubDate();
+    this.duration = episode.getDuration();
+    this.seriesTitle = episode.getSeriesTitle();
+    this.numberRecommenders = episode.getNumberRecommenders();
+    this.audioUrl = episode.getAudioUrl();
     this.user = new AssociatedUser(user);
   }
 
@@ -44,12 +51,14 @@ public class Recommendation extends Entity {
    * Constructor from JsonObject
    * @param object - JsonObject
    */
-  public Recommendation(JsonObject object) {
+  public Bookmark(JsonObject object) {
     this.episodeId = object.getString(EPISODE_ID);
-    this.seriesTitle = object.getString(SERIES_TITLE);
     this.title = object.getString(TITLE);
-    this.imageUrlSm = object.getString(IMAGE_URL_SM);
-    this.imageUrlLg = object.getString(IMAGE_URL_LG);
+    this.pubDate = object.getLong(PUB_DATE);
+    this.duration = object.getString(DURATION);
+    this.seriesTitle = object.getString(SERIES_TITLE);
+    this.numberRecommenders = object.getInt(NUMBER_RECOMMENDERS);
+    this.audioUrl = object.getString(AUDIO_URL);
     this.user = new AssociatedUser(object.getObject(USER));
   }
 
@@ -60,7 +69,7 @@ public class Recommendation extends Entity {
 
   /** Compose a key from episodeId and userId **/
   public static String composeKey(String episodeId, String userId) {
-    return Entity.composeKey(String.format("%s:%s", episodeId, userId), Type.recommendation.toString());
+    return Entity.composeKey(String.format("%s:%s", episodeId, userId), Constants.Type.bookmark.toString());
   }
 
   /** Compose a key from episode and user **/
@@ -68,8 +77,8 @@ public class Recommendation extends Entity {
     return composeKey(episode.getId(), user.getId());
   }
 
-  /** Compose key from Recommendation **/
-  public static String composeKey(Recommendation r) {
+  /** Compose key from Bookmark **/
+  public static String composeKey(Bookmark r) {
     return composeKey(r.getEpisodeId(), r.getUser().getId());
   }
 

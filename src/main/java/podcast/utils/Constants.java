@@ -85,6 +85,7 @@ public class Constants {
     recommendation,
     subscription,
     recommendationElement,
-    releaseElement
+    releaseElement,
+    bookmark
   }
 }
