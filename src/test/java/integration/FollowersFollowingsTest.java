@@ -40,7 +40,6 @@ public class FollowersFollowingsTest extends BaseIntegrationTest {
       if (u.getSession().getSessionToken().equals(getSession())) {
         continue;
       }
-
       JsonNode response = mvcResultAsJson(
         getMockMvc()
           .perform(MockMvcRequestBuilders.post("/api/v1/followings/" + u.getId())

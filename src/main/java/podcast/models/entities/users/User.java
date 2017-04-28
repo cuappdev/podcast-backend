@@ -93,30 +93,33 @@ public class User extends Entity {
     this.username = username;
   }
 
-
-  /** Increment followers **/
-  public void incrementFollowers() {
-    numberFollowers += 1;
+  /** Increment followers - maintains CAS value of JsonDocument **/
+  public static JsonDocument incrementFollowers(JsonDocument doc) {
+    assert doc.content().getString(TYPE).equals(USER);
+    doc.content().put(NUMBER_FOLLOWERS, doc.content().getInt(NUMBER_FOLLOWERS) + 1);
+    return doc;
   }
 
-
-  /** Increment followings **/
-  public void incrementFollowings() {
-    numberFollowing += 1;
+  /** Increment followings - maintains CAS value of JsonDocument **/
+  public static JsonDocument incrementFollowings(JsonDocument doc) {
+    assert doc.content().getString(TYPE).equals(USER);
+    doc.content().put(NUMBER_FOLLOWING, doc.content().getInt(NUMBER_FOLLOWING) + 1);
+    return doc;
   }
 
-
-  /** Decrement followers **/
-  public void decrementFollowers() {
-    numberFollowers -= 1;
+  /** Decrement followers - maintains CAS value of JsonDocument **/
+  public static JsonDocument decrementFollowers(JsonDocument doc) {
+    assert doc.content().getString(TYPE).equals(USER);
+    doc.content().put(NUMBER_FOLLOWERS, doc.content().getInt(NUMBER_FOLLOWERS) - 1);
+    return doc;
   }
 
-
-  /** Decrement followings **/
-  public void decrementFollowings() {
-    numberFollowing -= 1;
+  /** Decrement followings - maintains CAS value of JsonDocument **/
+  public static JsonDocument decrementFollowings(JsonDocument doc) {
+    assert doc.content().getString(TYPE).equals(USER);
+    doc.content().put(NUMBER_FOLLOWING, doc.content().getInt(NUMBER_FOLLOWING) - 1);
+    return doc;
   }
-
 
   /** Make GoogleIdToUser lookup entity **/
   public GoogleIdToUser makeGoogleIdToUser() {
@@ -189,7 +192,6 @@ public class User extends Entity {
     googleIdToUser,
     facebookIdToUser
     // TODO - More?
-
 
   }
 

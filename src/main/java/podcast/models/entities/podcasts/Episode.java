@@ -75,6 +75,17 @@ public class Episode extends Podcast {
     return doc;
   }
 
+  /** Compose episode key **/
+  public static String composeKey(Long seriesId, Long pubDate) {
+    return Podcast.composeKey(seriesId, pubDate);
+  }
+
+  /** See {@link Entity#toJsonDocument()} */
+  public JsonDocument toJsonDocument() {
+    JsonObject object = super.toJsonObject();
+    return JsonDocument.create(composeKey(seriesId, pubDate), object);
+  }
+
   /** Grab these components -> return the pair **/
   public static CompositeEpisodeKey getSeriesIdAndPubDate(String episodeId) {
     String[] split = episodeId.split(":");
@@ -90,12 +101,6 @@ public class Episode extends Podcast {
       this.seriesId = seriesId;
       this.pubDate = pubDate;
     }
-  }
-
-  /** See {@link Entity#toJsonDocument()} */
-  public JsonDocument toJsonDocument() {
-    JsonObject object = super.toJsonObject();
-    return JsonDocument.create(composeKey(seriesId, pubDate), object);
   }
 
   /** When an episode does not exist **/

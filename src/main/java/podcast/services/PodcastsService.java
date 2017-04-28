@@ -62,34 +62,12 @@ public class PodcastsService {
 
   @EventListener
   private void handleSubscriptionCreation(SubscriptionsService.SubscriptionCreationEvent creationEvent) {
-    Observable.defer(() -> {
-      try {
-        return Observable.just(podcastsRepo.getSeries(creationEvent.series.getId()));
-      } catch (Exception e) {
-        return Observable.just(null);
-      }
-    }).map(series -> {
-      series.incrementSubscriberCount();
-      return series;
-    }).flatMap(series -> Observable.just(podcastsRepo.replaceSeries(series)))
-      .retryWhen(attempts -> retry.operation(attempts))
-      .subscribe();
+    podcastsRepo.incrementSeriesSubscribers(creationEvent.series.getId());
   }
 
   @EventListener
   private void handleSubscriptionDeletion(SubscriptionsService.SubscriptionDeletionEvent deletionEvent) {
-    Observable.defer(() -> {
-      try {
-        return Observable.just(podcastsRepo.getSeries(deletionEvent.series.getId()));
-      } catch (Exception e) {
-        return Observable.just(null);
-      }
-    }).map(series -> {
-      series.decrementSubscriberCount();
-      return series;
-    }).flatMap(series -> Observable.just(podcastsRepo.replaceSeries(series)))
-      .retryWhen(attempts -> retry.operation(attempts))
-      .subscribe();
+    podcastsRepo.decrementSeriesSubscribers(deletionEvent.series.getId());
   }
 
   @EventListener

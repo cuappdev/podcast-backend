@@ -46,6 +46,15 @@ def grab_token(token):
   """
   return sign_in(token)['data']['user']['session']['sessionToken']
 
+# FLAG - User
+
+def change_username(token, username):
+  """
+  Change a user's username
+  """
+  result = _post('/users/change_username?username={}'.format(username), _head(token))
+  return result.json()
+
 # FLAG - Search
 
 def query_all(token, query):
@@ -111,7 +120,7 @@ def get_recommendations(token, episode_id):
   """
   Get recommendations of a episode represented by `episode_id`
   """
-  result = _get('/recommendations/{}?max=10&offset=0'.format(episode_id), _head(token))
+  result = _get('/recommendations/{}?offset=0&max=10'.format(episode_id), _head(token))
   return result.json()
 
 def get_user_recommendations(token, user_id):
@@ -126,6 +135,36 @@ def delete_recommendation(token, episode_id):
   Delete a recommendation for episode represented by `episode_id`
   """
   result = _delete('/recommendations/{}'.format(episode_id), _head(token))
+  return result.json()
+
+# FLAG - Subscriptions
+
+def create_subscription(token, series_id):
+  """
+  Create a subscription for a series represented by `series_id`
+  """
+  result = _post('/subscriptions/{}'.format(series_id), _head(token))
+  return result.json()
+
+def delete_subscription(token, series_id):
+  """
+  Delete a subscription for a series represented by `series_id`
+  """
+  result = _delete('/subscriptions/{}'.format(series_id), _head(token))
+  return result.json()
+
+def get_subscriptions(token, series_id):
+  """
+  Get subscriptions for a series represented by `series_id`
+  """
+  result = _get('/subscriptions/{}?offset=0&max=10'.format(series_id), _head(token))
+  return result.json()
+
+def get_user_subscriptions(token, user_id):
+  """
+  Get subscriptions of a user represented by `user_id`
+  """
+  result = _get('/subscriptions/users/{}'.format(user_id), _head(token))
   return result.json()
 
 # FLAG - Integration Tests
@@ -161,7 +200,6 @@ def create_get_get_by_user_delete_recommendations(google_token):
 
   # Create recommendations
   for e_id in EPISODES:
-    print 'lol'
     create_recommendation(token, e_id)
 
   time.sleep(5)
@@ -179,6 +217,34 @@ def create_get_get_by_user_delete_recommendations(google_token):
   for e_id in EPISODES:
     delete_recommendation(token, e_id)
 
+def create_get_get_by_user_delete_subscriptions(google_token):
+  """
+  Full life-cycle of a subscription
+  """
+  # Grab user creds
+  user = sign_in(google_token)['data']['user']
+  user_id = user['id']
+  token = user['session']['sessionToken']
+
+  # Create subscriptions
+  for s_id in SERIES:
+    create_subscription(token, s_id)
+
+  time.sleep(5)
+
+  # Print user's subscriptions
+  print user['firstName'] + '\'s subscriptions'
+  pp.pprint(get_user_subscriptions(token, user_id))
+
+  # Print each series' subscriptions
+  for s_id in SERIES:
+    print str(s_id) + '\'s subscriptions'
+    pp.pprint(get_subscriptions(token, s_id))
+
+  # Delete subscriptions
+  for s_id in SERIES:
+    delete_subscription(token, s_id)
 
 if __name__ == '__main__':
-  create_get_get_by_user_delete_recommendations(sys.argv[1])
+  token = grab_token(sys.argv[1])
+  print change_username(token, 'lol123')

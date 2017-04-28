@@ -44,14 +44,29 @@ public class Series extends Podcast {
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
   }
 
-  /** Increment the number of people who are subscribed to this series */
-  public void incrementSubscriberCount() {
-    numberSubscribers += 1;
+  /** Increment the number of people who have subscribed to this.
+   * Static b/c original JsonDocument returned in order to ensure CAS value is unchanged */
+  public static JsonDocument incrementSubscriberCount(JsonDocument doc) {
+    assert doc.content().getString(TYPE).equals(SERIES);
+    Integer originalNum = doc.content().getInt(NUMBER_SUBSCRIBERS) != null ?
+      doc.content().getInt(NUMBER_SUBSCRIBERS) : 0;
+    doc.content().put(NUMBER_SUBSCRIBERS, originalNum + 1);
+    return doc;
   }
 
-  /** Decrement the number of people who are subscribed to this series */
-  public void decrementSubscriberCount() {
-    numberSubscribers -= 1;
+  /** Decrement the number of people who have subscribed to this.
+   * Static b/c original JsonDocument returned in order to ensure CAS value is unchanged */
+  public static JsonDocument decrementSubscriberCount(JsonDocument doc) {
+    assert doc.content().getString(TYPE).equals(SERIES);
+    Integer originalNum = doc.content().getInt(NUMBER_SUBSCRIBERS) != null ?
+      doc.content().getInt(NUMBER_SUBSCRIBERS) : 0;
+    doc.content().put(NUMBER_SUBSCRIBERS, originalNum - 1);
+    return doc;
+  }
+
+  /** Compose series key **/
+  public static String composeKey(Long seriesId) {
+    return Podcast.composeKey(seriesId, SERIES_PUB_DATE);
   }
 
   /** See {@link Entity#toJsonDocument()} */

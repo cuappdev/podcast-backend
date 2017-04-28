@@ -46,6 +46,11 @@ public class SubscriptionsService {
     return subscriptionsRepo.deleteSubscription(subscription);
   }
 
+  /** Get subscriptions of a particular series **/
+  public List<Subscription> getSubscriptions(Long seriesId, Integer offset, Integer max) {
+    return subscriptionsRepo.getSubscriptions(seriesId, offset, max);
+  }
+
   /** Get a user's subscriptions by the user's ID */
   public List<Subscription> getUserSubscriptions(String userId) throws Exception {
     User user = usersRepo.getUserById(userId);

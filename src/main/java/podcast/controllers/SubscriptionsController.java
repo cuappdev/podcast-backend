@@ -41,12 +41,26 @@ public class SubscriptionsController {
     }
   }
 
+  /** Get subscriptions of a particular series (paginated) **/
+  @RequestMapping(method = RequestMethod.GET, value = "/{series_id}")
+  public ResponseEntity<Result> getSubscriptions(HttpServletRequest request,
+                                                 @PathVariable("series_id") Long seriesId,
+                                                 @RequestParam("offset") Integer offset,
+                                                 @RequestParam("max") Integer max) {
+    try {
+      List<Subscription> subscriptions = subscriptionsService.getSubscriptions(seriesId, offset, max);
+      return ResponseEntity.status(200).body(new Success(SUBSCRIPTIONS, subscriptions));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
+
   /** Delete a subscription **/
   @RequestMapping(method = RequestMethod.DELETE, value = "/{series_id}")
   public ResponseEntity<Result> deleteSubscription(HttpServletRequest request,
                                                    @PathVariable("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
-
     try {
       Subscription subscription = subscriptionsService.deleteSubscription(user, seriesId);
       return ResponseEntity.status(200).body(new Success(SUBSCRIPTION, subscription));

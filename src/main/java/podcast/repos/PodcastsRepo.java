@@ -1,17 +1,14 @@
 package podcast.repos;
 
 import com.couchbase.client.java.Bucket;
-import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryRow;
 import com.couchbase.client.java.query.dsl.Sort;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import podcast.models.entities.podcasts.Episode;
-import podcast.models.entities.podcasts.Podcast;
 import podcast.models.entities.podcasts.Series;
 import rx.Observable;
-
 import java.util.stream.Collectors;
 import java.util.List;
 import static com.couchbase.client.java.query.Select.select;
@@ -28,18 +25,6 @@ public class PodcastsRepo {
     this.bucket = podcastsBucket;
   }
 
-  /** Update episode */
-  public Episode replaceEpisode(Episode episode) {
-    bucket.replace(episode.toJsonDocument());
-    return episode;
-  }
-
-  /** Update series */
-  public Series replaceSeries(Series series) {
-    bucket.replace(series.toJsonDocument());
-    return series;
-  }
-
   /** Get episode by Id */
   public Episode getEpisodeById(String episodeId) {
     Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
@@ -48,14 +33,13 @@ public class PodcastsRepo {
 
   /** Get episode by seriesId and timestamp **/
   public Episode getEpisodeBySeriesIdAndPubDate(Long seriesId, Long timestamp) {
-    return new Episode(bucket.get(Podcast.composeKey(seriesId, timestamp)).content());
+    return new Episode(bucket.get(Episode.composeKey(seriesId, timestamp)).content());
   }
 
   /** Increment episode recommendations **/
   public void incrementEpisodeRecommendations(String episodeId) {
-
     Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
-    String key = Podcast.composeKey(comp.getSeriesId(), comp.getPubDate());
+    String key = Episode.composeKey(comp.getSeriesId(), comp.getPubDate());
     Observable.defer(() -> {
       try {
         return Observable.just(bucket.get(key));
@@ -71,7 +55,7 @@ public class PodcastsRepo {
   /** Decrement episode recommendations **/
   public void decrementEpisodeRecommendations(String episodeId) {
     Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
-    String key = Podcast.composeKey(comp.getSeriesId(), comp.getPubDate());
+    String key = Episode.composeKey(comp.getSeriesId(), comp.getPubDate());
     Observable.defer(() -> {
       try {
         return Observable.just(bucket.get(key));
@@ -84,9 +68,39 @@ public class PodcastsRepo {
       .subscribe();
   }
 
+  /** Increment series subscribers **/
+  public void incrementSeriesSubscribers(Long seriesId) {
+    String key = Series.composeKey(seriesId);
+    Observable.defer(() -> {
+      try {
+        return Observable.just(bucket.get(key));
+      } catch (Exception e) {
+        return Observable.just(null);
+      }
+    }).map(Series::incrementSubscriberCount)
+    .flatMap(doc -> Observable.just(bucket.replace(doc)))
+      .retryWhen(attempts -> retry.operation(attempts))
+      .subscribe();
+  }
+
+  /** Decrement series subscribers **/
+  public void decrementSeriesSubscribers(Long seriesId) {
+    String key = Series.composeKey(seriesId);
+    Observable.defer(() -> {
+      try {
+        return Observable.just(bucket.get(key));
+      } catch (Exception e) {
+        return Observable.just(null);
+      }
+    }).map(Series::decrementSubscriberCount)
+      .flatMap(doc -> Observable.just(bucket.replace(doc)))
+      .retryWhen(attempts -> retry.operation(attempts))
+      .subscribe();
+  }
+
   /** Get series by id **/
   public Series getSeries(Long seriesId) {
-    return new Series(bucket.get(Podcast.composeKey(seriesId, SERIES_PUB_DATE)).content());
+    return new Series(bucket.get(Series.composeKey(seriesId)).content());
   }
 
   /** Get episodes by seriesId (paginated) **/

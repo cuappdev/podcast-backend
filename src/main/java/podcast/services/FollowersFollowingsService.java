@@ -31,6 +31,9 @@ public class FollowersFollowingsService {
 
   /** Create a following **/
   public Following createFollowing(User owner, String followedId) throws Exception {
+    if (owner.getId().equals(followedId)) {
+      throw new FollowRelationship.FollowingSelfException();
+    }
     User followed = usersRepo.getUserById(followedId);
     Following following = new Following(owner, followed);
     publisher.publishEvent(new FollowingCreationEvent(following, owner, followed));

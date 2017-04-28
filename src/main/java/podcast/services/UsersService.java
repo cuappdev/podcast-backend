@@ -8,7 +8,6 @@ import podcast.models.entities.sessions.Session;
 import podcast.models.entities.users.User;
 import podcast.repos.UsersRepo;
 import rx.Observable;
-
 import java.util.AbstractMap;
 import java.util.Optional;
 import static podcast.utils.Lambdas.*;
@@ -30,15 +29,12 @@ public class UsersService {
   /** Get or create User, given a response from Google API -
    * boolean indicates whether or not the user is new **/
   public AbstractMap.SimpleEntry<Boolean, User> getOrCreateUser(JsonNode response, String googleId) {
-    // Must be an atomic attempt
-    synchronized (this) {
-      Optional<User> possUser = usersRepo.getUserByGoogleId(googleId);
-      User user = possUser.isPresent() ? possUser.get() : new User(response);
-      Boolean newUser = !possUser.isPresent();
-      user.setSession(new Session(user));
-      usersRepo.storeUser(user);
-      return new AbstractMap.SimpleEntry<Boolean, User>(newUser, user);
-    }
+    Optional<User> possUser = usersRepo.getUserByGoogleId(googleId);
+    User user = possUser.isPresent() ? possUser.get() : new User(response);
+    Boolean newUser = !possUser.isPresent();
+    user.setSession(new Session(user));
+    usersRepo.storeUser(user);
+    return new AbstractMap.SimpleEntry<Boolean, User>(newUser, user);
   }
 
   /** Get user by Id **/
@@ -52,17 +48,12 @@ public class UsersService {
   }
 
   /** Update the username of a user **/
-  public User updateUsername(User user,
-                             String username) throws Exception {
-    // Must be atomic, we can't have one thread check and update while
-    // the other is doing the same
-    synchronized (this) {
-      if (usersRepo.usernameAvailable(username)) {
-        usersRepo.updateUsername(user, username);
-        return user;
-      } else {
-        throw new User.UsernameTakenException();
-      }
+  public User updateUsername(User user, String username) throws Exception {
+    if (usersRepo.usernameAvailable(username)) {
+      usersRepo.updateUsername(user, username);
+      return user;
+    } else {
+      throw new User.UsernameTakenException();
     }
   }
 
@@ -75,68 +66,12 @@ public class UsersService {
 
   @EventListener
   private void handleFollowingCreation(FollowersFollowingsService.FollowingCreationEvent creationEvent) {
-
-    // Update the owner
-    Observable<User> updateOwner = Observable.defer(() -> {
-      try {
-        return Observable.just(usersRepo.getUserById(creationEvent.owner.getId()));
-      } catch (Exception e) {
-        return null;
-      }
-    }).map(owner -> {
-      owner.incrementFollowings();
-      return owner;
-    }).flatMap(owner -> Observable.just(usersRepo.replaceUser(owner)))
-      .retryWhen(attempts -> retry.operation(attempts));
-
-    // Update the followed
-    Observable<User> updateFollowed = Observable.defer(() -> {
-      try {
-        return Observable.just(usersRepo.getUserById(creationEvent.followed.getId()));
-      } catch (Exception e) {
-        return null;
-      }
-    }).map(followed -> {
-      followed.incrementFollowers();
-      return followed;
-    }).flatMap(followed -> Observable.just(usersRepo.replaceUser(followed)))
-      .retryWhen(attempts -> retry.operation(attempts));
-
-    // Merge these + subscribe (start)
-    Observable.merge(updateOwner, updateFollowed).subscribe();
+    usersRepo.handleFollowingCreation(creationEvent.owner.getId(), creationEvent.followed.getId());
   }
 
   @EventListener
   private void handleFollowingDeletion(FollowersFollowingsService.FollowingDeletionEvent deletionEvent) {
-
-    // Update the owner
-    Observable<User> updateOwner = Observable.defer(() -> {
-      try {
-        return Observable.just(usersRepo.getUserById(deletionEvent.owner.getId()));
-      } catch (Exception e) {
-        return null;
-      }
-    }).map(owner -> {
-      owner.decrementFollowings();
-      return owner;
-    }).flatMap(owner -> Observable.just(usersRepo.replaceUser(owner)))
-      .retryWhen(attempts -> retry.operation(attempts));
-
-    // Update the followed
-    Observable<User> updateFollowed = Observable.defer(() -> {
-      try {
-        return Observable.just(usersRepo.getUserById(deletionEvent.followed.getId()));
-      } catch (Exception e) {
-        return null;
-      }
-    }).map(followed -> {
-      followed.decrementFollowers();
-      return followed;
-    }).flatMap(followed -> Observable.just(usersRepo.replaceUser(followed)))
-      .retryWhen(attempts -> retry.operation(attempts));
-
-    // Merge these + subscribe (start)
-    Observable.merge(updateOwner, updateFollowed).subscribe();
+    usersRepo.handleFollowingDeletion(deletionEvent.owner.getId(), deletionEvent.followed.getId());
   }
 
 }

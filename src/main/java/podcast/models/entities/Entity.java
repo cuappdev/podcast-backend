@@ -33,7 +33,7 @@ public abstract class Entity {
    * @param type - Type information in the form of a String
    * @return - Key string
    */
-  public static String composeKey(String key, String type) {
+  protected static String composeKey(String key, String type) {
     return String.format("%s:%s", key, type);
   }
 

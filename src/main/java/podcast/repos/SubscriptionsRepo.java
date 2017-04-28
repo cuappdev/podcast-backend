@@ -48,6 +48,20 @@ public class SubscriptionsRepo {
     }
   }
 
+  /** Get the subscriptions of a particular series **/
+  public List<Subscription> getSubscriptions(Long seriesId, Integer offset, Integer max) {
+    N1qlQuery q = N1qlQuery.simple(
+      select("*").from("`" + DB + "`")
+      .where(
+        (x(TYPE).eq(s(SUBSCRIPTION)))
+        .and(x("`" + SERIES_ID + "`").eq(x(seriesId)))
+      ).limit(max).offset(offset)
+    );
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+    return rows.stream()
+      .map(r -> new Subscription(r.value().getObject(DB))).collect(Collectors.toList());
+  }
+
   /** Get a user's subscriptions **/
   public List<Subscription> getUserSubscriptions(User user) {
     N1qlQuery q = N1qlQuery.simple(

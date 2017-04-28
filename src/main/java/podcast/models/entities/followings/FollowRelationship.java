@@ -50,4 +50,11 @@ public abstract class FollowRelationship extends Entity {
     }
   }
 
+  /** When a user tries to follow himself **/
+  public static class FollowingSelfException extends Exception {
+    public FollowingSelfException() {
+      super("You cannot follow yourself");
+    }
+  }
+
 }

@@ -9,6 +9,7 @@ import podcast.models.entities.users.User;
 import rx.Observable;
 import java.util.List;
 import java.util.Optional;
+import static podcast.utils.Lambdas.retry;
 
 @Component
 public class UsersRepo {
@@ -36,10 +37,60 @@ public class UsersRepo {
     return user;
   }
 
-  /** Replace user */
-  public User replaceUser(User user) {
-    bucket.replace(user.toJsonDocument());
-    return user;
+  /** Handle following creation **/
+  public void handleFollowingCreation(String ownerId, String followedId) {
+    // Update the owner
+    Observable<JsonDocument> updateOwner = Observable.defer(() -> {
+      try {
+        return Observable.just(bucket.get(User.composeKey(ownerId)));
+      } catch (Exception e) {
+        return null;
+      }
+    }).map(User::incrementFollowings)
+      .flatMap(doc -> Observable.just(bucket.replace(doc)))
+      .retryWhen(attempts -> retry.operation(attempts));
+
+    // Update the followed
+    Observable<JsonDocument> updateFollowed = Observable.defer(() -> {
+      try {
+        return Observable.just(bucket.get(User.composeKey(followedId)));
+      } catch (Exception e) {
+        return null;
+      }
+    }).map(User::incrementFollowers)
+      .flatMap(doc -> Observable.just(bucket.replace(doc)))
+      .retryWhen(attempts -> retry.operation(attempts));
+
+    // Merge these + subscribe (start)
+    Observable.merge(updateOwner, updateFollowed).subscribe();
+  }
+
+  /** Handle following deletion **/
+  public void handleFollowingDeletion(String ownerId, String followedId) {
+    // Update the owner
+    Observable<JsonDocument> updateOwner = Observable.defer(() -> {
+      try {
+        return Observable.just(bucket.get(User.composeKey(ownerId)));
+      } catch (Exception e) {
+        return null;
+      }
+    }).map(User::decrementFollowings)
+      .flatMap(doc -> Observable.just(bucket.replace(doc)))
+      .retryWhen(attempts -> retry.operation(attempts));
+
+    // Update the followed
+    Observable<JsonDocument> updateFollowed = Observable.defer(() -> {
+      try {
+        return Observable.just(bucket.get(User.composeKey(followedId)));
+      } catch (Exception e) {
+        return null;
+      }
+    }).map(User::decrementFollowers)
+      .flatMap(doc -> Observable.just(bucket.replace(doc)))
+      .retryWhen(attempts -> retry.operation(attempts));
+
+    // Merge these + subscribe (start)
+    Observable.merge(updateOwner, updateFollowed).subscribe();
   }
 
   /** Remove User by ID (+ return the user just deleted) **/
@@ -68,11 +119,10 @@ public class UsersRepo {
 
   /** Update user username **/
   public User updateUsername(User user, String username) throws Exception {
-    // Remove previous lookup for username
-    bucket.remove(User.UsernameToUser.composeKey(user.getUsername()));
-    // Sets username, ensures it's valid
+    String oldUsername = user.getUsername();
     user.setUsername(username);
-    // Stores user as a whole + returns the user
+    bucket.insert(new User.UsernameToUser(user.toJsonObject()).toJsonDocument());
+    bucket.remove(User.UsernameToUser.composeKey(oldUsername));
     return storeUser(user);
   }
 
