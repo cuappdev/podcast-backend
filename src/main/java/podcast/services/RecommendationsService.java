@@ -57,6 +57,11 @@ public class RecommendationsService {
     return recommendationsRepo.getUserRecommendations(user);
   }
 
+  /** Get recommendations by episodeId **/
+  public List<Recommendation> getRecommendations(String episodeId, Integer offset, Integer max) {
+    return recommendationsRepo.getRecommendations(episodeId, offset, max);
+  }
+
   // MARK - events
 
   private static abstract class RecommendationEvent {

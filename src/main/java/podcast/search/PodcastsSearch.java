@@ -31,7 +31,6 @@ public abstract class PodcastsSearch {
   /** Given a query, search all podcast info **/
   public abstract List<Podcast> searchEverything(String query, Integer offset, Integer max, User user) throws Exception;
 
-
   /** Add the isSubscribed field to a list of series **/
   public List<Series> addSubscribed(List<Series> series, User user) throws Exception {
     List<Long> subs = subscriptionsService.getUserSubscriptions(user).stream()

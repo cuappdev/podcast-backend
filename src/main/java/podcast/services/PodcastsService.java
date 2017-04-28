@@ -94,34 +94,12 @@ public class PodcastsService {
 
   @EventListener
   private void handleRecommendationCreation(RecommendationsService.RecommendationCreationEvent creationEvent) {
-    Observable.defer(() -> {
-      try {
-        return Observable.just(podcastsRepo.getEpisodeById(creationEvent.episode.getId()));
-      } catch (Exception e) {
-        return Observable.just(null);
-      }
-    }).map(episode -> {
-      episode.incrementNumberRecommenders();
-      return episode;
-    }).flatMap(episode -> Observable.just(podcastsRepo.replaceEpisode(episode)))
-      .retryWhen(attempts -> retry.operation(attempts))
-      .subscribe();
+    podcastsRepo.incrementEpisodeRecommendations(creationEvent.episode.getId());
   }
 
   @EventListener
   private void handleRecommendationDeletion(RecommendationsService.RecommendationDeletionEvent deletionEvent) {
-    Observable.defer(() -> {
-      try {
-        return Observable.just(podcastsRepo.getEpisodeById(deletionEvent.episode.getId()));
-      } catch (Exception e) {
-        return Observable.just(null);
-      }
-    }).map(episode -> {
-      episode.decrementNumberRecommenders();
-      return episode;
-    }).flatMap(episode -> Observable.just(podcastsRepo.replaceEpisode(episode)))
-      .retryWhen(attempts -> retry.operation(attempts))
-      .subscribe();
+    podcastsRepo.decrementEpisodeRecommendations(deletionEvent.episode.getId());
   }
 
 }

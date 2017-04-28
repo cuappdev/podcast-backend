@@ -55,14 +55,24 @@ public class Episode extends Podcast {
     return String.format("%s:%s", getSeriesId(), getPubDate());
   }
 
-  /** Increment the number of people who have recommended this */
-  public void incrementNumberRecommenders() {
-    numberRecommenders += 1;
+  /** Increment the number of people who have recommended this.
+   * Static b/c original JsonDocument returned in order to ensure CAS value is unchanged */
+  public static JsonDocument incrementNumberRecommenders(JsonDocument doc) {
+    assert doc.content().getString(TYPE).equals(EPISODE);
+    Integer originalNum = doc.content().getInt(NUMBER_RECOMMENDERS) != null ?
+      doc.content().getInt(NUMBER_RECOMMENDERS) : 0;
+    doc.content().put(NUMBER_RECOMMENDERS, originalNum + 1);
+    return doc;
   }
 
-  /** Decrement the number of people who have recommended this */
-  public void decrementNumberRecommenders() {
-    numberRecommenders -= 1;
+  /** Decrement the number of people who have recommended this.
+   * Static b/c original JsonDocument returns in order to ensure CAS value is unchanged */
+  public static JsonDocument decrementNumberRecommenders(JsonDocument doc) {
+    assert doc.content().getString(TYPE).equals(EPISODE);
+    Integer originalNum = doc.content().getInt(NUMBER_RECOMMENDERS) != null ?
+      doc.content().getInt(NUMBER_RECOMMENDERS) : 0;
+    doc.content().put(NUMBER_RECOMMENDERS, originalNum - 1);
+    return doc;
   }
 
   /** Grab these components -> return the pair **/

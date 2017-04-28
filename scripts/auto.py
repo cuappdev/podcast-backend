@@ -8,6 +8,7 @@ pp = pprint.PrettyPrinter()
 
 BASE_URL = 'http://localhost:8080/api/v1'
 EPISODES = ['947194144:1459321200', '1074070278:1354478400', '79497721:1276558260', '261086208:1211130802']
+SERIES   = [int(e.split(':')[0]) for e in EPISODES]
 
 def _get(endpoint, headers={}):
   """
@@ -23,19 +24,50 @@ def _post(endpoint, headers={}):
 
 def _delete(endpoint, headers={}):
   """
-  DELETe endpoint wrapper
+  DELETE endpoint wrapper
   """
   return re.delete(BASE_URL + endpoint, headers=headers)
 
 def _head(token):
   return { 'Authorization' : 'Bearer {}'.format(token) }
 
-def grab_token(token):
+# FLAG - Sign In
+
+def sign_in(token):
   """
-  Grab session token from server to make requests
+  Sign in as a user
   """
   result = _post('/users/google_sign_in?id_token={}'.format(token))
-  return result.json()['data']['user']['session']['sessionToken']
+  return result.json()
+
+def grab_token(token):
+  """
+  Grab session token
+  """
+  return sign_in(token)['data']['user']['session']['sessionToken']
+
+# FLAG - Search
+
+def query_all(token, query):
+  """
+  Query all
+  """
+  result = _get('/search/all/{}?offset=0&max=10'.format(query), _head(token))
+  return result.json()
+
+def query_users(token, query):
+  """
+  Query users
+  """
+  result = _get('/search/users/{}?offset=0&max=10'.format(query), _head(token))
+  return result.json()
+
+def query_series(token, query):
+  """
+  Query series
+  """
+  result = _get('/search/series/{}?offset=0&max=10'.format(query), _head(token))
+  return result.json()
 
 def query_episodes(token, query):
   """
@@ -43,6 +75,8 @@ def query_episodes(token, query):
   """
   result = _get('/search/episodes/{}?offset=0&max=10'.format(query), _head(token))
   return result.json()['data']['episodes']
+
+# FLAG - Bookmarks
 
 def create_bookmark(token, episode_id):
   """
@@ -64,14 +98,48 @@ def delete_bookmark(token, episode_id):
   result = _delete('/bookmarks/{}'.format(episode_id), _head(token))
   return result.json()
 
-if __name__ == '__main__':
+# FLAG - Recommendations
 
+def create_recommendation(token, episode_id):
+  """
+  Create a recommendation for episode represented by `episode_id`
+  """
+  result = _post('/recommendations/{}'.format(episode_id), _head(token))
+  return result.json()
+
+def get_recommendations(token, episode_id):
+  """
+  Get recommendations of a episode represented by `episode_id`
+  """
+  result = _get('/recommendations/{}?max=10&offset=0'.format(episode_id), _head(token))
+  return result.json()
+
+def get_user_recommendations(token, user_id):
+  """
+  Get recommendations of a user represented by `user_id`
+  """
+  result = _get('/recommendations/users/{}'.format(user_id), _head(token))
+  return result.json()
+
+def delete_recommendation(token, episode_id):
+  """
+  Delete a recommendation for episode represented by `episode_id`
+  """
+  result = _delete('/recommendations/{}'.format(episode_id), _head(token))
+  return result.json()
+
+# FLAG - Integration Tests
+
+def create_get_delete_bookmarks(google_token):
+  """
+  Full life-cycle of a bookmark
+  """
   # Token
-  token = grab_token(sys.argv[1])
+  token = grab_token(google_token)
 
   # Create bookmarks
-  for lol in EPISODES:
-    create_bookmark(token, lol)
+  for e_id in EPISODES:
+    create_bookmark(token, e_id)
 
   time.sleep(5)
 
@@ -79,5 +147,38 @@ if __name__ == '__main__':
   pp.pprint(get_bookmarks(token))
 
   # Delete bookmarks
-  for lol in EPISODES:
-    delete_bookmark(token, lol)
+  for e_id in EPISODES:
+    delete_bookmark(token, e_id)
+
+def create_get_get_by_user_delete_recommendations(google_token):
+  """
+  Full life-cycle of a recommendation
+  """
+  # Grab user creds
+  user    = sign_in(google_token)['data']['user']
+  user_id = user['id']
+  token   = user['session']['sessionToken']
+
+  # Create recommendations
+  for e_id in EPISODES:
+    print 'lol'
+    create_recommendation(token, e_id)
+
+  time.sleep(5)
+
+  # Print user's recommendations
+  print user['firstName'] + '\'s recommendations'
+  pp.pprint(get_user_recommendations(token, user_id))
+
+  # Print each episodes' recommendations
+  for e_id in EPISODES:
+    print e_id + '\'s recommendations'
+    pp.pprint(get_recommendations(token, e_id))
+
+  # Delete recommendations
+  for e_id in EPISODES:
+    delete_recommendation(token, e_id)
+
+
+if __name__ == '__main__':
+  create_get_get_by_user_delete_recommendations(sys.argv[1])

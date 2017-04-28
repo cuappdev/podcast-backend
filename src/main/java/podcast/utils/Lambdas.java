@@ -14,6 +14,7 @@ public class Lambdas {
   /** Retry a request to Couchbase */
   public static OneArgObservableInterface retry = (attempts) ->
     attempts.flatMap(n -> {
+      n.printStackTrace();
       if (!(n.getCause() instanceof CASMismatchException)) {
         return Observable.just(n.getCause());
       }

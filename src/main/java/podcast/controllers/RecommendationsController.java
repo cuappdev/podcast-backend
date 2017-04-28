@@ -37,6 +37,7 @@ public class RecommendationsController {
       Recommendation recommendation = recommendationsService.createRecommendation(user, episodeId);
       return ResponseEntity.status(200).body(new Success(RECOMMENDATION, recommendation));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }
   }
@@ -48,8 +49,8 @@ public class RecommendationsController {
                                                    @RequestParam("offset") Integer offset,
                                                    @RequestParam("max") Integer max) {
     try {
-      // TODO
-      return ResponseEntity.status(200).body(new Success(RECOMMENDATIONS, null));
+      List<Recommendation> recommendations = recommendationsService.getRecommendations(episodeId, offset, max);
+      return ResponseEntity.status(200).body(new Success(RECOMMENDATIONS, recommendations));
     } catch (Exception e) {
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));
     }

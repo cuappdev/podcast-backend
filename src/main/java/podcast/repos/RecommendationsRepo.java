@@ -65,4 +65,18 @@ public class RecommendationsRepo {
       .map(r -> new Recommendation(r.value().getObject(DB))).collect(Collectors.toList());
   }
 
+  /** Get recommendations by episodeId **/
+  public List<Recommendation> getRecommendations(String episodeId, Integer offset, Integer max) {
+    N1qlQuery q = N1qlQuery.simple(
+      select("*").from("`" + DB + "`")
+      .where(
+        (x(TYPE).eq(s(RECOMMENDATION)))
+        .and(x("`" + EPISODE_ID + "`").eq(s(episodeId)))
+      ).limit(max).offset(offset)
+    );
+    List<N1qlQueryRow> rows = bucket.query(q).allRows();
+    return rows.stream()
+      .map(r -> new Recommendation(r.value().getObject(DB))).collect(Collectors.toList());
+  }
+
 }
