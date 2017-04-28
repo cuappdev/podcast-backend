@@ -1,5 +1,5 @@
 # Podcasts
-CUAppDev's podcast app API documentation
+CUAppDev"s podcast app API documentation
 
 # Group Users
 ## Google Sign In [/api/v1/users/google_sign_in?id_token={id_token}]
@@ -223,8 +223,39 @@ CUAppDev's podcast app API documentation
                 "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
               },
               "seriesId": 79681292,
-              "seriesTitle": "KQED's The California Report"
+              "seriesTitle": "KQED"s The California Report"
             }
+          },
+          "success": true
+        }
+
+### Get Subscriptions [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "subscriptions": [{
+              "createdAt": 1491028615211,
+              "type": "subscription",
+              "imageUrlLg": "http://bit.ly/2nsBAPG",
+              "imageUrlSm": "http://bit.ly/2nsBAPG",
+              "user": {
+                "firstName": "Jimmy",
+                "lastName": "Johns",
+                "imageUrl": "http://bit.ly/2nsBAPG",
+                "id": "9fc410fa-169e-11e7-ad67-7f48f7c09a8f",
+                "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
+              },
+              "seriesId": 79681292,
+              "seriesTitle": "KQED"s The California Report"
+            }]
           },
           "success": true
         }
@@ -254,7 +285,7 @@ CUAppDev's podcast app API documentation
                   "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
                 },
                 "seriesId": 79681292,
-                "seriesTitle": "KQED's The California Report"
+                "seriesTitle": "KQED"s The California Report"
               }
             },
             "success": true
@@ -286,7 +317,7 @@ CUAppDev's podcast app API documentation
                 "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
               },
               "seriesId": 79681292,
-              "seriesTitle": "KQED's The California Report"
+              "seriesTitle": "KQED"s The California Report"
             }]
           },
           "success": true
@@ -563,19 +594,232 @@ CUAppDev's podcast app API documentation
 ## Recommendations CRUD [/api/v1/recommendations/{episode_id}]
 ### Create Recommendation [POST]
 
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "recommendation": {
+              "createdAt": 1493414791095,
+              "episodeId": "947194144:1459321200",
+              "imageUrlLg": "https://goo.gl/L37gfS",
+              "imageUrlSm": "https://goo.gl/L37gfS",
+              "seriesTitle": "Series Title",
+              "title": "Episode title",
+              "type": "recommendation",
+              "user": {
+                "firstName": "User First Name",
+                "id": "UUID",
+                "imageUrl": "https://goo.gl/L37gfS",
+                "lastName": "User Last Name",
+                "username": "my_sick_username"
+              }
+            }
+          }
+        }
+
+### Get Recommendations [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "recommendations": [{
+              "createdAt": 1493414791095,
+              "episodeId": "947194144:1459321200",
+              "imageUrlLg": "https://goo.gl/L37gfS",
+              "imageUrlSm": "https://goo.gl/L37gfS",
+              "seriesTitle": "Series Title",
+              "title": "Episode title",
+              "type": "recommendation",
+              "user": {
+                "firstName": "User First Name",
+                "id": "UUID",
+                "imageUrl": "https://goo.gl/L37gfS",
+                "lastName": "User Last Name",
+                "username": "my_sick_username"
+              }
+            }]
+          }
+        }
 
 ### Delete Recommendation [DELETE]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "recommendation": {
+              "createdAt": 1493414791095,
+              "episodeId": "947194144:1459321200",
+              "imageUrlLg": "https://goo.gl/L37gfS",
+              "imageUrlSm": "https://goo.gl/L37gfS",
+              "seriesTitle": "Series Title",
+              "title": "Episode title",
+              "type": "recommendation",
+              "user": {
+                "firstName": "User First Name",
+                "id": "UUID",
+                "imageUrl": "https://goo.gl/L37gfS",
+                "lastName": "User Last Name",
+                "username": "my_sick_username"
+              }
+            }
+          }
+        }
 
 ## User Recommendations [/api/v1/recommendations/users/{user_id}]
 ### User Recommendations [GET]
 
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "recommendations": [{
+              "createdAt": 1493414791095,
+              "episodeId": "947194144:1459321200",
+              "imageUrlLg": "https://goo.gl/L37gfS",
+              "imageUrlSm": "https://goo.gl/L37gfS",
+              "seriesTitle": "Series Title",
+              "title": "Episode title",
+              "type": "recommendation",
+              "user": {
+                "firstName": "User First Name",
+                "id": "UUID",
+                "imageUrl": "https://goo.gl/L37gfS",
+                "lastName": "User Last Name",
+                "username": "my_sick_username"
+              }
+            }]
+          }
+        }
+
 
 # Group Bookmarks
-## Get Your Bookmarks [api/v1/bookmarks/]
+## Get Your Bookmarks [/api/v1/bookmarks]
 ### Get Your Bookmarks [GET]
 
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "bookmarks": [{
+              "audioUrl": "https://goo.gl/L37gfS",
+              "duration": "",
+              "episodeId": "261086208:1211130802",
+              "numberRecommenders": 0,
+              "pubDate": 1211130802,
+              "seriesTitle": "Wormwood: A Serialized Mystery",
+              "title": "Plugging in the Fuzzy Typewriter",
+              "type": "bookmark",
+              "user": {
+                "firstName": "User First Name",
+                "id": "UUID",
+                "imageUrl": "https://goo.gl/L37gfS",
+                "lastName": "User Last Name",
+                "username": "my_sick_username"
+              }
+            }]
+          }
+        }
 
 ## Bookmarks CRUD [/api/v1/bookmarks/{episode_id}]
 ### Create Bookmark [POST]
 
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "bookmark": {
+              "audioUrl": "https://goo.gl/L37gfS",
+              "duration": "",
+              "episodeId": "261086208:1211130802",
+              "numberRecommenders": 0,
+              "pubDate": 1211130802,
+              "seriesTitle": "Wormwood: A Serialized Mystery",
+              "title": "Plugging in the Fuzzy Typewriter",
+              "type": "bookmark",
+              "user": {
+                "firstName": "User First Name",
+                "id": "UUID",
+                "imageUrl": "https://goo.gl/L37gfS",
+                "lastName": "User Last Name",
+                "username": "my_sick_username"
+              }
+            }
+          }
+        }
+
 ### Delete Bookmark [DELETE]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "bookmark": {
+              "audioUrl": "https://goo.gl/L37gfS",
+              "duration": "",
+              "episodeId": "261086208:1211130802",
+              "numberRecommenders": 0,
+              "pubDate": 1211130802,
+              "seriesTitle": "Wormwood: A Serialized Mystery",
+              "title": "Plugging in the Fuzzy Typewriter",
+              "type": "bookmark",
+              "user": {
+                "firstName": "User First Name",
+                "id": "UUID",
+                "imageUrl": "https://goo.gl/L37gfS",
+                "lastName": "User Last Name",
+                "username": "my_sick_username"
+              }
+            }
+          }
+        }

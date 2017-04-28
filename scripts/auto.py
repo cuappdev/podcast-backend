@@ -178,7 +178,7 @@ def create_get_delete_bookmarks(google_token):
 
   # Create bookmarks
   for e_id in EPISODES:
-    create_bookmark(token, e_id)
+    pp.pprint(create_bookmark(token, e_id))
 
   time.sleep(5)
 
@@ -187,7 +187,7 @@ def create_get_delete_bookmarks(google_token):
 
   # Delete bookmarks
   for e_id in EPISODES:
-    delete_bookmark(token, e_id)
+    pp.pprint(delete_bookmark(token, e_id))
 
 def create_get_get_by_user_delete_recommendations(google_token):
   """
@@ -200,7 +200,7 @@ def create_get_get_by_user_delete_recommendations(google_token):
 
   # Create recommendations
   for e_id in EPISODES:
-    create_recommendation(token, e_id)
+    pp.pprint(create_recommendation(token, e_id))
 
   time.sleep(5)
 
@@ -215,7 +215,7 @@ def create_get_get_by_user_delete_recommendations(google_token):
 
   # Delete recommendations
   for e_id in EPISODES:
-    delete_recommendation(token, e_id)
+    pp.pprint(delete_recommendation(token, e_id))
 
 def create_get_get_by_user_delete_subscriptions(google_token):
   """
@@ -228,7 +228,7 @@ def create_get_get_by_user_delete_subscriptions(google_token):
 
   # Create subscriptions
   for s_id in SERIES:
-    create_subscription(token, s_id)
+    pp.pprint(create_subscription(token, s_id))
 
   time.sleep(5)
 
@@ -243,8 +243,8 @@ def create_get_get_by_user_delete_subscriptions(google_token):
 
   # Delete subscriptions
   for s_id in SERIES:
-    delete_subscription(token, s_id)
+    pp.pprint(delete_subscription(token, s_id))
 
 if __name__ == '__main__':
-  token = grab_token(sys.argv[1])
-  print change_username(token, 'lol123')
+  create_get_get_by_user_delete_recommendations(sys.argv[1])
+  create_get_delete_bookmarks(sys.argv[1])
