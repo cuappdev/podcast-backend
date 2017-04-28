@@ -44,7 +44,7 @@ public class BookmarksController {
   }
 
   /** Get a user's bookmarks */
-  @RequestMapping(method = RequestMethod.GET, value = "/")
+  @RequestMapping(method = RequestMethod.GET, value = "")
   public ResponseEntity<Result> getUserBookmarks(HttpServletRequest request) {
     User user = (User) request.getAttribute(USER);
     try {
