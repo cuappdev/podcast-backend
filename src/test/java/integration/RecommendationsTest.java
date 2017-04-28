@@ -10,8 +10,7 @@ import podcast.services.RecommendationsService;
 public class RecommendationsTest extends BaseIntegrationTest {
 
   @Autowired
-  @Getter
-  RecommendationsService recommendationsService;
+  @Getter RecommendationsService recommendationsService;
 
   @Before
   public void before() throws Exception {
@@ -19,21 +18,21 @@ public class RecommendationsTest extends BaseIntegrationTest {
   }
 
   private void recommendAll() throws Exception {
+
+  }
+
+  @Test
+  public void createRecommendationTest() throws Exception {
     // TODO
   }
 
   @Test
-  private void createRecommendationTest() throws Exception {
+  public void deleteRecommendationTest() throws Exception {
     // TODO
   }
 
   @Test
-  private void deleteRecommendationTest() throws Exception {
-    // TODO
-  }
-
-  @Test
-  private void getUserRecommendationsTest() throws Exception {
+  public void getUserRecommendationsTest() throws Exception {
     // TODO
   }
 

@@ -13,9 +13,7 @@ import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.AbstractMap;
-
 import static podcast.utils.Constants.*;
-
 
 /**
  * Users REST API controller

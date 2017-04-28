@@ -47,3 +47,5 @@ fabric.properties
 *.env
 target
 google.json
+venv
+*.pyc
