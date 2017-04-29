@@ -2,7 +2,6 @@ package podcast.models.entities.users;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
-
 import static podcast.utils.Constants.*;
 
 /** User data nested in a model that requires some User data **/
@@ -29,5 +28,16 @@ public class AssociatedUser {
     this.lastName = object.getString(LAST_NAME);
     this.username = object.getString(USERNAME);
     this.imageUrl = object.getString(IMAGE_URL);
+  }
+
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof AssociatedUser)) return false;
+    return ((AssociatedUser) o).getId().equals(id);
   }
 }

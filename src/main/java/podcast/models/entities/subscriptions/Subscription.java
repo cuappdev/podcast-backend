@@ -24,7 +24,6 @@ public class Subscription extends Entity {
   @Getter private AssociatedUser user;
   @Getter private Date createdAt = new Date();
 
-
   /**
    * Constructor from user and series
    * @param user - User
@@ -38,16 +37,15 @@ public class Subscription extends Entity {
     this.user = new AssociatedUser(user);
   }
 
-
   /** Constructor from JsonObject **/
   public Subscription(JsonObject object) {
     this.seriesTitle = object.getString(SERIES_TITLE);
     this.seriesId = object.getLong(SERIES_ID);
     this.imageUrlSm = object.getString(IMAGE_URL_SM);
     this.imageUrlLg = object.getString(IMAGE_URL_LG);
+    this.createdAt = new Date(object.getInt(CREATED_AT));
     this.user = new AssociatedUser(object.getObject(USER));
   }
-
 
   /** See {@link Entity#toJsonDocument()} **/
   public JsonDocument toJsonDocument() {

@@ -53,6 +53,7 @@ public class Recommendation extends Entity {
     this.imageUrlSm = object.getString(IMAGE_URL_SM);
     this.imageUrlLg = object.getString(IMAGE_URL_LG);
     this.audioUrl = object.getString(AUDIO_URL);
+    this.createdAt = new Date(object.getInt(CREATED_AT));
     this.user = new AssociatedUser(object.getObject(USER));
   }
 

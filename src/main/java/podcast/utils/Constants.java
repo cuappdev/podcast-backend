@@ -50,6 +50,7 @@ public class Constants {
   public static final String AUDIO_URL = "audioUrl";
   public static final String OWNER_ID = "ownerId";
   public static final String CREATED_AT = "createdAt";
+  public static final String UPDATED_AT = "updatedAt";
   public static final String SUBSCRIPTION = "subscription";
   public static final String USER_ID = "userId";
   public static final String EPISODE_ID = "episodeId";
@@ -65,6 +66,9 @@ public class Constants {
   public static final String BOOKMARKS = "bookmarks";
   public static final String LISTENING_HISTORY = "listeningHistory";
   public static final String LISTENING_HISTORIES = "listeningHistories";
+  public static final String FEEDS = "feeds";
+  public static final String RECOMMENDATION_FEED_ELEMENT = "recommendationFeedElement";
+  public static final String RELEASE_FEED_ELEMENT = "releaseFeedElement";
 
   /* Header constants */
   public static final String AUTHORIZATION = "Authorization";
@@ -88,8 +92,8 @@ public class Constants {
     following,
     recommendation,
     subscription,
-    recommendationElement,
-    releaseElement,
+    recommendationFeedElement,
+    releaseFeedElement,
     bookmark,
     listeningHistory
   }
