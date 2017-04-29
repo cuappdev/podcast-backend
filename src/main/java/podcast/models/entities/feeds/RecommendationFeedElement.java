@@ -24,7 +24,7 @@ public class RecommendationFeedElement extends FeedElement {
   @Getter private FeedType feedType = FeedType.recommendationFeedElement;
   @Getter private String ownerId;
   @Getter private Episode episode;
-  @Getter private List<AssociatedUser> users;
+  @Getter private AssociatedUser recommender;
   @Getter private Date updatedAt = new Date();
 
   /**
@@ -36,31 +36,17 @@ public class RecommendationFeedElement extends FeedElement {
   public RecommendationFeedElement(String ownerId, Episode episode, User user) {
     this.ownerId = ownerId;
     this.episode = episode;
-    this.users = new ArrayList<AssociatedUser>();
-    this.users.add(new AssociatedUser((user)));
+    this.recommender = new AssociatedUser(user);
   }
 
-  /** Static update, including a user who recommended a specific episode **/
-  public static JsonDocument addUser(JsonDocument doc, User user) {
-    assert doc.content().getString(TYPE).equals(RECOMMENDATION_FEED_ELEMENT);
-    AssociatedUser associatedUser = new AssociatedUser(user);
-    JsonArray arr = doc.content().getArray(USERS);
-    List<AssociatedUser> users = arr.toList().stream()
-      .map(o -> {
-        return new AssociatedUser((JsonObject) o);
-      }).collect(Collectors.toList());
-    HashSet<AssociatedUser> usersSet = new HashSet<AssociatedUser>(users);
-    if (!usersSet.contains(associatedUser)) {
-      arr.add(associatedUser);
-      doc.content().put(UPDATED_AT, new Date());
-    }
-    doc.content().put(USERS, arr);
-    return doc;
-  }
-
-  /** Add user to to this recommendation feed element **/
-  public void addUser(User user) {
-    this.users.add(new AssociatedUser(user));
+  /**
+   * Constructor from JsonObject
+   * @param object - JsonObject
+   */
+  public RecommendationFeedElement(JsonObject object) {
+    this.ownerId = object.getString(OWNER_ID);
+    this.episode = new Episode(object.getObject(EPISODE));
+    this.recommender = new AssociatedUser(object.getObject(RECOMMENDER));
   }
 
   /** See {@link Entity#toJsonDocument()} */

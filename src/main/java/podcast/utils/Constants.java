@@ -70,6 +70,7 @@ public class Constants {
   public static final String FEEDS = "feeds";
   public static final String RECOMMENDATION_FEED_ELEMENT = "recommendationFeedElement";
   public static final String RELEASE_FEED_ELEMENT = "releaseFeedElement";
+  public static final String RECOMMENDER = "recommender";
 
   /* Header constants */
   public static final String AUTHORIZATION = "Authorization";
