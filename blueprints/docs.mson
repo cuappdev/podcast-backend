@@ -1,5 +1,5 @@
 # Podcasts
-CUAppDev"s podcast app API documentation
+CUAppDev's podcast app API documentation
 
 # Group Users
 ## Google Sign In [/api/v1/users/google_sign_in?id_token={id_token}]
@@ -197,38 +197,7 @@ CUAppDev"s podcast app API documentation
 
 
 # Group Subscriptions
-## Subscriptions CRUD [/api/v1/subscriptions?series_id={id}]
-### Create Subscription [POST]
-
-+ Request
-
-  + Headers
-
-            Authorization : Bearer {sessionToken}
-
-+ Response 200 (application/json)
-
-        {
-          "data": {
-            "subscription": {
-              "createdAt": 1491028615211,
-              "type": "subscription",
-              "imageUrlLg": "http://bit.ly/2nsBAPG",
-              "imageUrlSm": "http://bit.ly/2nsBAPG",
-              "user": {
-                "firstName": "Jimmy",
-                "lastName": "Johns",
-                "imageUrl": "http://bit.ly/2nsBAPG",
-                "id": "9fc410fa-169e-11e7-ad67-7f48f7c09a8f",
-                "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
-              },
-              "seriesId": 79681292,
-              "seriesTitle": "KQED's The California Report"
-            }
-          },
-          "success": true
-        }
-
+## Get Subscriptions [/api/v1/subscriptions/{series_id}?offset={offset}&max={max}]
 ### Get Subscriptions [GET]
 
 + Request
@@ -256,6 +225,38 @@ CUAppDev"s podcast app API documentation
               "seriesId": 79681292,
               "seriesTitle": "KQED's The California Report"
             }]
+          },
+          "success": true
+        }
+
+## Subscriptions CRUD [/api/v1/subscriptions/{series_id}]
+### Create Subscription [POST]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "subscription": {
+              "createdAt": 1491028615211,
+              "type": "subscription",
+              "imageUrlLg": "http://bit.ly/2nsBAPG",
+              "imageUrlSm": "http://bit.ly/2nsBAPG",
+              "user": {
+                "firstName": "Jimmy",
+                "lastName": "Johns",
+                "imageUrl": "http://bit.ly/2nsBAPG",
+                "id": "9fc410fa-169e-11e7-ad67-7f48f7c09a8f",
+                "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
+              },
+              "seriesId": 79681292,
+              "seriesTitle": "KQED's The California Report"
+            }
           },
           "success": true
         }
@@ -291,7 +292,7 @@ CUAppDev"s podcast app API documentation
             "success": true
           }
 
-## Get User Subscriptions [/api/v1/subscriptions?id={id}]
+## Get User Subscriptions [/api/v1/subscriptions/users/{user_id}]
 ### Get User Subscriptions [GET]
 
 + Request
