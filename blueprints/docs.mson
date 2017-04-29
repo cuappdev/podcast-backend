@@ -223,7 +223,7 @@ CUAppDev"s podcast app API documentation
                 "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
               },
               "seriesId": 79681292,
-              "seriesTitle": "KQED"s The California Report"
+              "seriesTitle": "KQED's The California Report"
             }
           },
           "success": true
@@ -254,7 +254,7 @@ CUAppDev"s podcast app API documentation
                 "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
               },
               "seriesId": 79681292,
-              "seriesTitle": "KQED"s The California Report"
+              "seriesTitle": "KQED's The California Report"
             }]
           },
           "success": true
@@ -285,7 +285,7 @@ CUAppDev"s podcast app API documentation
                   "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
                 },
                 "seriesId": 79681292,
-                "seriesTitle": "KQED"s The California Report"
+                "seriesTitle": "KQED's The California Report"
               }
             },
             "success": true
@@ -317,7 +317,7 @@ CUAppDev"s podcast app API documentation
                 "username": "user-9fc410fa-169e-11e7-ad67-7f48f7c09a8f"
               },
               "seriesId": 79681292,
-              "seriesTitle": "KQED"s The California Report"
+              "seriesTitle": "KQED's The California Report"
             }]
           },
           "success": true
