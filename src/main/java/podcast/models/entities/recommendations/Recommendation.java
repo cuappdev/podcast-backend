@@ -22,6 +22,7 @@ public class Recommendation extends Entity {
   @Getter private String title;
   @Getter private String imageUrlSm;
   @Getter private String imageUrlLg;
+  @Getter private String audioUrl;
   @Getter private AssociatedUser user;
   @Getter private Date createdAt = new Date();
 
@@ -37,6 +38,7 @@ public class Recommendation extends Entity {
     this.title = episode.getTitle();
     this.imageUrlSm = episode.getImageUrlSm();
     this.imageUrlLg = episode.getImageUrlLg();
+    this.audioUrl = episode.getAudioUrl();
     this.user = new AssociatedUser(user);
   }
 
@@ -50,6 +52,7 @@ public class Recommendation extends Entity {
     this.title = object.getString(TITLE);
     this.imageUrlSm = object.getString(IMAGE_URL_SM);
     this.imageUrlLg = object.getString(IMAGE_URL_LG);
+    this.audioUrl = object.getString(AUDIO_URL);
     this.user = new AssociatedUser(object.getObject(USER));
   }
 
