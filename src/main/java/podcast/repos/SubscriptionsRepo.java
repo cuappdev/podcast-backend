@@ -34,7 +34,7 @@ public class SubscriptionsRepo {
   /** Deletes a subscription **/
   public Subscription deleteSubscription(Subscription subscription) {
     if (subscription == null) return null;
-    bucket.remove(subscription.toJsonDocument().id());
+    bucket.remove(Subscription.composeKey(subscription));
     return subscription;
   }
 

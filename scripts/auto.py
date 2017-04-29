@@ -118,7 +118,7 @@ def create_recommendation(token, episode_id):
 
 def get_recommendations(token, episode_id):
   """
-  Get recommendations of a episode represented by `episode_id`
+  Get recommendations of an episode represented by `episode_id`
   """
   result = _get('/recommendations/{}?offset=0&max=10'.format(episode_id), _head(token))
   return result.json()
@@ -132,7 +132,7 @@ def get_user_recommendations(token, user_id):
 
 def delete_recommendation(token, episode_id):
   """
-  Delete a recommendation for episode represented by `episode_id`
+  Delete a recommendation for an episode represented by `episode_id`
   """
   result = _delete('/recommendations/{}'.format(episode_id), _head(token))
   return result.json()
@@ -167,9 +167,39 @@ def get_user_subscriptions(token, user_id):
   result = _get('/subscriptions/users/{}'.format(user_id), _head(token))
   return result.json()
 
+# FLAG - listening histories
+
+def create_listening_history(token, episode_id):
+  """
+  Create a listening history element for an episode represented by `episode_id`
+  """
+  result = _post('/history/listening/{}'.format(episode_id), _head(token))
+  return result.json()
+
+def delete_listening_history(token, episode_id):
+  """
+  Delete a listening history element for an episode represented by `episode_id`
+  """
+  result = _delete('/history/listening/{}'.format(episode_id), _head(token))
+  return result.json()
+
+def clear_listening_history(token):
+  """
+  Clear your listening history
+  """
+  result = _delete('/history/listening', _head(token))
+  return result.json()
+
+def get_listening_history(token):
+  """
+  Get your listening history
+  """
+  result = _get('/history/listening?offset=0&max=10', _head(token))
+  return result.json()
+
 # FLAG - Integration Tests
 
-def create_get_delete_bookmarks(google_token):
+def bookmark_lifecycle(google_token):
   """
   Full life-cycle of a bookmark
   """
@@ -189,7 +219,7 @@ def create_get_delete_bookmarks(google_token):
   for e_id in EPISODES:
     pp.pprint(delete_bookmark(token, e_id))
 
-def create_get_get_by_user_delete_recommendations(google_token):
+def recommendation_lifecycle(google_token):
   """
   Full life-cycle of a recommendation
   """
@@ -217,7 +247,7 @@ def create_get_get_by_user_delete_recommendations(google_token):
   for e_id in EPISODES:
     pp.pprint(delete_recommendation(token, e_id))
 
-def create_get_get_by_user_delete_subscriptions(google_token):
+def subscription_lifecyle(google_token):
   """
   Full life-cycle of a subscription
   """
@@ -245,6 +275,28 @@ def create_get_get_by_user_delete_subscriptions(google_token):
   for s_id in SERIES:
     pp.pprint(delete_subscription(token, s_id))
 
+def listening_history_lifecycle(google_token):
+  # Grab user creds
+  user = sign_in(google_token)['data']['user']
+  user_id = user['id']
+  token = user['session']['sessionToken']
+
+  # Create listening history elements
+  for e_id in EPISODES:
+    pp.pprint(create_listening_history(token, e_id))
+
+  time.sleep(5)
+
+  print user['firstName'] + '\'s listening history elements'
+  pp.pprint(get_listening_history(token))
+
+  # Delete one listening history
+  pp.pprint(delete_listening_history(token, EPISODES[0]))
+
+  # Clear the rest
+  clear_listening_history(token)
+
+
 if __name__ == '__main__':
-  create_get_get_by_user_delete_recommendations(sys.argv[1])
-  create_get_delete_bookmarks(sys.argv[1])
+  sign_in(sys.argv[1])
+  listening_history_lifecycle(sys.argv[1])

@@ -63,6 +63,8 @@ public class Constants {
   public static final String HAS_RECOMMENDED = "hasRecommended";
   public static final String BOOKMARK = "bookmark";
   public static final String BOOKMARKS = "bookmarks";
+  public static final String LISTENING_HISTORY = "listeningHistory";
+  public static final String LISTENING_HISTORIES = "listeningHistories";
 
   /* Header constants */
   public static final String AUTHORIZATION = "Authorization";
@@ -88,6 +90,7 @@ public class Constants {
     subscription,
     recommendationElement,
     releaseElement,
-    bookmark
+    bookmark,
+    listeningHistory
   }
 }

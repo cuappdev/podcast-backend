@@ -591,6 +591,39 @@ CUAppDev"s podcast app API documentation
 
 
 # Group Recommendations
+## Get Recommendations [/api/v1/recommendations/{episode_id}?offset={offset}&max={max}]
+### Get Recommendations [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "recommendations": [{
+              "createdAt": 1493414791095,
+              "episodeId": "947194144:1459321200",
+              "imageUrlLg": "https://goo.gl/L37gfS",
+              "imageUrlSm": "https://goo.gl/L37gfS",
+              "seriesTitle": "Series Title",
+              "title": "Episode title",
+              "type": "recommendation",
+              "user": {
+                "firstName": "User First Name",
+                "id": "UUID",
+                "imageUrl": "https://goo.gl/L37gfS",
+                "lastName": "User Last Name",
+                "username": "my_sick_username"
+              }
+            }]
+          }
+        }
+
 ## Recommendations CRUD [/api/v1/recommendations/{episode_id}]
 ### Create Recommendation [POST]
 
@@ -621,38 +654,6 @@ CUAppDev"s podcast app API documentation
                 "username": "my_sick_username"
               }
             }
-          }
-        }
-
-### Get Recommendations [GET]
-
-+ Request
-
-  + Headers
-
-            Authorization : Bearer {sessionToken}
-
-+ Response 200 (application/json)
-
-        {
-          "success": true,
-          "data": {
-            "recommendations": [{
-              "createdAt": 1493414791095,
-              "episodeId": "947194144:1459321200",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "seriesTitle": "Series Title",
-              "title": "Episode title",
-              "type": "recommendation",
-              "user": {
-                "firstName": "User First Name",
-                "id": "UUID",
-                "imageUrl": "https://goo.gl/L37gfS",
-                "lastName": "User Last Name",
-                "username": "my_sick_username"
-              }
-            }]
           }
         }
 
@@ -820,6 +821,105 @@ CUAppDev"s podcast app API documentation
                 "lastName": "User Last Name",
                 "username": "my_sick_username"
               }
+            }
+          }
+        }
+
+# Group Listening History
+## Get Your Listening History [/api/v1/history/listening?offset={offset}&max={max}]
+### Get Your Listening History [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+          {
+            "success": true,
+            "data": {
+              "listeningHistories": [{
+                "audioUrl": "https://goo.gl/L37gfS",
+                "createdAt": 1493430842888,
+                "episodeId": "947194144:1459321200",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "seriesTitle": "Bunker Buddies with Andie and Travis",
+                "title": "Plane Crash!",
+                "type": "listeningHistory",
+                "userId": "42f95fa6-2c7e-11e7-bf6a-db655108dc48"
+              }]
+            }
+          }
+
+## Clear Your Listening History [/api/v1/history/listening]
+### Clear Your Listening History [DELETE]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true
+        }
+
+## Listening History CRUD [/api/v1/history/listening/{episode_id}]
+### Create Listening History Element [POST]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "listeningHistory": {
+              "audioUrl": "https://goo.gl/L37gfS",
+              "createdAt": 1493430842888,
+              "episodeId": "947194144:1459321200",
+              "imageUrlLg": "https://goo.gl/L37gfS",
+              "imageUrlSm": "https://goo.gl/L37gfS",
+              "seriesTitle": "Bunker Buddies with Andie and Travis",
+              "title": "Plane Crash!",
+              "type": "listeningHistory",
+              "userId": "42f95fa6-2c7e-11e7-bf6a-db655108dc48"
+            }
+          }
+        }
+
+### Delete Listening History Element [DELETE]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "listeningHistory": {
+              "audioUrl": "https://goo.gl/L37gfS",
+              "createdAt": 1493430842888,
+              "episodeId": "947194144:1459321200",
+              "imageUrlLg": "https://goo.gl/L37gfS",
+              "imageUrlSm": "https://goo.gl/L37gfS",
+              "seriesTitle": "Bunker Buddies with Andie and Travis",
+              "title": "Plane Crash!",
+              "type": "listeningHistory",
+              "userId": "42f95fa6-2c7e-11e7-bf6a-db655108dc48"
             }
           }
         }
