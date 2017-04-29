@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import static podcast.utils.Constants.*;
 
+/**
+ * Listening History REST API Controller
+ */
 @RestController
 @RequestMapping("/api/v1/history/listening")
 public class ListeningHistoryController {

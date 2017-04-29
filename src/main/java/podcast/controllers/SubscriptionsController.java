@@ -14,7 +14,7 @@ import java.util.List;
 import static podcast.utils.Constants.*;
 
 /**
- * Subscription REST API controller
+ * Podcast series subscriptions REST API controller
  */
 @RestController
 @RequestMapping("/api/v1/subscriptions")

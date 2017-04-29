@@ -13,8 +13,7 @@ import podcast.repos.UsersRepo;
 @Service
 public class SessionsService {
 
-  /* DB operations */
-  private UsersRepo usersRepo;
+  private final UsersRepo usersRepo;
 
   @Autowired
   public SessionsService (UsersRepo usersRepo) {

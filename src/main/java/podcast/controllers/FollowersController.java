@@ -16,6 +16,9 @@ import podcast.services.FollowersFollowingsService;
 import javax.servlet.http.HttpServletRequest;
 import static podcast.utils.Constants.*;
 
+/**
+ * Followers REST API Controller
+ */
 @RestController
 @RequestMapping("/api/v1/followers/")
 public class FollowersController {

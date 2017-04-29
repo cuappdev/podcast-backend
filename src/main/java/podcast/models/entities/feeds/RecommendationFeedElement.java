@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static podcast.utils.Constants.*;
 
 /**
@@ -22,7 +21,7 @@ import static podcast.utils.Constants.*;
  */
 public class RecommendationFeedElement extends FeedElement {
 
-  @Getter private Constants.Type type = Constants.Type.recommendationFeedElement;
+  @Getter private FeedType feedType = FeedType.recommendationFeedElement;
   @Getter private String ownerId;
   @Getter private Episode episode;
   @Getter private List<AssociatedUser> users;
@@ -81,7 +80,7 @@ public class RecommendationFeedElement extends FeedElement {
 
   /** Compose key from ownerId and episodeId **/
   public static String composeKey(String ownerId, String episodeId) {
-    return Entity.composeKey(String.format("%s:%s", ownerId, episodeId), Constants.Type.recommendationFeedElement.toString());
+    return Entity.composeKey(String.format("%s:%s", ownerId, episodeId), Constants.Type.feed.toString());
   }
 
 }

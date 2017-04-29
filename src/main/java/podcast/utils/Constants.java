@@ -66,6 +66,7 @@ public class Constants {
   public static final String BOOKMARKS = "bookmarks";
   public static final String LISTENING_HISTORY = "listeningHistory";
   public static final String LISTENING_HISTORIES = "listeningHistories";
+  public static final String FEED = "feed";
   public static final String FEEDS = "feeds";
   public static final String RECOMMENDATION_FEED_ELEMENT = "recommendationFeedElement";
   public static final String RELEASE_FEED_ELEMENT = "releaseFeedElement";
@@ -92,8 +93,7 @@ public class Constants {
     following,
     recommendation,
     subscription,
-    recommendationFeedElement,
-    releaseFeedElement,
+    feed,
     bookmark,
     listeningHistory
   }

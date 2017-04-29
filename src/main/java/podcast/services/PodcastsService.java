@@ -20,9 +20,8 @@ import static podcast.utils.Lambdas.*;
 @Service
 public class PodcastsService {
 
-  /* Database communication */
-  private PodcastsRepo podcastsRepo;
-  private SubscriptionsRepo subscriptionsRepo;
+  private final PodcastsRepo podcastsRepo;
+  private final SubscriptionsRepo subscriptionsRepo;
 
   @Autowired
   public PodcastsService(PodcastsRepo podcastsRepo,

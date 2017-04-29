@@ -19,7 +19,7 @@ import static podcast.utils.Lambdas.*;
 @Service
 public class UsersService {
 
-  private UsersRepo usersRepo;
+  private final UsersRepo usersRepo;
 
   @Autowired
   public UsersService(UsersRepo usersRepo) {
