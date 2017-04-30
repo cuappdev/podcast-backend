@@ -85,6 +85,20 @@ def query_episodes(token, query):
   result = _get('/search/episodes/{}?offset=0&max=10'.format(query), _head(token))
   return result.json()['data']['episodes']
 
+# FLAG - Followings
+
+def create_following():
+  pass
+
+def get_followers():
+  pass
+
+def get_followings():
+  pass
+
+def delete_following():
+  pass
+
 # FLAG - Bookmarks
 
 def create_bookmark(token, episode_id):
@@ -197,6 +211,15 @@ def get_listening_history(token):
   result = _get('/history/listening?offset=0&max=10', _head(token))
   return result.json()
 
+# FLAG - Feeds
+
+def get_feed(token):
+  """
+  Get your feed
+  """
+  result = _get('/feed?offset=0&max=10', _head(token))
+  return result.json()
+
 # FLAG - Integration Tests
 
 def bookmark_lifecycle(google_token):
@@ -296,7 +319,24 @@ def listening_history_lifecycle(google_token):
   # Clear the rest
   clear_listening_history(token)
 
+def feed_lifecycle(google_token1, google_token2):
+  """
+  Full life-cycle of feed
+  """
+  # Grab user1 creds
+  user1 = sign_in(google_token1)['data']['user']
+  user_id1 = user1['id']
+  token1 = user1['session']['sessionToken']
+
+  # Grab user2 creds
+  user2 = sign_in(google_token2)['data']['user']
+  user_id2 = user2['id']
+  token2 = user2['session']['sessionToken']
+
+
+
+  pp.pprint(get_feed(token))
 
 if __name__ == '__main__':
-  sign_in(sys.argv[1])
-  listening_history_lifecycle(sys.argv[1])
+  # Get feed
+  feed_lifecycle(sys.argv[1], sys.argv[2])

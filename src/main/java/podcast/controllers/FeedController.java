@@ -20,7 +20,7 @@ import static podcast.utils.Constants.*;
  * Feed REST API Controller
  */
 @RestController
-@RequestMapping("/api/v1/feed/")
+@RequestMapping("/api/v1/feed")
 public class FeedController {
 
   private final FeedElementService feedElementService;
