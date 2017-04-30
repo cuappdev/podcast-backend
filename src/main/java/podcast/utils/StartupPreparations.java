@@ -56,7 +56,9 @@ public class StartupPreparations implements InitializingBean {
         "def_firstName",
         "def_lastName",
         "def_username",
-        "def_ownerId"));
+        "def_ownerId",
+        "def_createdAt",
+        "def_updatedAt"));
     ensureBucketIndexes(dbBucket, dbIndexes);
 
     // Podcast indexes

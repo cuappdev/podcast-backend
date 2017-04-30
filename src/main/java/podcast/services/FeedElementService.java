@@ -7,7 +7,6 @@ import podcast.models.entities.feeds.FeedElement;
 import podcast.models.entities.followings.Follower;
 import podcast.repos.FeedElementRepo;
 import podcast.repos.FollowersFollowingsRepo;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,9 +24,9 @@ public class FeedElementService {
     this.ffRepo = ffRepo;
   }
 
-  public List<FeedElement> getFeedElements(String userId) {
-    // TODO
-    return null;
+  /** Get feed elements **/
+  public List<FeedElement> getFeedElements(String userId, Integer offset, Integer max) {
+    return feedElementRepo.getFeed(userId, offset, max);
   }
 
   // MARK - listeners
@@ -37,8 +36,8 @@ public class FeedElementService {
     List<String> followers = ffRepo.getUserFollowers(creationEvent.user.getId()).stream()
       .map(Follower::getId).collect(Collectors.toList());
     feedElementRepo.handleRecommendationCreation(
-      creationEvent.episode.getId(),
-      creationEvent.user.getId(),
+      creationEvent.episode,
+      creationEvent.user,
       followers);
   }
 
@@ -47,9 +46,8 @@ public class FeedElementService {
     List<String> followers = ffRepo.getUserFollowers(deletionEvent.user.getId()).stream()
       .map(Follower::getId).collect(Collectors.toList());
     feedElementRepo.handleRecommendationDeletion(
-      deletionEvent.episode.getId(),
-      deletionEvent.user.getId(),
+      deletionEvent.episode,
+      deletionEvent.user,
       followers);
   }
-
 }
