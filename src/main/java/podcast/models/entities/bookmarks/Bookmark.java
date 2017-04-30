@@ -20,6 +20,8 @@ public class Bookmark extends Entity {
   @Getter private String episodeId;
   @Getter private String title;
   @Getter private Long pubDate;
+  @Getter private String imageUrlSm;
+  @Getter private String imageUrlLg;
   @Getter private String duration;
   @Getter private String seriesTitle;
   @Getter private Integer numberRecommenders;
@@ -35,6 +37,8 @@ public class Bookmark extends Entity {
     this.episodeId = episode.getId();
     this.title = episode.getTitle();
     this.pubDate = episode.getPubDate();
+    this.imageUrlSm = episode.getImageUrlSm();
+    this.imageUrlLg = episode.getImageUrlLg();
     this.duration = episode.getDuration();
     this.seriesTitle = episode.getSeriesTitle();
     this.numberRecommenders = episode.getNumberRecommenders();
@@ -50,6 +54,8 @@ public class Bookmark extends Entity {
     this.episodeId = object.getString(EPISODE_ID);
     this.title = object.getString(TITLE);
     this.pubDate = object.getLong(PUB_DATE);
+    this.imageUrlSm = object.getString(IMAGE_URL_SM);
+    this.imageUrlLg = object.getString(IMAGE_URL_LG);
     this.duration = object.getString(DURATION);
     this.seriesTitle = object.getString(SERIES_TITLE);
     this.numberRecommenders = object.getInt(NUMBER_RECOMMENDERS);
