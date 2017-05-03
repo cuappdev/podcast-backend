@@ -83,21 +83,37 @@ def query_episodes(token, query):
   Query episodes
   """
   result = _get('/search/episodes/{}?offset=0&max=10'.format(query), _head(token))
-  return result.json()['data']['episodes']
+  return result.json()
 
 # FLAG - Followings
 
-def create_following():
-  pass
+def create_following(token, user_id):
+  """
+  Create a following (follow `user_id`)
+  """
+  result = _post('/followings/{}'.format(user_id), _head(token))
+  return result.json()
 
-def get_followers():
-  pass
+def get_followings(token):
+  """
+  Get your followings (people you follow)
+  """
+  result = _get('/followings/show?id=me', _head(token))
+  return result.json()
 
-def get_followings():
-  pass
+def get_followers(token):
+  """
+  Get your followers (people who follow you)
+  """
+  result = _get('/followers/show?id=me', _head(token))
+  return result.json()
 
-def delete_following():
-  pass
+def delete_following(token, user_id):
+  """
+  Delete a following (unfollow someone)
+  """
+  result = _delete('/followings/{}'.format(user_id), _head(token))
+  return result.json()
 
 # FLAG - Bookmarks
 
@@ -333,9 +349,23 @@ def feed_lifecycle(google_token1, google_token2):
   user_id2 = user2['id']
   token2 = user2['session']['sessionToken']
 
+  # user1 follows user2
+  create_following(token1, user_id2)
 
+  time.sleep(2)
 
-  pp.pprint(get_feed(token))
+  # Create recommendations (user2)
+  for e_id in EPISODES:
+    pp.pprint(create_recommendation(token2, e_id))
+
+  time.sleep(5)
+
+  # Now get user1's feed
+  pp.pprint(get_feed(token1))
+
+  # Delete recommendations (user2)
+  for e_id in EPISODES:
+    pp.pprint(delete_recommendation(token2, e_id))
 
 if __name__ == '__main__':
   # Get feed

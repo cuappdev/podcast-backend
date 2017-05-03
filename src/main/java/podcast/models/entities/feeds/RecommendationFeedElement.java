@@ -1,7 +1,6 @@
 package podcast.models.entities.feeds;
 
 import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import podcast.models.entities.Entity;
@@ -9,11 +8,7 @@ import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.users.AssociatedUser;
 import podcast.models.entities.users.User;
 import podcast.utils.Constants;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
 import static podcast.utils.Constants.*;
 
 /**

@@ -33,11 +33,12 @@ public class FeedElementRepo {
       select("*").from("`" + DB + "`")
       .where(
         (x(TYPE).eq(s(FEED)))
-        .and(x(USER_ID).eq(s(OWNER_ID)))
+        .and(x(OWNER_ID).eq(s(ownerId)))
       ).orderBy(Sort.desc(UPDATED_AT))
-      .limit(offset)
-      .offset(max)
+      .limit(max)
+      .offset(offset)
     );
+    System.out.println(q);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
     return rows.stream()
       .map(r -> {

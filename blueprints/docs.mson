@@ -1,5 +1,5 @@
 # Podcasts
-CUAppDev's podcast app API documentation
+CUAppDev podcast app API documentation
 
 # Group Users
 ## Google Sign In [/api/v1/users/google_sign_in?id_token={id_token}]
@@ -559,7 +559,10 @@ CUAppDev's podcast app API documentation
                 "pubDate": 1452080745,
                 "duration": "17:39",
                 "audioUrl": "An mp3 URL of some sort",
-                "tags": ["David", "Gries"],
+                "tags": [
+                  "David",
+                  "Gries"
+                ],
                 "id": "1008577710:1452080745"
               }
             ],
@@ -573,7 +576,10 @@ CUAppDev's podcast app API documentation
                 "imageUrlSm": "https://goo.gl/L37gfS",
                 "imageUrlLg": "https://goo.gl/L37gfS",
                 "feedUrl": "A RSS Feed URL",
-                "genres": ["Loop Invariants", "56 Years of Programming Experience"],
+                "genres": [
+                  "Loop Invariants",
+                  "56 Years of Programming Experience"
+                ]
               }
             ],
             "users": [
@@ -932,5 +938,54 @@ CUAppDev's podcast app API documentation
               "type": "listeningHistory",
               "userId": "42f95fa6-2c7e-11e7-bf6a-db655108dc48"
             }
+          }
+        }
+
+# Group Feed
+## Get Your Feed [/api/v1/feed?offset={offset}&max={max}]
+### Get Your Feed [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "success": true,
+          "data": {
+            "feeds": [
+              {
+                "episode": {
+                  "audioUrl": "MP3 URL",
+                  "author": "Some Author name",
+                  "duration": "10:00",
+                  "id": "261086208:1211130802",
+                  "imageUrlLg": "https://goo.gl/L37gfS",
+                  "imageUrlSm": "https://goo.gl/L37gfS",
+                  "numberRecommenders": 1,
+                  "pubDate": 1211130802,
+                  "seriesId": 261086208,
+                  "seriesTitle": "An intriguing series title",
+                  "summary": "A sick summary",
+                  "tags": ["podcasting"],
+                  "title": "Episode Title",
+                  "type": "episode"
+                },
+                "feedType": "recommendationFeedElement",
+                "ownerId": "1741e4f7-302f-11e7-8dce-4f1f5a1b819d",
+                "recommender": {
+                  "firstName": "John",
+                  "id": "User's UUID",
+                  "imageUrl": "https://goo.gl/L37gfS",
+                  "lastName": "Doe",
+                  "username": "JohnDOEEE"
+                },
+                "type": "feed",
+                "updatedAt": 1493836454615
+              }
+            ]
           }
         }
