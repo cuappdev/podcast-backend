@@ -25,7 +25,7 @@ public class SimpleUsersSearch extends UsersSearch {
   /** {@link UsersSearch#searchUsers(String, Integer, Integer)} **/
   public List<Person> searchUsers(String query, Integer offset, Integer max) throws Exception {
     query = query.trim(); // cleanse query
-    String qS = "SELECT * FROM `%s` WHERE %s='%s' AND %s LIKE '%s%%' OR %s LIKE '%s%%' OR %s LIKE '%s%%' OFFSET %d LIMIT %d";
+    String qS = "SELECT * FROM `%s` WHERE type='user' AND %s='%s' AND %s LIKE '%s%%' OR %s LIKE '%s%%' OR %s LIKE '%s%%' OFFSET %d LIMIT %d";
     String queryString = String.format(qS, DB, USERNAME, query, TYPE, USER, FIRST_NAME, query, LAST_NAME, query, offset, max);
     N1qlQuery q = N1qlQuery.simple(queryString);
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
