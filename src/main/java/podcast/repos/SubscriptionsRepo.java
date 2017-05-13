@@ -80,7 +80,7 @@ public class SubscriptionsRepo {
       .map(r -> new Subscription(r.value().getObject(DB))).collect(Collectors.toList());
   }
 
-  /** Get series-subscriptions mapping */
+  /** Get series-subscriptions boolean mappings */
   public HashMap<Long, Boolean> getSeriesSubscriptionMappings(String userId, List<Long> seriesIds) {
     List<String> keys = seriesIds.stream().map(id -> Subscription.composeKey(userId, id)).collect(Collectors.toList());
     List<JsonDocument> foundDocs = Observable.from(keys)

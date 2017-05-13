@@ -8,6 +8,7 @@ import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.podcasts.Series;
 import podcast.models.entities.podcasts.EpisodeStat;
 import podcast.models.entities.podcasts.SeriesStat;
+import podcast.repos.BookmarksRepo;
 import podcast.repos.PodcastsRepo;
 import podcast.repos.RecommendationsRepo;
 import podcast.repos.SubscriptionsRepo;
@@ -24,14 +25,17 @@ public class PodcastsService {
   private final PodcastsRepo podcastsRepo;
   private final SubscriptionsRepo subscriptionsRepo;
   private final RecommendationsRepo recommendationsRepo;
+  private final BookmarksRepo bookmarksRepo;
 
   @Autowired
   public PodcastsService(PodcastsRepo podcastsRepo,
                          SubscriptionsRepo subscriptionsRepo,
-                         RecommendationsRepo recommendationsRepo) {
+                         RecommendationsRepo recommendationsRepo,
+                         BookmarksRepo bookmarksRepo) {
     this.podcastsRepo = podcastsRepo;
     this.subscriptionsRepo = subscriptionsRepo;
     this.recommendationsRepo = recommendationsRepo;
+    this.bookmarksRepo = bookmarksRepo;
   }
 
   /** Fetch a episode given its seriesId and timestamp **/
@@ -59,7 +63,17 @@ public class PodcastsService {
     return podcastsRepo.getEpisodesBySeriesId(seriesId, offset, max);
   }
 
-  // MARK - listeners
+  /** Series info */
+  public SeriesInfo getSeriesInfo(String userId, List<Long> seriesIds) {
+    return new SeriesInfo(userId, seriesIds);
+  }
+
+  /** Episodes info */
+  public EpisodesInfo getEpisodesInfo(String userId, List<String> episodeIds) {
+    return new EpisodesInfo(userId, episodeIds);
+  }
+
+  // MARK - Listeners
 
   @EventListener
   private void handleSubscriptionCreation(SubscriptionsService.SubscriptionCreationEvent creationEvent) {
@@ -85,21 +99,23 @@ public class PodcastsService {
 
   public class EpisodesInfo {
     @Getter private HashMap<String, EpisodeStat> episodeStats;
-    @Getter private HashMap<String, Boolean> recommendations;
+    @Getter private HashMap<String, Boolean> recommendationsInfo;
+    @Getter private HashMap<String, Boolean> bookmarksInfo;
 
     private EpisodesInfo(String userId, List<String> episodeIds) {
       this.episodeStats = podcastsRepo.episodeStats(episodeIds);
-      this.recommendations = recommendationsRepo.getEpsiodeRecommendationMappings(userId, episodeIds);
+      this.recommendationsInfo = recommendationsRepo.getEpsiodeRecommendationMappings(userId, episodeIds);
+      this.bookmarksInfo = bookmarksRepo.getEpisodesBookmarksMappings(userId, episodeIds);
     }
   }
 
   public class SeriesInfo {
     @Getter private HashMap<Long, SeriesStat> seriesStats;
-    @Getter private HashMap<Long, Boolean> subscriptions;
+    @Getter private HashMap<Long, Boolean> subscriptionsInfo;
 
     private SeriesInfo(String userId, List<Long> seriesIds) {
       this.seriesStats = podcastsRepo.seriesStats(seriesIds);
-      this.subscriptions = subscriptionsRepo.getSeriesSubscriptionMappings(userId, seriesIds);
+      this.subscriptionsInfo = subscriptionsRepo.getSeriesSubscriptionMappings(userId, seriesIds);
     }
   }
 

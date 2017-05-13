@@ -81,7 +81,7 @@ public class RecommendationsRepo {
       .map(r -> new Recommendation(r.value().getObject(DB))).collect(Collectors.toList());
   }
 
-  /** Get episode-recommendation mappings */
+  /** Get episode-recommendation boolean mappings */
   public HashMap<String, Boolean> getEpsiodeRecommendationMappings(String userId, List<String> episodeIds) {
     List<String> keys = episodeIds.stream().map(id -> Recommendation.composeKey(id, userId)).collect(Collectors.toList());
     List<JsonDocument> foundDocs = Observable.from(keys)

@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import podcast.models.entities.bookmarks.Bookmark;
 import podcast.models.entities.users.User;
+import rx.Observable;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import static com.couchbase.client.java.query.Select.select;
@@ -62,6 +65,28 @@ public class BookmarksRepo {
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
     return rows.stream()
       .map(r -> new Bookmark(r.value().getObject(DB))).collect(Collectors.toList());
+  }
+
+  /** Get episode-bookmark boolean mappings */
+  public HashMap<String, Boolean> getEpisodesBookmarksMappings(String userId, List<String> episodeIds) {
+    List<String> keys = episodeIds.stream().map(id -> Bookmark.composeKey(id, userId)).collect(Collectors.toList());
+    List<JsonDocument> foundDocs = Observable.from(keys)
+      .flatMap(key -> Observable.just(bucket.get(key)))
+      .toList()
+      .toBlocking()
+      .single();
+    List<Bookmark> bookmarks = foundDocs.stream()
+      .filter(doc -> doc != null)
+      .map(doc -> new Bookmark(doc.content()))
+      .collect(Collectors.toList());
+    HashMap<String, Boolean> result = new HashMap<>();
+    for (Bookmark bookmark : bookmarks) {
+      result.put(bookmark.getEpisode().getId(), true);
+    }
+    for (String eId : episodeIds) {
+      if (!result.containsKey(eId)) result.put(eId, false);
+    }
+    return result;
   }
 
 }
