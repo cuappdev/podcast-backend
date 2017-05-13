@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.podcasts.Series;
-import podcast.models.entities.stats.EpisodeStat;
-import podcast.models.entities.stats.SeriesStat;
+import podcast.models.entities.podcasts.EpisodeStat;
+import podcast.models.entities.podcasts.SeriesStat;
 import rx.Observable;
+
+import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.List;
 import static com.couchbase.client.java.query.Select.select;
@@ -23,9 +25,11 @@ import static podcast.utils.Lambdas.retry;
 public class PodcastsRepo {
 
   private Bucket bucket;
-
-  public PodcastsRepo(@Qualifier("podcastsBucket") Bucket podcastsBucket) {
+  private Bucket dbBucket;
+  public PodcastsRepo(@Qualifier("podcastsBucket") Bucket podcastsBucket,
+                      @Qualifier("dbBucket") Bucket dbBucket) {
     this.bucket = podcastsBucket;
+    this.dbBucket = dbBucket;
   }
 
   /** Get episode by Id */
@@ -134,10 +138,53 @@ public class PodcastsRepo {
       .limit(max)
       .offset(offset)
     );
-
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
     return rows.stream()
       .map(r -> new Episode(r.value().getObject(PODCASTS))).collect(Collectors.toList());
+  }
+
+  /** Get seriesId -> series stat mappings */
+  public HashMap<Long, SeriesStat> seriesStats(List<Long> seriesIds) {
+    List<String> keys = seriesIds.stream().map(id -> SeriesStat.composeKey(id)).collect(Collectors.toList());
+    List<JsonDocument> foundDocs = Observable.from(keys)
+      .flatMap(key -> Observable.just(dbBucket.get(key)))
+      .toList()
+      .toBlocking()
+      .single();
+    List<SeriesStat> seriesStats = foundDocs.stream()
+      .filter(doc -> doc != null)
+      .map(doc -> new SeriesStat(doc.content()))
+      .collect(Collectors.toList());
+    HashMap<Long, SeriesStat> result = new HashMap<>();
+    for (SeriesStat seriesStat : seriesStats) {
+      result.put(seriesStat.getSeriesId(), seriesStat);
+    }
+    for (Long seriesId : seriesIds) {
+      if (!result.containsKey(seriesId)) result.put(seriesId, new SeriesStat(seriesId));
+    }
+    return result;
+  }
+
+  /** Get episodeId -> episode stat mappings */
+  public HashMap<String, EpisodeStat> episodeStats(List<String> episodeIds) {
+    List<String> keys = episodeIds.stream().map(id -> EpisodeStat.composeKey(id)).collect(Collectors.toList());
+    List<JsonDocument> foundDocs = Observable.from(keys)
+      .flatMap(key -> Observable.just(dbBucket.get(key)))
+      .toList()
+      .toBlocking()
+      .single();
+    List<EpisodeStat> episodeStats = foundDocs.stream()
+      .filter(doc -> doc != null)
+      .map(doc -> new EpisodeStat(doc.content()))
+      .collect(Collectors.toList());
+    HashMap<String, EpisodeStat> result = new HashMap<>();
+    for (EpisodeStat episodeStat : episodeStats) {
+      result.put(episodeStat.getEpisodeId(),  episodeStat);
+    }
+    for (String episodeId : episodeIds) {
+      if (!result.containsKey(episodeId)) result.put(episodeId, new EpisodeStat(episodeId));
+    }
+    return result;
   }
 
 }

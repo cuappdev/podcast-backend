@@ -1,4 +1,4 @@
-package podcast.models.entities.stats;
+package podcast.models.entities.podcasts;
 
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;

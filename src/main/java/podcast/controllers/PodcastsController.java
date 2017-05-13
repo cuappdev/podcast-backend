@@ -34,7 +34,7 @@ public class PodcastsController {
                                               @PathVariable("series_id") Long seriesId) {
     User user = (User) request.getAttribute(USER);
     try {
-      Series series = podcastsService.getSeries(user, seriesId);
+      PodcastsService.SingleSeriesInfo series = podcastsService.getSeries(user.getId(), seriesId);
       return ResponseEntity.status(200).body(new Success(SERIES, series));
     } catch (Exception e) {
       e.printStackTrace();
@@ -48,8 +48,9 @@ public class PodcastsController {
                                                       @PathVariable("series_id") Long seriesId,
                                                       @RequestParam("offset") Integer offset,
                                                       @RequestParam("max") Integer max) {
+    User user = (User) request.getAttribute(USER);
     try {
-      List<Episode> episodes = podcastsService.getEpisodesBySeriesId(seriesId, offset, max);
+      PodcastsService.EpisodesInfo episodes = podcastsService.getEpisodesBySeriesId(user.getId(), seriesId, offset, max);
       return ResponseEntity.status(200).body(new Success(EPISODES, episodes));
     } catch (Exception e) {
       e.printStackTrace();
