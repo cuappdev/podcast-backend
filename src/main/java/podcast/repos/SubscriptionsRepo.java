@@ -8,9 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import podcast.models.entities.subscriptions.Subscription;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import podcast.models.entities.users.User;
+import rx.Observable;
+
 import static com.couchbase.client.java.query.Select.select;
 import static com.couchbase.client.java.query.dsl.Expression.*;
 import static podcast.utils.Constants.*;
@@ -75,4 +79,30 @@ public class SubscriptionsRepo {
     return rows.stream()
       .map(r -> new Subscription(r.value().getObject(DB))).collect(Collectors.toList());
   }
+
+  /** Get series-subscriptions mapping */
+  public HashMap<Long, Boolean> getSeriesSubscriptionMappings(String userId, List<Long> seriesIds) {
+    List<String> keys = seriesIds.stream().map(id -> Subscription.composeKey(userId, id)).collect(Collectors.toList());
+    List<JsonDocument> foundDocs = Observable.from(keys)
+      .flatMap(key -> Observable.just(bucket.get(key)))
+      .toList()
+      .toBlocking()
+      .single();
+    List<Subscription> subscriptions = foundDocs.stream()
+      .map(doc -> {
+        if (doc == null) return null;
+        return new Subscription(doc.content());
+      })
+      .filter(sub -> sub != null)
+      .collect(Collectors.toList());
+    HashMap<Long, Boolean> result = new HashMap<Long, Boolean>();
+    for (Subscription subscription : subscriptions) {
+      result.put(subscription.getSeriesId(), true);
+    }
+    for (Long sId : seriesIds) {
+      if (!result.containsKey(sId)) result.put(sId, false);
+    }
+    return result;
+  }
+
 }

@@ -72,6 +72,8 @@ public class Constants {
   public static final String RELEASE_FEED_ELEMENT = "releaseFeedElement";
   public static final String RECOMMENDER = "recommender";
   public static final String FEED_TYPE = "feedType";
+  public static final String EPISODE_STAT = "episodeStat";
+  public static final String SERIES_STAT = "seriesStat";
 
   /* Header constants */
   public static final String AUTHORIZATION = "Authorization";
@@ -91,6 +93,8 @@ public class Constants {
     session,
     series,
     episode,
+    episodeStats,
+    seriesStats,
     follower,
     following,
     recommendation,

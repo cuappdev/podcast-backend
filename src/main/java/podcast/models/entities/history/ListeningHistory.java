@@ -15,12 +15,7 @@ import static podcast.utils.Constants.*;
 public class ListeningHistory extends Entity {
 
   @Getter private Type type = Type.listeningHistory;
-  @Getter private String episodeId;
-  @Getter private String seriesTitle;
-  @Getter private String title;
-  @Getter private String imageUrlSm;
-  @Getter private String imageUrlLg;
-  @Getter private String audioUrl;
+  @Getter private Episode episode;
   @Getter private String userId;
   @Getter private Date createdAt = new Date();
 
@@ -30,12 +25,7 @@ public class ListeningHistory extends Entity {
    * @param userId - String
    */
   public ListeningHistory(Episode episode, String userId) {
-    this.episodeId = episode.getId();
-    this.seriesTitle = episode.getSeriesTitle();
-    this.title = episode.getTitle();
-    this.imageUrlSm = episode.getImageUrlSm();
-    this.imageUrlLg = episode.getImageUrlLg();
-    this.audioUrl = episode.getAudioUrl();
+    this.episode = episode;
     this.userId = userId;
   }
 
@@ -44,12 +34,7 @@ public class ListeningHistory extends Entity {
    * @param object - JsonObject
    */
   public ListeningHistory(JsonObject object) {
-    this.episodeId = object.getString(EPISODE_ID);
-    this.seriesTitle = object.getString(SERIES_TITLE);
-    this.title = object.getString(TITLE);
-    this.imageUrlSm = object.getString(IMAGE_URL_SM);
-    this.imageUrlLg = object.getString(IMAGE_URL_LG);
-    this.audioUrl = object.getString(AUDIO_URL);
+    this.episode = new Episode(object.getObject(EPISODE));
     this.createdAt = new Date(object.getInt(CREATED_AT));
     this.userId = object.getString(USER_ID);
   }
@@ -71,6 +56,6 @@ public class ListeningHistory extends Entity {
 
   /** Compose a key from ListeningHistory element **/
   public static String composeKey(ListeningHistory history) {
-    return composeKey(history.getEpisodeId(), history.getUserId());
+    return composeKey(history.getEpisode().getId(), history.getUserId());
   }
 }

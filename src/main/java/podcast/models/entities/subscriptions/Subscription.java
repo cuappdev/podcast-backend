@@ -52,8 +52,8 @@ public class Subscription extends Entity {
     return JsonDocument.create(composeKey(this), super.toJsonObject());
   }
 
-  public static String composeKey(String usersId, Long seriesId) {
-    return Entity.composeKey(String.format("%s:%s", usersId, seriesId), Type.subscription.toString());
+  public static String composeKey(String userId, Long seriesId) {
+    return Entity.composeKey(String.format("%s:%s", userId, seriesId), Type.subscription.toString());
   }
 
   /** Compose Key from Subscription **/

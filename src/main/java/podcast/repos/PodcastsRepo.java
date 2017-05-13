@@ -1,6 +1,7 @@
 package podcast.repos;
 
 import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryRow;
 import com.couchbase.client.java.query.dsl.Sort;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.podcasts.Series;
+import podcast.models.entities.stats.EpisodeStat;
+import podcast.models.entities.stats.SeriesStat;
 import rx.Observable;
 import java.util.stream.Collectors;
 import java.util.List;
@@ -38,31 +41,37 @@ public class PodcastsRepo {
 
   /** Increment episode recommendations **/
   public void incrementEpisodeRecommendations(String episodeId) {
-    Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
-    String key = Episode.composeKey(comp.getSeriesId(), comp.getPubDate());
+    String key = EpisodeStat.composeKey(episodeId);
     Observable.defer(() -> {
       try {
         return Observable.just(bucket.get(key));
       } catch (Exception e) {
         return Observable.just(null);
       }
-    }).map(Episode::incrementNumberRecommenders)
-      .flatMap(doc -> Observable.just(bucket.replace(doc)))
+    }).map(EpisodeStat::incrementNumberRecommenders)
+      .flatMap(doc -> {
+        if (doc != null) {
+          return Observable.just(bucket.replace(doc));
+        } else {
+          EpisodeStat episodeStats = new EpisodeStat(episodeId);
+          JsonDocument newDoc = EpisodeStat.incrementNumberRecommenders(episodeStats.toJsonDocument());
+          return Observable.just(bucket.upsert(newDoc));
+        }
+      })
       .retryWhen(attempts -> retry.operation(attempts))
       .subscribe();
   }
 
   /** Decrement episode recommendations **/
   public void decrementEpisodeRecommendations(String episodeId) {
-    Episode.CompositeEpisodeKey comp = Episode.getSeriesIdAndPubDate(episodeId);
-    String key = Episode.composeKey(comp.getSeriesId(), comp.getPubDate());
+    String key = EpisodeStat.composeKey(episodeId);
     Observable.defer(() -> {
       try {
         return Observable.just(bucket.get(key));
       } catch (Exception e) {
         return Observable.just(null);
       }
-    }).map(Episode::decrementNumberRecommenders)
+    }).map(EpisodeStat::decrementNumberRecommenders)
       .flatMap(doc -> Observable.just(bucket.replace(doc)))
       .retryWhen(attempts -> retry.operation(attempts))
       .subscribe();
@@ -70,29 +79,37 @@ public class PodcastsRepo {
 
   /** Increment series subscribers **/
   public void incrementSeriesSubscribers(Long seriesId) {
-    String key = Series.composeKey(seriesId);
+    String key = SeriesStat.composeKey(seriesId);
     Observable.defer(() -> {
       try {
         return Observable.just(bucket.get(key));
       } catch (Exception e) {
         return Observable.just(null);
       }
-    }).map(Series::incrementSubscriberCount)
-    .flatMap(doc -> Observable.just(bucket.replace(doc)))
+    }).map(SeriesStat::incrementSubscriberCount)
+      .flatMap(doc -> {
+        if (doc != null) {
+          return Observable.just(bucket.replace(doc));
+        } else {
+          SeriesStat seriesStats = new SeriesStat(seriesId);
+          JsonDocument newDoc = SeriesStat.incrementSubscriberCount(seriesStats.toJsonDocument());
+          return Observable.just(bucket.upsert(newDoc));
+        }
+      })
       .retryWhen(attempts -> retry.operation(attempts))
       .subscribe();
   }
 
   /** Decrement series subscribers **/
   public void decrementSeriesSubscribers(Long seriesId) {
-    String key = Series.composeKey(seriesId);
+    String key = SeriesStat.composeKey(seriesId);
     Observable.defer(() -> {
       try {
         return Observable.just(bucket.get(key));
       } catch (Exception e) {
         return Observable.just(null);
       }
-    }).map(Series::decrementSubscriberCount)
+    }).map(SeriesStat::decrementSubscriberCount)
       .flatMap(doc -> Observable.just(bucket.replace(doc)))
       .retryWhen(attempts -> retry.operation(attempts))
       .subscribe();

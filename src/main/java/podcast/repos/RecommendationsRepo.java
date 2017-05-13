@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.recommendations.Recommendation;
 import podcast.models.entities.users.User;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import static com.couchbase.client.java.query.Select.select;
@@ -77,6 +78,11 @@ public class RecommendationsRepo {
     List<N1qlQueryRow> rows = bucket.query(q).allRows();
     return rows.stream()
       .map(r -> new Recommendation(r.value().getObject(DB))).collect(Collectors.toList());
+  }
+
+  /** Get episode-recommendation mappings */
+  public HashMap<String, Boolean> getEpsiodeRecommendationMappings(String userId, List<String> episodeIds) {
+    return null;
   }
 
 }

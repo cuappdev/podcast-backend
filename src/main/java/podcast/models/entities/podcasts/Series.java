@@ -24,7 +24,6 @@ public class Series extends Podcast {
   @Getter private String imageUrlSm;
   @Getter private String imageUrlLg;
   @Getter private String feedUrl;
-  @Getter private Integer numberSubscribers;
   @Getter private List<String> genres;
 
   /**
@@ -39,29 +38,8 @@ public class Series extends Podcast {
     this.imageUrlSm = object.getString(IMAGE_URL_SM);
     this.imageUrlLg = object.getString(IMAGE_URL_LG);
     this.feedUrl = object.getString(FEED_URL);
-    this.numberSubscribers = object.getInt(NUMBER_SUBSCRIBERS) == null ? 0 : object.getInt(NUMBER_SUBSCRIBERS);
     this.genres = object.getArray(GENRES) == null ? new ArrayList<String>() : object.getArray(GENRES).toList()
       .stream().map(o -> { return (String) o; }).collect(Collectors.toList());
-  }
-
-  /** Increment the number of people who have subscribed to this.
-   * Static b/c original JsonDocument returned in order to ensure CAS value is unchanged */
-  public static JsonDocument incrementSubscriberCount(JsonDocument doc) {
-    assert doc.content().getString(TYPE).equals(SERIES);
-    Integer originalNum = doc.content().getInt(NUMBER_SUBSCRIBERS) != null ?
-      doc.content().getInt(NUMBER_SUBSCRIBERS) : 0;
-    doc.content().put(NUMBER_SUBSCRIBERS, originalNum + 1);
-    return doc;
-  }
-
-  /** Decrement the number of people who have subscribed to this.
-   * Static b/c original JsonDocument returned in order to ensure CAS value is unchanged */
-  public static JsonDocument decrementSubscriberCount(JsonDocument doc) {
-    assert doc.content().getString(TYPE).equals(SERIES);
-    Integer originalNum = doc.content().getInt(NUMBER_SUBSCRIBERS) != null ?
-      doc.content().getInt(NUMBER_SUBSCRIBERS) : 0;
-    doc.content().put(NUMBER_SUBSCRIBERS, originalNum - 1);
-    return doc;
   }
 
   /** Compose series key **/

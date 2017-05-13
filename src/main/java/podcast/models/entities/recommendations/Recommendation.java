@@ -17,12 +17,7 @@ import static podcast.utils.Constants.*;
 public class Recommendation extends Entity {
 
   @Getter private Type type = Type.recommendation;
-  @Getter private String episodeId;
-  @Getter private String seriesTitle;
-  @Getter private String title;
-  @Getter private String imageUrlSm;
-  @Getter private String imageUrlLg;
-  @Getter private String audioUrl;
+  @Getter private Episode episode;
   @Getter private AssociatedUser user;
   @Getter private Date createdAt = new Date();
 
@@ -33,12 +28,7 @@ public class Recommendation extends Entity {
    * @param episode _ Episode
    */
   public Recommendation(User user, Episode episode) {
-    this.episodeId = episode.getId();
-    this.seriesTitle = episode.getSeriesTitle();
-    this.title = episode.getTitle();
-    this.imageUrlSm = episode.getImageUrlSm();
-    this.imageUrlLg = episode.getImageUrlLg();
-    this.audioUrl = episode.getAudioUrl();
+    this.episode = episode;
     this.user = new AssociatedUser(user);
   }
 
@@ -47,13 +37,7 @@ public class Recommendation extends Entity {
    * @param object - JsonObject
    */
   public Recommendation(JsonObject object) {
-    this.episodeId = object.getString(EPISODE_ID);
-    this.seriesTitle = object.getString(SERIES_TITLE);
-    this.title = object.getString(TITLE);
-    this.imageUrlSm = object.getString(IMAGE_URL_SM);
-    this.imageUrlLg = object.getString(IMAGE_URL_LG);
-    this.audioUrl = object.getString(AUDIO_URL);
-    this.createdAt = new Date(object.getInt(CREATED_AT));
+    this.episode = new Episode(object.getObject(EPISODE));
     this.user = new AssociatedUser(object.getObject(USER));
   }
 
@@ -74,7 +58,7 @@ public class Recommendation extends Entity {
 
   /** Compose key from Recommendation **/
   public static String composeKey(Recommendation r) {
-    return composeKey(r.getEpisodeId(), r.getUser().getId());
+    return composeKey(r.getEpisode().getId(), r.getUser().getId());
   }
 
 }

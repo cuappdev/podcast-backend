@@ -4,8 +4,6 @@ import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import lombok.Getter;
 import podcast.models.entities.Entity;
-import podcast.models.entities.podcasts.Podcast;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +25,6 @@ public class Episode extends Podcast {
   @Getter private Long pubDate;
   @Getter private String duration;
   @Getter private String audioUrl;
-  @Getter private Integer numberRecommenders;
   @Getter private List<String> tags;
 
   /**
@@ -45,7 +42,6 @@ public class Episode extends Podcast {
     this.pubDate = object.getLong(PUB_DATE);
     this.duration = object.getString(DURATION);
     this.audioUrl = object.getString(AUDIO_URL);
-    this.numberRecommenders = object.getInt(NUMBER_RECOMMENDERS);
     this.tags = object.getArray(TAGS) == null ? new ArrayList<String>() : object.getArray(TAGS).toList()
       .stream().map(o -> ((String) o)).collect(Collectors.toList());
   }
@@ -55,29 +51,15 @@ public class Episode extends Podcast {
     return String.format("%s:%s", getSeriesId(), getPubDate());
   }
 
-  /** Increment the number of people who have recommended this.
-   * Static b/c original JsonDocument returned in order to ensure CAS value is unchanged */
-  public static JsonDocument incrementNumberRecommenders(JsonDocument doc) {
-    assert doc.content().getString(TYPE).equals(EPISODE);
-    Integer originalNum = doc.content().getInt(NUMBER_RECOMMENDERS) != null ?
-      doc.content().getInt(NUMBER_RECOMMENDERS) : 0;
-    doc.content().put(NUMBER_RECOMMENDERS, originalNum + 1);
-    return doc;
-  }
-
-  /** Decrement the number of people who have recommended this.
-   * Static b/c original JsonDocument returns in order to ensure CAS value is unchanged */
-  public static JsonDocument decrementNumberRecommenders(JsonDocument doc) {
-    assert doc.content().getString(TYPE).equals(EPISODE);
-    Integer originalNum = doc.content().getInt(NUMBER_RECOMMENDERS) != null ?
-      doc.content().getInt(NUMBER_RECOMMENDERS) : 0;
-    doc.content().put(NUMBER_RECOMMENDERS, originalNum - 1);
-    return doc;
-  }
-
   /** Compose episode key **/
   public static String composeKey(Long seriesId, Long pubDate) {
     return Podcast.composeKey(seriesId, pubDate);
+  }
+
+  /** Compose key from episodeId */
+  public static String composeKey(String episodeId) {
+    Episode.CompositeEpisodeKey comp = getSeriesIdAndPubDate(episodeId);
+    return composeKey(comp.getSeriesId(), comp.getPubDate());
   }
 
   /** See {@link Entity#toJsonDocument()} */

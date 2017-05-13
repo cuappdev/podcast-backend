@@ -17,15 +17,7 @@ public class Bookmark extends Entity {
 
   // title, pubDate, duration, seriesTitle, id, numRecommendations, audioUrl
   @Getter private Constants.Type type = Constants.Type.bookmark;
-  @Getter private String episodeId;
-  @Getter private String title;
-  @Getter private Long pubDate;
-  @Getter private String imageUrlSm;
-  @Getter private String imageUrlLg;
-  @Getter private String duration;
-  @Getter private String seriesTitle;
-  @Getter private Integer numberRecommenders;
-  @Getter private String audioUrl;
+  @Getter private Episode episode;
   @Getter private AssociatedUser user;
 
   /**
@@ -34,15 +26,7 @@ public class Bookmark extends Entity {
    * @param episode _ Episode
    */
   public Bookmark(User user, Episode episode) {
-    this.episodeId = episode.getId();
-    this.title = episode.getTitle();
-    this.pubDate = episode.getPubDate();
-    this.imageUrlSm = episode.getImageUrlSm();
-    this.imageUrlLg = episode.getImageUrlLg();
-    this.duration = episode.getDuration();
-    this.seriesTitle = episode.getSeriesTitle();
-    this.numberRecommenders = episode.getNumberRecommenders();
-    this.audioUrl = episode.getAudioUrl();
+    this.episode = episode;
     this.user = new AssociatedUser(user);
   }
 
@@ -51,15 +35,7 @@ public class Bookmark extends Entity {
    * @param object - JsonObject
    */
   public Bookmark(JsonObject object) {
-    this.episodeId = object.getString(EPISODE_ID);
-    this.title = object.getString(TITLE);
-    this.pubDate = object.getLong(PUB_DATE);
-    this.imageUrlSm = object.getString(IMAGE_URL_SM);
-    this.imageUrlLg = object.getString(IMAGE_URL_LG);
-    this.duration = object.getString(DURATION);
-    this.seriesTitle = object.getString(SERIES_TITLE);
-    this.numberRecommenders = object.getInt(NUMBER_RECOMMENDERS);
-    this.audioUrl = object.getString(AUDIO_URL);
+    this.episode = new Episode(object.getObject(EPISODE));
     this.user = new AssociatedUser(object.getObject(USER));
   }
 
@@ -80,7 +56,7 @@ public class Bookmark extends Entity {
 
   /** Compose key from Bookmark **/
   public static String composeKey(Bookmark r) {
-    return composeKey(r.getEpisodeId(), r.getUser().getId());
+    return composeKey(r.getEpisode().getId(), r.getUser().getId());
   }
 
 }

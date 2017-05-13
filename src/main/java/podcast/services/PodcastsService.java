@@ -1,17 +1,20 @@
 package podcast.services;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.podcasts.Series;
+import podcast.models.entities.stats.EpisodeStat;
+import podcast.models.entities.stats.SeriesStat;
 import podcast.models.entities.subscriptions.Subscription;
 import podcast.models.entities.users.User;
 import podcast.repos.PodcastsRepo;
 import podcast.repos.SubscriptionsRepo;
-import rx.Observable;
+
+import java.util.HashMap;
 import java.util.List;
-import static podcast.utils.Lambdas.*;
 
 /**
  * Service to handle querying podcast
@@ -77,6 +80,21 @@ public class PodcastsService {
   @EventListener
   private void handleRecommendationDeletion(RecommendationsService.RecommendationDeletionEvent deletionEvent) {
     podcastsRepo.decrementEpisodeRecommendations(deletionEvent.episode.getId());
+  }
+
+
+  // MARK - Wrappers
+
+  public static class EpisodesInfo {
+    @Getter private List<Episode> episodes;
+    @Getter private HashMap<String, EpisodeStat> episodeStats;
+    @Getter private HashMap<String, Boolean> recommendations;
+  }
+
+  public static class SeriesInfo {
+    @Getter private List<Series> series;
+    @Getter private HashMap<Long, SeriesStat> seriesStats;
+    @Getter private HashMap<Long, Boolean> subscriptions;
   }
 
 }
