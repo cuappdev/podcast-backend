@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.recommendations.Recommendation;
 import podcast.models.entities.users.User;
+import rx.Observable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,7 +83,24 @@ public class RecommendationsRepo {
 
   /** Get episode-recommendation mappings */
   public HashMap<String, Boolean> getEpsiodeRecommendationMappings(String userId, List<String> episodeIds) {
-    return null;
+    List<String> keys = episodeIds.stream().map(id -> Recommendation.composeKey(id, userId)).collect(Collectors.toList());
+    List<JsonDocument> foundDocs = Observable.from(keys)
+      .flatMap(key -> Observable.just(bucket.get(key)))
+      .toList()
+      .toBlocking()
+      .single();
+    List<Recommendation> recommendations = foundDocs.stream()
+      .filter(doc -> doc != null)
+      .map(doc -> new Recommendation(doc.content()))
+      .collect(Collectors.toList());
+    HashMap<String, Boolean> result = new HashMap<String, Boolean>();
+    for (Recommendation recommendation : recommendations) {
+      result.put(recommendation.getEpisode().getId(), true);
+    }
+    for (String eId : episodeIds) {
+      if (!result.containsKey(eId)) result.put(eId, false);
+    }
+    return result;
   }
 
 }

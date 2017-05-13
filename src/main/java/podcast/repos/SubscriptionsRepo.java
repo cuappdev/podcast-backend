@@ -89,11 +89,8 @@ public class SubscriptionsRepo {
       .toBlocking()
       .single();
     List<Subscription> subscriptions = foundDocs.stream()
-      .map(doc -> {
-        if (doc == null) return null;
-        return new Subscription(doc.content());
-      })
       .filter(sub -> sub != null)
+      .map(doc -> new Subscription(doc.content()))
       .collect(Collectors.toList());
     HashMap<Long, Boolean> result = new HashMap<Long, Boolean>();
     for (Subscription subscription : subscriptions) {
