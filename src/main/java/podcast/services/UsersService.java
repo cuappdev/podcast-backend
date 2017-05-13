@@ -6,11 +6,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import podcast.models.entities.sessions.Session;
 import podcast.models.entities.users.User;
+import podcast.repos.FollowersFollowingsRepo;
 import podcast.repos.UsersRepo;
-import rx.Observable;
 import java.util.AbstractMap;
 import java.util.Optional;
-import static podcast.utils.Lambdas.*;
 
 /**
  * Service to handle storage and querying of
@@ -20,10 +19,13 @@ import static podcast.utils.Lambdas.*;
 public class UsersService {
 
   private final UsersRepo usersRepo;
+  private final FollowersFollowingsRepo followersFollowingsRepo;
 
   @Autowired
-  public UsersService(UsersRepo usersRepo) {
+  public UsersService(UsersRepo usersRepo,
+                      FollowersFollowingsRepo followersFollowingsRepo) {
     this.usersRepo = usersRepo;
+    this.followersFollowingsRepo = followersFollowingsRepo;
   }
 
   /** Get or create User, given a response from Google API -
@@ -73,5 +75,9 @@ public class UsersService {
   private void handleFollowingDeletion(FollowersFollowingsService.FollowingDeletionEvent deletionEvent) {
     usersRepo.handleFollowingDeletion(deletionEvent.owner.getId(), deletionEvent.followed.getId());
   }
+
+  // MARK - Info Wrappers
+
+
 
 }

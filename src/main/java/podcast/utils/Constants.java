@@ -13,7 +13,6 @@ public class Constants {
   public static final String EPISODE = "episode";
   public static final String FOLLOWER = "follower";
   public static final String FOLLOWING = "following";
-  public static final String RELEASE = "release";
   public static final String RECOMMENDATION = "recommendation";
 
   /* FIELDS */
@@ -59,9 +58,7 @@ public class Constants {
   public static final String SUBSCRIPTIONS = "subscriptions";
   public static final String EPISODES = "episodes";
   public static final String USERS = "users";
-  public static final String IS_SUBSCRIBED = "isSubscribed";
   public static final String NUMBER_RECOMMENDERS = "numberRecommenders";
-  public static final String HAS_RECOMMENDED = "hasRecommended";
   public static final String BOOKMARK = "bookmark";
   public static final String BOOKMARKS = "bookmarks";
   public static final String LISTENING_HISTORY = "listeningHistory";
@@ -74,6 +71,9 @@ public class Constants {
   public static final String FEED_TYPE = "feedType";
   public static final String EPISODE_STAT = "episodeStat";
   public static final String SERIES_STAT = "seriesStat";
+  public static final String USERS_INFO = "usersInfo";
+  public static final String EPISODES_INFO = "episodesInfo";
+  public static final String SERIES_INFO = "seriesInfo";
 
   /* Header constants */
   public static final String AUTHORIZATION = "Authorization";

@@ -8,15 +8,11 @@ import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.podcasts.Series;
 import podcast.models.entities.podcasts.EpisodeStat;
 import podcast.models.entities.podcasts.SeriesStat;
-import podcast.models.entities.subscriptions.Subscription;
-import podcast.models.entities.users.User;
 import podcast.repos.PodcastsRepo;
 import podcast.repos.RecommendationsRepo;
 import podcast.repos.SubscriptionsRepo;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Service to handle querying podcast
@@ -39,44 +35,28 @@ public class PodcastsService {
   }
 
   /** Fetch a episode given its seriesId and timestamp **/
-  public SingleEpisodeInfo getEpisode(String userId, Long seriesId, Long pubDate) throws Exception {
+  public Episode getEpisode(String episodeId) throws Exception {
     try {
-      return new SingleEpisodeInfo(
-        userId,
-        podcastsRepo.getEpisodeBySeriesIdAndPubDate(seriesId, pubDate)
-      );
+      return podcastsRepo.getEpisodeById(episodeId);
     } catch (Exception e) {
       throw new Episode.EpisodeDoesNotExistException();
     }
   }
 
   /** Fetch a series given its seriesId **/
-  public SingleSeriesInfo getSeries(String userId, Long seriesId) throws Exception {
+  public Series getSeries(Long seriesId) throws Exception {
     try {
-      Series series = podcastsRepo.getSeries(seriesId);
-      return new SingleSeriesInfo(userId, series);
+      return podcastsRepo.getSeries(seriesId);
     } catch (Exception e) {
       throw new Series.SeriesDoesNotExistException();
     }
   }
 
   /** Paginated episodes by seriesId **/
-  public EpisodesInfo getEpisodesBySeriesId(String userId,
-                                            Long seriesId,
-                                            Integer offset,
-                                            Integer max) throws Exception {
-    List<Episode> episodes = podcastsRepo.getEpisodesBySeriesId(seriesId, offset, max);
-    return new EpisodesInfo(userId, episodes);
-  }
-
-  /** Convert to seriesInfo */
-  public SeriesInfo convertSeriesToSeriesInfo(String userId, List<Series> series) {
-    return new SeriesInfo(userId, series);
-  }
-
-  /** Convert to episodeInfo */
-  public EpisodesInfo convertEpisodesToEpsiodesInfo(String userId, List<Episode> episodes) {
-    return new EpisodesInfo(userId, episodes);
+  public List<Episode> getEpisodesBySeriesId(Long seriesId,
+                                             Integer offset,
+                                             Integer max) throws Exception {
+    return podcastsRepo.getEpisodesBySeriesId(seriesId, offset, max);
   }
 
   // MARK - listeners
@@ -101,59 +81,25 @@ public class PodcastsService {
     podcastsRepo.decrementEpisodeRecommendations(deletionEvent.episode.getId());
   }
 
-  // MARK - Wrappers
+  // MARK - Info Wrappers
 
-  public abstract class PodcastsInfo {}
-
-  public class EpisodesInfo extends PodcastsInfo {
-    @Getter private List<Episode> episodes;
+  public class EpisodesInfo {
     @Getter private HashMap<String, EpisodeStat> episodeStats;
     @Getter private HashMap<String, Boolean> recommendations;
 
-    private EpisodesInfo(String userId, List<Episode> episodes) {
-      this.episodes = episodes;
-      List<String> episodeIds = episodes.stream().map(Episode::getId).collect(Collectors.toList());
+    private EpisodesInfo(String userId, List<String> episodeIds) {
       this.episodeStats = podcastsRepo.episodeStats(episodeIds);
       this.recommendations = recommendationsRepo.getEpsiodeRecommendationMappings(userId, episodeIds);
     }
   }
 
-  public class SingleEpisodeInfo {
-    @Getter private Episode episode;
-    @Getter private HashMap<String, EpisodeStat> episodeStats;
-    @Getter private HashMap<String, Boolean> recommendations;
-
-    private SingleEpisodeInfo(String userId, Episode episode) {
-      this.episode = episode;
-      EpisodesInfo episodesInfo = new EpisodesInfo(userId, Collections.singletonList(episode));
-      this.episodeStats = episodesInfo.getEpisodeStats();
-      this.recommendations = episodesInfo.getRecommendations();
-    }
-  }
-
-  public class SeriesInfo extends PodcastsInfo {
-    @Getter private List<Series> series;
+  public class SeriesInfo {
     @Getter private HashMap<Long, SeriesStat> seriesStats;
     @Getter private HashMap<Long, Boolean> subscriptions;
 
-    private SeriesInfo(String userId, List<Series> series) {
-      this.series = series;
-      List<Long> seriesIds = series.stream().map(Series::getId).collect(Collectors.toList());
+    private SeriesInfo(String userId, List<Long> seriesIds) {
       this.seriesStats = podcastsRepo.seriesStats(seriesIds);
       this.subscriptions = subscriptionsRepo.getSeriesSubscriptionMappings(userId, seriesIds);
-    }
-  }
-
-  public class SingleSeriesInfo {
-    @Getter private Series series;
-    @Getter private HashMap<Long, SeriesStat> seriesStats;
-    @Getter private HashMap<Long, Boolean> subscriptions;
-
-    private SingleSeriesInfo(String userId, Series series) {
-      this.series = series;
-      SeriesInfo seriesInfo = new SeriesInfo(userId, Collections.singletonList(series));
-      this.seriesStats = seriesInfo.getSeriesStats();
-      this.subscriptions = seriesInfo.getSubscriptions();
     }
   }
 

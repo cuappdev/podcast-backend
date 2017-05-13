@@ -12,7 +12,6 @@ import podcast.models.entities.podcasts.Series;
 import podcast.models.entities.podcasts.EpisodeStat;
 import podcast.models.entities.podcasts.SeriesStat;
 import rx.Observable;
-
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.List;
@@ -48,18 +47,18 @@ public class PodcastsRepo {
     String key = EpisodeStat.composeKey(episodeId);
     Observable.defer(() -> {
       try {
-        return Observable.just(bucket.get(key));
+        return Observable.just(dbBucket.get(key));
       } catch (Exception e) {
         return Observable.just(null);
       }
     }).map(EpisodeStat::incrementNumberRecommenders)
       .flatMap(doc -> {
         if (doc != null) {
-          return Observable.just(bucket.replace(doc));
+          return Observable.just(dbBucket.replace(doc));
         } else {
-          EpisodeStat episodeStats = new EpisodeStat(episodeId);
-          JsonDocument newDoc = EpisodeStat.incrementNumberRecommenders(episodeStats.toJsonDocument());
-          return Observable.just(bucket.upsert(newDoc));
+          EpisodeStat episodeStat = new EpisodeStat(episodeId);
+          JsonDocument newDoc = EpisodeStat.incrementNumberRecommenders(episodeStat.toJsonDocument());
+          return Observable.just(dbBucket.upsert(newDoc));
         }
       })
       .retryWhen(attempts -> retry.operation(attempts))
@@ -71,12 +70,12 @@ public class PodcastsRepo {
     String key = EpisodeStat.composeKey(episodeId);
     Observable.defer(() -> {
       try {
-        return Observable.just(bucket.get(key));
+        return Observable.just(dbBucket.get(key));
       } catch (Exception e) {
         return Observable.just(null);
       }
     }).map(EpisodeStat::decrementNumberRecommenders)
-      .flatMap(doc -> Observable.just(bucket.replace(doc)))
+      .flatMap(doc -> Observable.just(dbBucket.replace(doc)))
       .retryWhen(attempts -> retry.operation(attempts))
       .subscribe();
   }
@@ -86,18 +85,18 @@ public class PodcastsRepo {
     String key = SeriesStat.composeKey(seriesId);
     Observable.defer(() -> {
       try {
-        return Observable.just(bucket.get(key));
+        return Observable.just(dbBucket.get(key));
       } catch (Exception e) {
         return Observable.just(null);
       }
     }).map(SeriesStat::incrementSubscriberCount)
       .flatMap(doc -> {
         if (doc != null) {
-          return Observable.just(bucket.replace(doc));
+          return Observable.just(dbBucket.replace(doc));
         } else {
-          SeriesStat seriesStats = new SeriesStat(seriesId);
-          JsonDocument newDoc = SeriesStat.incrementSubscriberCount(seriesStats.toJsonDocument());
-          return Observable.just(bucket.upsert(newDoc));
+          SeriesStat seriesStat = new SeriesStat(seriesId);
+          JsonDocument newDoc = SeriesStat.incrementSubscriberCount(seriesStat.toJsonDocument());
+          return Observable.just(dbBucket.upsert(newDoc));
         }
       })
       .retryWhen(attempts -> retry.operation(attempts))
@@ -109,12 +108,12 @@ public class PodcastsRepo {
     String key = SeriesStat.composeKey(seriesId);
     Observable.defer(() -> {
       try {
-        return Observable.just(bucket.get(key));
+        return Observable.just(dbBucket.get(key));
       } catch (Exception e) {
         return Observable.just(null);
       }
     }).map(SeriesStat::decrementSubscriberCount)
-      .flatMap(doc -> Observable.just(bucket.replace(doc)))
+      .flatMap(doc -> Observable.just(dbBucket.replace(doc)))
       .retryWhen(attempts -> retry.operation(attempts))
       .subscribe();
   }

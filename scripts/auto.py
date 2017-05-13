@@ -55,6 +55,22 @@ def change_username(token, username):
   result = _post('/users/change_username?username={}'.format(username), _head(token))
   return result.json()
 
+# FLAG - Podcasts
+
+def get_series_by_id(token, series_id):
+  """
+  Get series by id
+  """
+  result = _get('/podcasts/series/{}'.format(series_id), _head(token))
+  return result.json()
+
+def get_episode_by_id(token, episode_id):
+  """
+  Get episode by id
+  """
+  result = _get('/podcasts/episodes/{}'.format(episode_id), _head(token))
+  return result.json()
+
 # FLAG - Search
 
 def query_all(token, query):
@@ -282,6 +298,10 @@ def recommendation_lifecycle(google_token):
     print e_id + '\'s recommendations'
     pp.pprint(get_recommendations(token, e_id))
 
+  # Print each epsiode
+  for e_id in EPISODES:
+    pp.pprint(get_episode_by_id(token, e_id))
+
   # Delete recommendations
   for e_id in EPISODES:
     pp.pprint(delete_recommendation(token, e_id))
@@ -309,6 +329,9 @@ def subscription_lifecyle(google_token):
   for s_id in SERIES:
     print str(s_id) + '\'s subscriptions'
     pp.pprint(get_subscriptions(token, s_id))
+
+  for s_id in SERIES:
+    pp.pprint(get_series_by_id(token, s_id))
 
   # Delete subscriptions
   for s_id in SERIES:
@@ -368,5 +391,7 @@ def feed_lifecycle(google_token1, google_token2):
     pp.pprint(delete_recommendation(token2, e_id))
 
 if __name__ == '__main__':
-  # Get feed
-  feed_lifecycle(sys.argv[1], sys.argv[2])
+
+  # subscription_lifecyle(sys.argv[1])
+  recommendation_lifecycle(sys.argv[1])
+  # feed_lifecycle(sys.argv[1], sys.argv[2])

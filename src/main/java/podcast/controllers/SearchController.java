@@ -47,7 +47,7 @@ public class SearchController {
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
     try {
-      PodcastsService.EpisodesInfo episodes = podcastsSearch.searchEpisodes(query, offset, max, user);
+      List<Episode> episodes = podcastsSearch.searchEpisodes(query, offset, max);
       return ResponseEntity.status(200).body(new Success(EPISODES, episodes));
     } catch (Exception e) {
       e.printStackTrace();
@@ -64,7 +64,7 @@ public class SearchController {
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
     try {
-      PodcastsService.SeriesInfo series = podcastsSearch.searchSeries(query, offset, max, user);
+      List<Series> series = podcastsSearch.searchSeries(query, offset, max);
       return ResponseEntity.status(200).body(new Success(SERIES, series));
     } catch (Exception e) {
       e.printStackTrace();
@@ -99,8 +99,8 @@ public class SearchController {
     /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
     try {
-      PodcastsService.SeriesInfo series = podcastsSearch.searchSeries(query, offset, max, user);
-      PodcastsService.EpisodesInfo episodes = podcastsSearch.searchEpisodes(query, offset, max, user);
+      List<Series> series = podcastsSearch.searchSeries(query, offset, max);
+      List<Episode> episodes = podcastsSearch.searchEpisodes(query, offset, max);
       List<Person> users = usersSearch.searchUsers(query, offset, max);
       return ResponseEntity.status(200).body(
         new Success(SERIES, series)

@@ -614,12 +614,21 @@ CUAppDev podcast app API documentation
           "data": {
             "recommendations": [{
               "createdAt": 1493414791095,
-              "episodeId": "947194144:1459321200",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "audioUrl": "An mp3 URL of some sort",
-              "seriesTitle": "Series Title",
-              "title": "Episode title",
+              "episode": {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              },
               "type": "recommendation",
               "user": {
                 "firstName": "User First Name",
@@ -648,12 +657,21 @@ CUAppDev podcast app API documentation
           "data": {
             "recommendation": {
               "createdAt": 1493414791095,
-              "episodeId": "947194144:1459321200",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "audioUrl": "An mp3 URL of some sort",
-              "seriesTitle": "Series Title",
-              "title": "Episode title",
+              "episode": {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              },
               "type": "recommendation",
               "user": {
                 "firstName": "User First Name",
@@ -681,12 +699,21 @@ CUAppDev podcast app API documentation
           "data": {
             "recommendation": {
               "createdAt": 1493414791095,
-              "episodeId": "947194144:1459321200",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "audioUrl": "An mp3 URL of some sort",
-              "seriesTitle": "Series Title",
-              "title": "Episode title",
+              "episode": {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              },
               "type": "recommendation",
               "user": {
                 "firstName": "User First Name",
@@ -715,12 +742,21 @@ CUAppDev podcast app API documentation
           "data": {
             "recommendations": [{
               "createdAt": 1493414791095,
-              "episodeId": "947194144:1459321200",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "audioUrl": "An mp3 URL of some sort",
-              "seriesTitle": "Series Title",
-              "title": "Episode title",
+              "episode": {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              },
               "type": "recommendation",
               "user": {
                 "firstName": "User First Name",
@@ -750,15 +786,21 @@ CUAppDev podcast app API documentation
           "success": true,
           "data": {
             "bookmarks": [{
-              "audioUrl": "https://goo.gl/L37gfS",
-              "duration": "",
-              "episodeId": "261086208:1211130802",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "numberRecommenders": 0,
-              "pubDate": 1211130802,
-              "seriesTitle": "Wormwood: A Serialized Mystery",
-              "title": "Plugging in the Fuzzy Typewriter",
+              "episode": {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              },
               "type": "bookmark",
               "user": {
                 "firstName": "User First Name",
@@ -786,15 +828,21 @@ CUAppDev podcast app API documentation
           "success": true,
           "data": {
             "bookmark": {
-              "audioUrl": "https://goo.gl/L37gfS",
-              "duration": "",
-              "episodeId": "261086208:1211130802",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "numberRecommenders": 0,
-              "pubDate": 1211130802,
-              "seriesTitle": "Wormwood: A Serialized Mystery",
-              "title": "Plugging in the Fuzzy Typewriter",
+              "episode": {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              },
               "type": "bookmark",
               "user": {
                 "firstName": "User First Name",
@@ -821,15 +869,21 @@ CUAppDev podcast app API documentation
           "success": true,
           "data": {
             "bookmark": {
-              "audioUrl": "https://goo.gl/L37gfS",
-              "duration": "",
-              "episodeId": "261086208:1211130802",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "numberRecommenders": 0,
-              "pubDate": 1211130802,
-              "seriesTitle": "Wormwood: A Serialized Mystery",
-              "title": "Plugging in the Fuzzy Typewriter",
+              "episode": {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              },
               "type": "bookmark",
               "user": {
                 "firstName": "User First Name",
@@ -858,13 +912,22 @@ CUAppDev podcast app API documentation
             "success": true,
             "data": {
               "listeningHistories": [{
-                "audioUrl": "https://goo.gl/L37gfS",
                 "createdAt": 1493430842888,
-                "episodeId": "947194144:1459321200",
-                "imageUrlLg": "https://goo.gl/L37gfS",
-                "imageUrlSm": "https://goo.gl/L37gfS",
-                "seriesTitle": "Bunker Buddies with Andie and Travis",
-                "title": "Plane Crash!",
+                "episode": {
+                  "type": "episode",
+                  "seriesId": 1008577710,
+                  "seriesTitle": "A Captivating Podcast Series",
+                  "imageUrlSm": "https://goo.gl/L37gfS",
+                  "imageUrlLg": "https://goo.gl/L37gfS",
+                  "title": "An Awesome Podcast Episode",
+                  "author": "An Exquisite Author",
+                  "summary": "An informative summary",
+                  "pubDate": 1452080745,
+                  "duration": "17:39",
+                  "audioUrl": "An mp3 URL of some sort",
+                  "tags": ["David", "Gries"],
+                  "id": "1008577710:1452080745"
+                },
                 "type": "listeningHistory",
                 "userId": "42f95fa6-2c7e-11e7-bf6a-db655108dc48"
               }]
@@ -901,13 +964,22 @@ CUAppDev podcast app API documentation
           "success": true,
           "data": {
             "listeningHistory": {
-              "audioUrl": "https://goo.gl/L37gfS",
               "createdAt": 1493430842888,
-              "episodeId": "947194144:1459321200",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "seriesTitle": "Bunker Buddies with Andie and Travis",
-              "title": "Plane Crash!",
+              "episode": {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              },
               "type": "listeningHistory",
               "userId": "42f95fa6-2c7e-11e7-bf6a-db655108dc48"
             }
@@ -928,13 +1000,22 @@ CUAppDev podcast app API documentation
           "success": true,
           "data": {
             "listeningHistory": {
-              "audioUrl": "https://goo.gl/L37gfS",
               "createdAt": 1493430842888,
-              "episodeId": "947194144:1459321200",
-              "imageUrlLg": "https://goo.gl/L37gfS",
-              "imageUrlSm": "https://goo.gl/L37gfS",
-              "seriesTitle": "Bunker Buddies with Andie and Travis",
-              "title": "Plane Crash!",
+              "episode": {
+                "type": "episode",
+                "seriesId": 1008577710,
+                "seriesTitle": "A Captivating Podcast Series",
+                "imageUrlSm": "https://goo.gl/L37gfS",
+                "imageUrlLg": "https://goo.gl/L37gfS",
+                "title": "An Awesome Podcast Episode",
+                "author": "An Exquisite Author",
+                "summary": "An informative summary",
+                "pubDate": 1452080745,
+                "duration": "17:39",
+                "audioUrl": "An mp3 URL of some sort",
+                "tags": ["David", "Gries"],
+                "id": "1008577710:1452080745"
+              },
               "type": "listeningHistory",
               "userId": "42f95fa6-2c7e-11e7-bf6a-db655108dc48"
             }
@@ -965,7 +1046,6 @@ CUAppDev podcast app API documentation
                   "id": "261086208:1211130802",
                   "imageUrlLg": "https://goo.gl/L37gfS",
                   "imageUrlSm": "https://goo.gl/L37gfS",
-                  "numberRecommenders": 1,
                   "pubDate": 1211130802,
                   "seriesId": 261086208,
                   "seriesTitle": "An intriguing series title",
