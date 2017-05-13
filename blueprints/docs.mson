@@ -96,6 +96,34 @@ CUAppDev podcast app API documentation
           }
         }
 
+## Users Info [/api/v1/users/info?ids={user_id1},{user_id2},{user_id3}]
+### Users Info [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "usersInfo": {
+              "followingsInfo": {
+                "user_id1": false,
+                "user_id2": true,
+                "user_id3": true
+              },
+              "followersInfo": {
+                "user_id1": true,
+                "user_id2": true,
+                "user_id3": false
+              }
+            }
+          },
+          "success": true
+        }
 
 # Group Sessions
 ## Update Session [/api/v1/sessions/update]
@@ -159,10 +187,44 @@ CUAppDev podcast app API documentation
               "feedUrl": "A RSS Feed URL",
               "genres": ["Loop Invariants", "56 Years of Programming Experience"]
             }
-          }
+          },
+          "success": true
         }
 
-## Episodes by Series ID [/api/v1/podcasts/episodes/{series_id}?offset={offset}&max={max}]
+## Episode by Episode ID [/api/v1/podcasts/episodes/{episode_id}]
+### Episode by Episode ID [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "episode": {
+              "type": "episode",
+              "seriesId": 1008577710,
+              "seriesTitle": "A Captivating Podcast Series",
+              "imageUrlSm": "https://goo.gl/L37gfS",
+              "imageUrlLg": "https://goo.gl/L37gfS",
+              "title": "An Awesome Podcast Episode",
+              "author": "An Exquisite Author",
+              "summary": "An informative summary",
+              "pubDate": 1452080745,
+              "duration": "17:39",
+              "audioUrl": "An mp3 URL of some sort",
+              "tags": ["David", "Gries"],
+              "id": "1008577710:1452080745"
+            }
+          },
+          "success": true
+        }
+
+
+## Episodes by Series ID [/api/v1/podcasts/episodes/by_series/{series_id}?offset={offset}&max={max}]
 ### Episodes by Series ID [GET]
 
 + Request
@@ -192,9 +254,96 @@ CUAppDev podcast app API documentation
                 "id": "1008577710:1452080745"
               }
             ]
-          }
+          },
+          "success": true
         }
 
+## Series Info [/api/v1/podcasts/series/info?ids={series_id1},{series_id2},{series_id3}]
+### Series Info [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "seriesInfo": {
+              "seriesStats": {
+                "series_id1": {
+                  "numberSubscribers": 1,
+                  "seriesId": 1074070278,
+                  "type": "seriesStats"
+                },
+                "series_id2": {
+                  "numberSubscribers": 1,
+                  "seriesId": 261086208,
+                  "type": "seriesStats"
+                },
+                "series_id3": {
+                  "numberSubscribers": 1,
+                  "seriesId": 79497721,
+                  "type": "seriesStats"
+                }
+              },
+              "subscriptionsInfo": {
+                "series_id1": true,
+                "series_id2": true,
+                "series_id3": false
+              }
+            }
+          },
+          "success": true
+        }
+
+## Episodes Info [/api/v1/podcasts/episodes/info?ids={episode_id1},{episode_id2},{episode_id3}]
+### Episodes Info [GET]
+
++ Request
+
+  + Headers
+
+            Authorization : Bearer {sessionToken}
+
++ Response 200 (application/json)
+
+        {
+          "data": {
+            "episodesInfo": {
+              "bookmarksInfo": {
+                "episode_id1": true,
+                "episode_id2": true,
+                "episode_id3": false
+              },
+              "episodeStats": {
+                "episode_id1": {
+                  "episodeId": "episode_id1",
+                  "numberRecommenders": 1,
+                  "type": "episodeStat"
+                },
+                "episode_id2": {
+                  "episodeId": "episode_id2",
+                  "numberRecommenders": 1,
+                  "type": "episodeStat"
+                },
+                "episode_id3": {
+                  "episodeId": "episode_id3",
+                  "numberRecommenders": 1,
+                  "type": "episodeStat"
+                }
+              },
+              "recommendationsInfo": {
+                "episode_id1": true,
+                "episode_id2": false,
+                "episode_id3": false
+              }
+            }
+          },
+          "success": true
+        }
 
 # Group Subscriptions
 ## Get Subscriptions [/api/v1/subscriptions/{series_id}?offset={offset}&max={max}]

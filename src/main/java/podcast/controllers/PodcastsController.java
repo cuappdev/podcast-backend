@@ -1,15 +1,19 @@
 package podcast.controllers;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import podcast.models.entities.podcasts.Episode;
 import podcast.models.entities.podcasts.Series;
+import podcast.models.entities.users.User;
 import podcast.models.formats.Failure;
 import podcast.models.formats.Result;
 import podcast.models.formats.Success;
 import podcast.services.PodcastsService;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static podcast.utils.Constants.*;
 
@@ -58,6 +62,36 @@ public class PodcastsController {
     try {
       List<Episode> episodes = podcastsService.getEpisodesBySeriesId(seriesId, offset, max);
       return ResponseEntity.status(200).body(new Success(EPISODES, episodes));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
+
+  /** Episodes info */
+  @RequestMapping(method = RequestMethod.GET, value = "/episodes/info")
+  public ResponseEntity<Result> episodesInfo(HttpServletRequest request,
+                                             @RequestParam("ids") String episodeIds) {
+    User user = (User) request.getAttribute(USER);
+    try {
+      List<String> idList = Arrays.asList(episodeIds.split(","));
+      PodcastsService.EpisodesInfo episodesInfo = podcastsService.getEpisodesInfo(user.getId(), idList);
+      return ResponseEntity.status(200).body(new Success(EPISODES_INFO, episodesInfo));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
+
+  /** Series info */
+  @RequestMapping(method = RequestMethod.GET, value = "/series/info")
+  public ResponseEntity<Result> seriesInfo(HttpServletRequest request,
+                                           @RequestParam("ids") String seriesIds) {
+    User user = (User) request.getAttribute(USER);
+    try {
+      List<Long> idList = Arrays.asList(seriesIds.split(",")).stream().map(Long::parseLong).collect(Collectors.toList());
+      PodcastsService.SeriesInfo seriesInfo = podcastsService.getSeriesInfo(user.getId(), idList);
+      return ResponseEntity.status(200).body(new Success(SERIES_INFO, seriesInfo));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));

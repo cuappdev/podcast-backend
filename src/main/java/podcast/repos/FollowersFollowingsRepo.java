@@ -12,6 +12,7 @@ import podcast.models.entities.followings.Following;
 import podcast.models.entities.users.User;
 import rx.Observable;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -98,5 +99,49 @@ public class FollowersFollowingsRepo {
       .toBlocking()
       .single();
     return true;
+  }
+
+  /** Get user-followings boolean mappings */
+  public HashMap<String, Boolean> getUsersFollowingsMappings(String userId, List<String> userIds) {
+    List<String> keys = userIds.stream().map(corrId -> Following.composeKey(userId, corrId)).collect(Collectors.toList());
+    List<JsonDocument> foundDocs = Observable.from(keys)
+      .flatMap(key -> Observable.just(bucket.get(key)))
+      .toList()
+      .toBlocking()
+      .single();
+    List<Following> followings = foundDocs.stream()
+      .filter(doc -> doc != null)
+      .map(doc -> new Following(doc.content()))
+      .collect(Collectors.toList());
+    HashMap<String, Boolean> result = new HashMap<>();
+    for (Following following : followings) {
+      result.put(following.getId(), true);
+    }
+    for (String uId : userIds) {
+      if (!result.containsKey(uId)) result.put(uId, false);
+    }
+    return result;
+  }
+
+  /** Get user-followers boolean mappings */
+  public HashMap<String, Boolean> getUsersFollowersMappings(String userId, List<String> userIds) {
+    List<String> keys = userIds.stream().map(corrId -> Follower.composeKey(userId, corrId)).collect(Collectors.toList());
+    List<JsonDocument> foundDocs = Observable.from(keys)
+      .flatMap(key -> Observable.just(bucket.get(key)))
+      .toList()
+      .toBlocking()
+      .single();
+    List<Follower> followers = foundDocs.stream()
+      .filter(doc -> doc != null)
+      .map(doc -> new Follower(doc.content()))
+      .collect(Collectors.toList());
+    HashMap<String, Boolean> result = new HashMap<>();
+    for (Follower follower : followers) {
+      result.put(follower.getId(), true);
+    }
+    for (String uId : userIds) {
+      if (!result.containsKey(uId)) result.put(uId, false);
+    }
+    return result;
   }
 }

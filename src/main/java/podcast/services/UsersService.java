@@ -1,5 +1,6 @@
 package podcast.services;
 
+import lombok.Getter;
 import org.codehaus.jackson.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -9,6 +10,8 @@ import podcast.models.entities.users.User;
 import podcast.repos.FollowersFollowingsRepo;
 import podcast.repos.UsersRepo;
 import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -64,6 +67,11 @@ public class UsersService {
     usersRepo.removeUserById(id);
   }
 
+  /** Get users info */
+  public UsersInfo getUsersInfo(String userId, List<String> userIds) {
+    return new UsersInfo(userId, userIds);
+  }
+
   // MARK - listeners
 
   @EventListener
@@ -78,6 +86,14 @@ public class UsersService {
 
   // MARK - Info Wrappers
 
+  public class UsersInfo {
+    @Getter private HashMap<String, Boolean> followingsInfo;
+    @Getter private HashMap<String, Boolean> followersInfo;
 
+    private UsersInfo(String userId, List<String> userIds) {
+      this.followingsInfo = followersFollowingsRepo.getUsersFollowingsMappings(userId, userIds);
+      this.followersInfo = followersFollowingsRepo.getUsersFollowersMappings(userId, userIds);
+    }
+  }
 
 }

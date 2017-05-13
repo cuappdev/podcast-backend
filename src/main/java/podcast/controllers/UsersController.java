@@ -13,6 +13,9 @@ import podcast.services.GoogleService;
 import podcast.services.UsersService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.List;
+
 import static podcast.utils.Constants.*;
 
 /**
@@ -52,9 +55,7 @@ public class UsersController {
   @RequestMapping(method = RequestMethod.POST, value = "/change_username")
   public ResponseEntity<Result> changeUsername(HttpServletRequest request,
                                                @RequestParam(value=USERNAME) String username) {
-    /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
-
     try {
       usersService.updateUsername(user, username);
       return ResponseEntity.status(200).body(
@@ -69,7 +70,6 @@ public class UsersController {
   @RequestMapping(method = RequestMethod.GET, value = "/{id}")
   public ResponseEntity<Result> userById(HttpServletRequest request,
                                          @PathVariable("id") String id) {
-    /* Grab the user corresponding to the request */
     User user = (User) request.getAttribute(USER);
     try {
       if (user.getId().equals(id)) {
@@ -78,6 +78,21 @@ public class UsersController {
         Person peer = new Person(usersService.getUserById(id));
         return ResponseEntity.status(200).body(new Success(USER, peer));
       }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(400).body(new Failure(e.getMessage()));
+    }
+  }
+
+  /** Users info */
+  @RequestMapping(method = RequestMethod.GET, value="/info")
+  public ResponseEntity<Result> usersInfo(HttpServletRequest request,
+                                          @RequestParam("ids") String ids) {
+    User user = (User) request.getAttribute(USER);
+    try {
+      List<String> idList = Arrays.asList(ids.split(","));
+      UsersService.UsersInfo usersInfo = usersService.getUsersInfo(user.getId(), idList);
+      return ResponseEntity.status(200).body(new Success(USERS_INFO, usersInfo));
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(400).body(new Failure(e.getMessage()));

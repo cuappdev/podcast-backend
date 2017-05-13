@@ -11,7 +11,7 @@ import static podcast.utils.Constants.*;
  */
 public class SeriesStat extends Entity {
 
-  @Getter private Type type = Type.seriesStats;
+  @Getter private Type type = Type.seriesStat;
   @Getter private Long seriesId;
   @Getter private Integer numberSubscribers;
 
@@ -62,7 +62,7 @@ public class SeriesStat extends Entity {
 
   /** Compose key from seriesId */
   public static String composeKey(Long seriesId) {
-    return Entity.composeKey("" + seriesId, Type.seriesStats.toString());
+    return Entity.composeKey("" + seriesId, Type.seriesStat.toString());
   }
 
   /** Compose key from seriesStats */

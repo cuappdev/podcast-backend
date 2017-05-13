@@ -71,6 +71,21 @@ def get_episode_by_id(token, episode_id):
   result = _get('/podcasts/episodes/{}'.format(episode_id), _head(token))
   return result.json()
 
+def get_series_info(token, series_ids):
+  """
+  Get series info
+  """
+  series_ids = [str(s) for s in series_ids]
+  result = _get('/podcasts/series/info?ids={}'.format(','.join(series_ids)), _head(token))
+  return result.json()
+
+def get_episodes_info(token, episode_ids):
+  """
+  Get episodes info
+  """
+  result = _get('/podcasts/episodes/info?ids={}'.format(','.join(episode_ids)), _head(token))
+  return result.json()
+
 # FLAG - Search
 
 def query_all(token, query):
@@ -298,9 +313,7 @@ def recommendation_lifecycle(google_token):
     print e_id + '\'s recommendations'
     pp.pprint(get_recommendations(token, e_id))
 
-  # Print each epsiode
-  for e_id in EPISODES:
-    pp.pprint(get_episode_by_id(token, e_id))
+  pp.pprint(get_episodes_info(token, EPISODES))
 
   # Delete recommendations
   for e_id in EPISODES:
@@ -330,8 +343,7 @@ def subscription_lifecyle(google_token):
     print str(s_id) + '\'s subscriptions'
     pp.pprint(get_subscriptions(token, s_id))
 
-  for s_id in SERIES:
-    pp.pprint(get_series_by_id(token, s_id))
+  pp.pprint(get_series_info(token, SERIES))
 
   # Delete subscriptions
   for s_id in SERIES:
