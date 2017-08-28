@@ -1,5 +1,8 @@
 # Podcasts API
 
+## Environment Variables
+
+I highly recommend [`autoenv`](https://github.com/kennethreitz/autoenv).
 The required environment variables for this API are the following:
 
 ````bash
@@ -12,8 +15,8 @@ APP_SETTINGS
 
 ## Virtual Environment
 
-Make sure you have `virtualenv` installed.  On creating a `virtualenv` called
-`venv`, run the following:
+Make sure you have [`virtualenv`](https://virtualenv.pypa.io/en/stable/) installed.  
+On creating a `virtualenv` called `venv`, run the following:
 
 ````bash
 pip install git+https://github.com/cuappdev/appdev.py.git#egg=appdev.py
