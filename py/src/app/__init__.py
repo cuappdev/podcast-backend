@@ -11,8 +11,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 # Import + Register Blueprints
-# from app.pcasts import pcasts as pcasts
-# app.register_blueprint(pcasts)
+from app.pcasts import pcasts as pcasts
+app.register_blueprint(pcasts)
 
 # HTTP error handling
 @app.errorhandler(404)
