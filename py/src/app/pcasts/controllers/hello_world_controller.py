@@ -10,4 +10,4 @@ class HelloWorldController(AppDevController):
     return ['GET']
 
   def content(self, **kwargs):
-    return { 'message': 'Hello, World!' }
+    return {'message': 'Hello, World!'}
