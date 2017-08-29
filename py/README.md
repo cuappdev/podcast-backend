@@ -26,3 +26,23 @@ On creating a `virtualenv` called `venv`, run the following:
 pip install git+https://github.com/cuappdev/appdev.py.git#egg=appdev.py
 pip install -r requirements.txt
 ````
+
+## Setting up Database
+
+Ensure you have `mysql` plus command line tools setup:
+
+````bash
+mysql
+mysql> CREATE DATABASE pcasts_db_dev;
+mysql> CREATE DATABASE pcasts_podcast_db_dev;
+mysql> \q
+cd src
+python manage.py db migrate # Migrates the DB
+python manage.py db upgrade # Upgrades the DB
+````
+
+If the `migrations` directory is ever deleted, regenerate it with the following:
+
+````bash
+python manage.py db init --multidb
+````

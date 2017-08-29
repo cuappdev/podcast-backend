@@ -4,6 +4,10 @@ from app import *
 # PCasts Blueprint
 pcasts = Blueprint('pcasts', __name__, url_prefix = '/api/v1')
 
+# Import all models
+from models._all import *
+
+# Import all controllers
 from controllers.hello_world_controller import *
 
 controllers = [

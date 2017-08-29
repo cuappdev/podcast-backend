@@ -1,5 +1,8 @@
 import os
 
+# Ensure Python path
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 # Database info
 DB_USERNAME  = os.environ['DB_USERNAME']
 DB_PASSWORD  = os.environ['DB_PASSWORD']
@@ -24,9 +27,6 @@ PODCAST_DB_URL      = 'mysql://{}:{}@{}/{}'.format(
   PODCAST_DB_NAME
 )
 
-# Ensure Python path
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 class Config(object):
   DEBUG = False
   TESTING = False
@@ -34,9 +34,12 @@ class Config(object):
   CSRF_SESSION_KEY = "secret"
   SECRET_KEY = "not_this"
   THREADS_PER_PAGE = 2
-  # DB info
-  SQLALCHEMY_DATABASE_URI = DB_URL
-  PODCAST_DATABASE_URI = PODCAST_DB_URL
+
+  # Mounting our DBs
+  SQLALCHEMY_BINDS = {
+    'db': DB_URL,
+    'podcast_db': PODCAST_DB_URL
+  }
 
 class ProductionConfig(Config):
   DEBUG = False
