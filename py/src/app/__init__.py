@@ -10,7 +10,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 # Database
 db = SQLAlchemy(app)
-db.create_all()
 
 # Import + Register Blueprints
 from app.pcasts import pcasts as pcasts

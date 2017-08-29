@@ -36,6 +36,7 @@ class Config(object):
   THREADS_PER_PAGE = 2
 
   # Mounting our DBs
+  SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
   SQLALCHEMY_BINDS = {
     'db': DB_URL,
     'podcast_db': PODCAST_DB_URL
