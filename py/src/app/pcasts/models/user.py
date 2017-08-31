@@ -17,7 +17,7 @@ class User(Base):
 
   def __init__(self, **kwargs):
     self.google_id = kwargs.get('google_id')
-    self.email = kwargs.get('email')
+    self.email = kwargs.get('email', '')
     self.first_name = kwargs.get('first_name')
     self.last_name = kwargs.get('last_name')
     self.image_url = kwargs.get('image_url')

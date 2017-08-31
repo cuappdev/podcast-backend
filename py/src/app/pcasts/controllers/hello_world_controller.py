@@ -1,5 +1,4 @@
 from . import *
-from appdev.controllers import *
 
 class HelloWorldController(AppDevController):
 
