@@ -1,7 +1,7 @@
 from . import *
 
 class Episode(Base):
-  __tablename__ = 'epsiodes'
+  __tablename__ = 'episodes'
   __bind_key__ = 'podcast_db'
 
   id = db.Column(db.Integer, primary_key=True)
