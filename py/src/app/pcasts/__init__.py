@@ -11,6 +11,8 @@ from app.pcasts.models._all import * # pylint: disable=C0413
 from app.pcasts.controllers.hello_world_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.google_sign_in_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_me_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.series_subscriptions_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.get_user_subscriptions_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.create_delete_bookmark_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_bookmarks_controller import * # pylint: disable=C0413
 
@@ -18,6 +20,8 @@ controllers = [
     HelloWorldController(),
     GoogleSignInController(),
     GetMeController(),
+    SeriesSubscriptionsController(),
+    GetUserSubscriptionsController(),
     CreateDeleteBookmarkController(),
     GetBookmarksController()
 ]
