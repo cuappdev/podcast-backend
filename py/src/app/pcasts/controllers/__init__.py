@@ -1,6 +1,6 @@
 from flask import request, render_template, jsonify, redirect
 from appdev.controllers import *
-from app.pcasts.dao import users_dao, sessions_dao
+from app.pcasts.dao import users_dao, sessions_dao, bookmarks_dao, episodes_dao
 from app.pcasts.utils.authorize import *
 
 from app.pcasts.models._all import *
@@ -8,3 +8,5 @@ from app.pcasts.models._all import *
 # Serializers
 user_schema = UserSchema()
 session_schema = SessionSchema()
+bookmark_schema = BookmarkSchema()
+episode_schema = EpisodeSchema()
