@@ -13,7 +13,7 @@ class Subscription(Base):
     db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
   series_id = db.Column(db.Integer, nullable=False)
 
-  user = db.relationship('User', cascade='all,delete')
+  user = db.relationship('User')
 
   def __init__(self, **kwargs):
     self.user_id = kwargs.get('user_id')

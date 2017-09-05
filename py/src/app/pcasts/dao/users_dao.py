@@ -32,3 +32,10 @@ def get_user_by_valid_session(session_token):
     return None
 
   return optional_session.user
+
+def get_user_by_id(user_id):
+  maybe_user = User.query.filter(User.id == user_id).first()
+  if maybe_user:
+    return maybe_user
+  else:
+    raise Exception("User with user_id: " + str(user_id) + " does not exist")

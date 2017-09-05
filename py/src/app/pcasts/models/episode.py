@@ -17,7 +17,7 @@ class Episode(Base):
 
   series_id = \
     db.Column(db.Integer, db.ForeignKey('series.id', ondelete='CASCADE'))
-  series = db.relationship('Series', cascade='all,delete', backref='episodes')
+  series = db.relationship('Series', backref='episodes')
 
   def __init__(self, **kwargs):
     self.title = kwargs.get('title', None)
