@@ -60,3 +60,5 @@ export PODCAST_DB_HOST=localhost
 export PODCAST_DB_NAME=pcasts_podcast_db_dev
 export APP_SETTINGS=CHANGEME
 ````
+
+## Loading in Test Data
