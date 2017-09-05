@@ -24,9 +24,9 @@ def build_json_lst(files):
 
 def load_up_db(json_lst):
   for element in json_lst:
-    # Series work
-    series_json = element['series']
     try:
+      # Series work
+      series_json = element['series']
       new_series = Series(
           id=series_json.get('id'),
           title=series_json.get('title'),
@@ -37,29 +37,25 @@ def load_up_db(json_lst):
           feed_url=series_json.get('feedUrl'),
           genres=series_json.get('genres')
       )
-      commit_model(new_series)
-    except Exception:
-      print 'Error saving series'
 
-    # Episode work
-    episode_jsons = element['episodes']
-    try:
+      # Episode work
+      episode_jsons = element['episodes']
       new_eps = []
       for ep_json in episode_jsons:
         new_eps.append(Episode(
             title=ep_json.get('title'),
             author=ep_json.get('author'),
-            summary=ep_json.get('summary'),
-            pub_date=datetime.datetime.fromtimestamp(ep_json.get('pubDate')),
+            summary=ep_json.get('summary').encode('utf-8'),
+            pub_date=datetime.\
+              datetime.fromtimestamp(float(ep_json.get('pubDate'))),
             duration=ep_json.get('duration'),
             audio_url=ep_json.get('audioUrl'),
             tags=ep_json.get('tags'),
             series_id=ep_json.get('seriesId')
         ))
-      commit_models(new_eps)
+      commit_models([new_series] + new_eps)
     except Exception as e:
-      print e
-      print 'Error saving episodes'
+      print 'Error saving podcast'
 
 if __name__ == '__main__':
   # Clear these tables
