@@ -15,6 +15,8 @@ from app.pcasts.controllers.series_subscriptions_controller import * # pylint: d
 from app.pcasts.controllers.get_user_subscriptions_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.create_delete_bookmark_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_bookmarks_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.get_create_delete_recommendation_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.get_user_recommendations_controller import * # pylint: disable=C0413
 
 controllers = [
     HelloWorldController(),
@@ -23,7 +25,9 @@ controllers = [
     SeriesSubscriptionsController(),
     GetUserSubscriptionsController(),
     CreateDeleteBookmarkController(),
-    GetBookmarksController()
+    GetBookmarksController(),
+    GetCreateDeleteRecommendationController(),
+    GetUserRecommendationsController()
 ]
 
 # Setup all controllers
