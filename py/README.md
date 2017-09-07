@@ -16,8 +16,8 @@ Ensure you have `mysql` plus command line tools setup:
 
 ````bash
 mysql
-mysql> CREATE DATABASE pcasts_db_dev;
-mysql> CREATE DATABASE pcasts_podcast_db_dev;
+mysql> CREATE DATABASE pcasts_db_dev CHARACTER SET utf8mb4;
+mysql> CREATE DATABASE pcasts_podcast_db_dev CHARACTER SET utf8mb4;
 mysql> \q
 cd src
 python manage.py db init --multidb # Generate migrations folder

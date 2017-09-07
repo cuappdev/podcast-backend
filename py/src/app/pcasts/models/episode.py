@@ -1,3 +1,4 @@
+from sqlalchemy.dialects.mysql import MEDIUMTEXT
 from . import *
 
 class Episode(Base):
@@ -5,13 +6,13 @@ class Episode(Base):
   __bind_key__ = 'podcast_db'
 
   id = db.Column(db.Integer, primary_key=True)
-  title = db.Column(db.String(255))
-  author = db.Column(db.String(255))
-  summary = db.Column(db.Text)
+  title = db.Column(db.Text)
+  author = db.Column(db.Text)
+  summary = db.Column(MEDIUMTEXT)
   pub_date = db.Column(db.DateTime, default=db.func.current_timestamp())
   duration = db.Column(db.String(255))
-  audio_url = db.Column(db.String(1000))
-  tags = db.Column(db.String(1000)) # semicolon-separated
+  audio_url = db.Column(db.Text)
+  tags = db.Column(db.Text) # semicolon-separated
 
   series_id = \
     db.Column(db.Integer, db.ForeignKey('series.id', ondelete='CASCADE'))

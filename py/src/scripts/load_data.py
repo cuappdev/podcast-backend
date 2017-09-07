@@ -42,19 +42,26 @@ def load_up_db(json_lst):
       episode_jsons = element['episodes']
       new_eps = []
       for ep_json in episode_jsons:
+        # Specific formatting of pubdate
+        pub_d = datetime.\
+                datetime.\
+                fromtimestamp(float(ep_json.get('pubDate'))) \
+                if ep_json.get('pubDate') else \
+                None
         new_eps.append(Episode(
             title=ep_json.get('title'),
             author=ep_json.get('author'),
-            summary=ep_json.get('summary').encode('utf-8'),
-            pub_date=datetime.\
-              datetime.fromtimestamp(float(ep_json.get('pubDate'))),
+            summary=ep_json.get('summary'),
+            pub_date=pub_d,
             duration=ep_json.get('duration'),
             audio_url=ep_json.get('audioUrl'),
             tags=ep_json.get('tags'),
             series_id=ep_json.get('seriesId')
         ))
       commit_models([new_series] + new_eps)
-    except Exception as e:
+      print 'Successfully saved: \'{}\''.format(new_series.title.encode('utf8'))
+    except Exception as e: # pylint: disable=W0703
+      print e
       print 'Error saving podcast'
 
 if __name__ == '__main__':
