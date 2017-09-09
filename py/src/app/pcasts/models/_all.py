@@ -5,6 +5,7 @@ from app.pcasts.models.episode import *
 from app.pcasts.models.session import *
 from app.pcasts.models.subscription import *
 from app.pcasts.models.bookmark import *
+from app.pcasts.models.recommendation import *
 
 class UserSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
@@ -31,5 +32,11 @@ class EpisodeSchema(ModelSchema):
 class BookmarkSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
     model = Bookmark
+  episode = fields.Nested('EpisodeSchema', many=False)
+  user = fields.Nested('UserSchema', many=False)
+
+class RecommendationSchema(ModelSchema):
+  class Meta(ModelSchema.Meta):
+      model = Recommendation
   episode = fields.Nested('EpisodeSchema', many=False)
   user = fields.Nested('UserSchema', many=False)
