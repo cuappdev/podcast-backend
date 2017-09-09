@@ -8,7 +8,8 @@ def commit_models(model_lst):
   try:
     db.session.commit()
     return model_lst
-  except Exception:
+  except Exception as e:
+    print e
     db.session.rollback()
     raise Exception(DB_COMMIT_ERROR_MESSAGE)
 
