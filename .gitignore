@@ -49,3 +49,4 @@ target
 google.json
 venv
 *.pyc
+.DS_STORE
