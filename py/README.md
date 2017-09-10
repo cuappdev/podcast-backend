@@ -18,11 +18,13 @@ Ensure you have `mysql` plus command line tools setup:
 mysql
 mysql> CREATE DATABASE pcasts_db_dev CHARACTER SET utf8mb4;
 mysql> CREATE DATABASE pcasts_podcast_db_dev CHARACTER SET utf8mb4;
+mysql> CREATE DATABASE test_pcasts_db_dev CHARACTER SET utf8mb4;
+mysql> CREATE DATABASE test_pcasts_podcast_db_dev CHARACTER SET utf8mb4;
 mysql> \q
-cd src
-python manage.py db init --multidb # Generate migrations folder
-python manage.py db migrate # Migrates the DB
-python manage.py db upgrade # Upgrades the DB
+cd src/scripts
+
+python setup_db.py dev
+python setup_db.py test
 ````
 
 If the `migrations` directory is ever deleted, you can regenerate it with the following:
@@ -45,6 +47,14 @@ PODCAST_DB_USERNAME
 PODCAST_DB_PASSWORD
 PODCAST_DB_HOST
 PODCAST_DB_NAME
+TEST_DB_USERNAME
+TEST_DB_PASSWORD
+TEST_DB_HOST
+TEST_DB_NAME
+TEST_PODCAST_DB_USERNAME
+TEST_PODCAST_DB_PASSWORD
+TEST_PODCAST_DB_HOST
+TEST_PODCAST_DB_NAME
 APP_SETTINGS # e.g. config.DevelopmentConfig
 ````
 
@@ -58,7 +68,31 @@ export PODCAST_DB_USERNAME=CHANGEME
 export PODCAST_DB_PASSWORD=CHANGEME
 export PODCAST_DB_HOST=localhost
 export PODCAST_DB_NAME=pcasts_podcast_db_dev
-export APP_SETTINGS=CHANGEME
+export TEST_DB_USERNAME=CHANGEME
+export TEST_DB_PASSWORD=CHANGEME
+export TEST_DB_HOST=localhost
+export TEST_DB_NAME=test_pcasts_db_dev
+export TEST_PODCAST_DB_USERNAME=CHANGEME
+export TEST_PODCAST_DB_PASSWORD=CHANGEME
+export TEST_PODCAST_DB_HOST=localhost
+export TEST_PODCAST_DB_NAME=test_pcasts_podcast_db_dev
+export APP_SETTINGS=config.DevelopmentConfig
 ````
 
+In the `/tests` directory, create another `.env` file that changes the `APP_SETTINGS`:
+````bash
+export APP_SETTINGS=config.TestingConfig
+````
 ## Loading in Test Data
+From the `/py` directory, run:
+````
+python src/scripts/load_data.py dev
+python src/scripts/load_data.py test
+````
+
+## Testing
+To run unit tests, from the `/tests` directory, run
+````
+nosetests
+````
+to run all of the tests in the directory.
