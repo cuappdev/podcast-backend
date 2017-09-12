@@ -18,7 +18,7 @@ def create_bookmark(episode_id, user):
 
 def delete_bookmark(episode_id, user):
   optional_bookmark = Bookmark.query \
-    .filter(Bookmark.episode_id == episode_id and Bookmark.user_id == user.id) \
+    .filter(Bookmark.episode_id == episode_id, Bookmark.user_id == user.id) \
     .first()
   if optional_bookmark:
     optional_bookmark.episode = episodes_dao.get_episode(episode_id)
