@@ -16,13 +16,14 @@ def get_followers(user_id):
 def create_following(follower_id, followed_id):
   if int(follower_id) != int(followed_id):
     following = Following(follower_id=follower_id, followed_id=followed_id)
-    follower = users_dao.get_user_by_id(follower_id)
-    followed = users_dao.get_user_by_id(followed_id)
-    if follower and followed:
+    users = users_dao.get_users_by_id([follower_id, followed_id])
+    if len(users) == 2:
+      follower = users[0] if users[0].id == follower_id else users[1]
+      followed = users[0] if users[0].id == followed_id else users[1]
       follower.followings_count += 1
       followed.followers_count += 1
     else:
-      raise Exception("Improper follower_id or followed_id")
+      raise Exception("Improper follower_id and/or followed_id")
   else:
     raise Exception("follower_id cannot equal followed_id")
 
@@ -30,13 +31,14 @@ def create_following(follower_id, followed_id):
 
 def delete_following(follower_id, followed_id):
   maybe_following = Following.query \
-    .filter(Following.follower_id == follower_id
-            and Following.followed_id == followed_id) \
+    .filter(Following.follower_id == follower_id,
+            Following.followed_id == followed_id) \
     .first()
 
   if maybe_following:
-    follower = users_dao.get_user_by_id(follower_id)
-    followed = users_dao.get_user_by_id(followed_id)
+    users = users_dao.get_users_by_id([follower_id, followed_id])
+    follower = users[0] if users[0].id == follower_id else users[1]
+    followed = users[0] if users[0].id == followed_id else users[1]
     follower.followings_count -= 1
     followed.followers_count -= 1
     db_utils.delete_model(maybe_following)
