@@ -7,6 +7,7 @@ from app.pcasts.models.subscription import *
 from app.pcasts.models.bookmark import *
 from app.pcasts.models.recommendation import *
 from app.pcasts.models.following import *
+from app.pcasts.models.listening_history import *
 
 class UserSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
@@ -47,3 +48,9 @@ class FollowingSchema(ModelSchema):
     model = Following
   follower = fields.Nested('UserSchema', many=False)
   followed = fields.Nested('UserSchema', many=False)
+
+class ListeningHistorySchema(ModelSchema):
+  class Meta(ModelSchema.Meta):
+    model = ListeningHistory
+  episode = fields.Nested('EpisodeSchema', many=False)
+  user = fields.Nested('UserSchema', many=False)

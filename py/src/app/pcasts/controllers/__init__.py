@@ -1,10 +1,16 @@
 from flask import request, render_template, jsonify, redirect
 from appdev.controllers import *
-from app.pcasts.dao import users_dao, sessions_dao, subscriptions_dao, \
-  series_dao, bookmarks_dao, episodes_dao, recommendations_dao, followings_dao
+from app.pcasts.dao import users_dao, \
+  sessions_dao, \
+  subscriptions_dao, \
+  series_dao, \
+  bookmarks_dao, \
+  episodes_dao, \
+  recommendations_dao, \
+  followings_dao, \
+  listening_histories_dao
 
 from app.pcasts.utils.authorize import *
-
 from app.pcasts.models._all import *
 
 # Serializers
@@ -15,3 +21,4 @@ bookmark_schema = BookmarkSchema()
 episode_schema = EpisodeSchema()
 recommendation_schema = RecommendationSchema()
 following_schema = FollowingSchema()
+listening_history_schema = ListeningHistorySchema()
