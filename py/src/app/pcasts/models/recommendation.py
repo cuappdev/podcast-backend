@@ -12,7 +12,7 @@ class Recommendation(Base):
   user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
   episode_id = db.Column(db.Integer, nullable=False)
 
-  user = db.relationship('User', cascade='all,delete')
+  user = db.relationship('User')
 
   def __init__(self, **kwargs):
     self.id = kwargs.get('id')

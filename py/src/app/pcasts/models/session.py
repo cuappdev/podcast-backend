@@ -15,7 +15,7 @@ class Session(Base):
 
   user_id = \
       db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
-  user = db.relationship('User', cascade='all,delete')
+  user = db.relationship('User')
 
   def __init__(self, **kwargs):
     self.activate_session()

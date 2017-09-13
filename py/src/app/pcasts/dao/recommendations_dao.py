@@ -13,8 +13,8 @@ def create_recommendation(episode_id, user):
 
 def delete_recommendation(episode_id, user):
   optional_recommendation = Recommendation.query \
-    .filter(Recommendation.episode_id == episode_id
-            and Recommendation.user_id == user.id).first()
+  .filter(Recommendation.episode_id == episode_id,
+          Recommendation.user_id == user.id).first()
   if optional_recommendation:
     episode = episodes_dao.get_episode(episode_id)
     optional_recommendation.episode = episode
