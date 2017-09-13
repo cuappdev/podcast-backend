@@ -11,8 +11,8 @@ class Episode(Base):
   summary = db.Column(MEDIUMTEXT)
   pub_date = db.Column(db.DateTime, default=db.func.current_timestamp())
   duration = db.Column(db.String(255))
-  audio_url = db.Column(db.String(1000))
-  tags = db.Column(db.String(1000)) # semicolon-separated
+  audio_url = db.Column(db.Text)
+  tags = db.Column(db.Text) # semicolon-separated
   recommendations_count = db.Column(db.Integer, nullable=False)
 
   series_id = \
