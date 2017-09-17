@@ -2,7 +2,7 @@ import unittest
 import os
 import sys
 
-from tests.loading_utils import * # pylint: disable=C0413
+from tests.loading_utils import *
 
 class TestCase(unittest.TestCase):
 
