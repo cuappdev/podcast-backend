@@ -27,6 +27,30 @@ PODCAST_DB_URL      = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
   PODCAST_DB_NAME
 )
 
+# Analog of database for testing purposes
+TEST_DB_USERNAME  = os.environ['TEST_DB_USERNAME']
+TEST_DB_PASSWORD  = os.environ['TEST_DB_PASSWORD']
+TEST_DB_HOST      = os.environ['TEST_DB_HOST']
+TEST_DB_NAME      = os.environ['TEST_DB_NAME']
+TEST_DB_URL       = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
+  TEST_DB_USERNAME,
+  TEST_DB_PASSWORD,
+  TEST_DB_HOST,
+  TEST_DB_NAME
+)
+
+# Analog of podcast database for testing purposes
+TEST_PODCAST_DB_USERNAME = os.environ['TEST_PODCAST_DB_USERNAME']
+TEST_PODCAST_DB_PASSWORD = os.environ['TEST_PODCAST_DB_PASSWORD']
+TEST_PODCAST_DB_HOST     = os.environ['TEST_PODCAST_DB_HOST']
+TEST_PODCAST_DB_NAME     = os.environ['TEST_PODCAST_DB_NAME']
+TEST_PODCAST_DB_URL      = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
+  TEST_PODCAST_DB_USERNAME,
+  TEST_PODCAST_DB_PASSWORD,
+  TEST_PODCAST_DB_HOST,
+  TEST_PODCAST_DB_NAME
+)
+
 class Config(object):
   DEBUG = False
   TESTING = False
@@ -55,3 +79,7 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
   TESTING = True
+  SQLALCHEMY_BINDS = {
+    'db': TEST_DB_URL,
+    'podcast_db': TEST_PODCAST_DB_URL
+  }

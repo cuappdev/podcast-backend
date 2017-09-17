@@ -2,10 +2,13 @@ import datetime
 import json
 import os
 import sys
+from script_utils import * # pylint: disable=W0403
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from app.pcasts.models._all import * # pylint: disable=C0413
-from app.pcasts.utils.db_utils import * # pylint: disable=C0413
+set_app_settings()
+
+from app.pcasts.models._all import * # pylint: disable=C0413,C0411
+from app.pcasts.utils.db_utils import * # pylint: disable=C0413,C0411
 
 def get_json_file_names():
   files = []
