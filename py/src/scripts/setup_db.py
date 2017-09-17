@@ -21,6 +21,12 @@ def delete_migrations():
   try:
     os.chdir('..')
     shutil.rmtree('migrations')
+    for db in ['DB', 'PODCAST_DB', 'TEST_DB', 'TEST_PODCAST_DB']:
+      os.system('mysql --user={} --password={} {} '
+                .format(os.environ['{}_USERNAME'.format(db)],
+                        os.environ['{}_PASSWORD'.format(db)],
+                        os.environ['{}_NAME'.format(db)])
+                + '-e "drop table alembic_version"')
     os.chdir('scripts')
     print 'Migrations folder deleted...'
   except OSError:
