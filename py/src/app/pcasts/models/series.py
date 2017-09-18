@@ -12,6 +12,7 @@ class Series(Base):
   image_url_sm = db.Column(db.Text)
   feed_url = db.Column(db.Text, nullable=False)
   genres = db.Column(db.Text) # semicolon-separated
+  subscribers_count = db.Column(db.Integer, nullable=False)
 
   def __init__(self, **kwargs):
     self.id = kwargs.get('id')
@@ -22,3 +23,4 @@ class Series(Base):
     self.image_url_sm = kwargs.get('image_url_sm', None)
     self.feed_url = kwargs.get('feed_url')
     self.genres = ';'.join(kwargs.get('genres', []))
+    self.subscribers_count = kwargs.get('subscribers_count', 0)

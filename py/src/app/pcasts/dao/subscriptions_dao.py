@@ -27,6 +27,7 @@ def create_subscription(user_id, series_id):
         series_id=series_id,
         series=maybe_series
     )
+    maybe_series.subscribers_count += 1
   else:
     raise Exception("Invalid series_id provided")
 
@@ -38,6 +39,7 @@ def delete_subscription(user_id, series_id):
 
   if maybe_subscription:
     attach_series([maybe_subscription])
+    maybe_subscription.series.subscribers_count -= 1
     return db_utils.delete_model(maybe_subscription)
   else:
     raise Exception("Specified subscription does not exist")
