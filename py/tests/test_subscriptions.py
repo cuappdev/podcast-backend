@@ -1,5 +1,6 @@
 from tests.test_case import *
-from app.pcasts.dao import subscriptions_dao # pylint: disable=C0413
+from app.pcasts.dao import subscriptions_dao
+from app.pcasts.controllers import series_subscriptions_controller
 
 class SubscriptionsTestCase(TestCase):
 
@@ -10,6 +11,10 @@ class SubscriptionsTestCase(TestCase):
 
   def test_get_subscriptions(self):
     assert not subscriptions_dao.get_user_subscriptions(1)
+
+  def test_create_subscription(self):
+    response = self.app.post('api/v1/subscriptions/1211520413/')
+    print(response.data)
 
 if __name__ == '__main__':
   unittest.main()
