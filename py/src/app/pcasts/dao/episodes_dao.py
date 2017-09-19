@@ -1,3 +1,4 @@
+from app.pcasts.dao import followings_dao
 from . import *
 
 def get_episodes(episode_ids):

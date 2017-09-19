@@ -44,3 +44,23 @@ def delete_following(follower_id, followed_id):
     db_utils.delete_model(maybe_following)
   else:
     raise Exception("Specified following does not exist")
+
+def get_following_recommendations(user_id, maxtime, page_size):
+  followings = get_followings(user_id)
+  following_ids = [f.id for f in followings]
+  return Recommendation.query \
+    .filter(Recommendation.user_id.in_(following_ids) and
+            Recommendation.created_at < maxtime) \
+    .order_by(Recommendation.created_at.desc()) \
+    .limit(page_size) \
+    .all()
+
+def get_following_subscriptions(user_id, maxtime, page_size):
+  followings = get_followings(user_id)
+  following_ids = [f.id for f in followings]
+  return Subscription.query \
+    .filter(Subscription.user_id.in_(following_ids) and
+            Subscription.created_at < maxtime) \
+    .order_by(Subscription.created_at.desc()) \
+    .limit(page_size) \
+    .all()

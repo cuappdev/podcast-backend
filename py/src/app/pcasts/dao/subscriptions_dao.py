@@ -45,3 +45,13 @@ def delete_subscription(user_id, series_id):
 def attach_series(subscriptions):
   for subscription in subscriptions:
     subscription.series = series_dao.get_series(subscription.series_id)
+
+def get_new_subscribed_episodes(user_id, maxtime, page_size):
+  subscriptions = get_user_subscriptions(user_id)
+  subscription_ids = [s.id for s in subscriptions]
+  return Episode.query \
+    .filter(Episode.series_id.in_(subscription_ids) and
+            Episode.created_at < maxtime) \
+    .order_by(Episode.created_at.desc()) \
+    .limit(page_size) \
+    .all()
