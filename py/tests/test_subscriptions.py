@@ -119,10 +119,25 @@ class SubscriptionsTestCase(TestCase):
     series = Series.query.filter(Series.id == series_id).first()
     self.assertEquals(series.subscribers_count, 0)
 
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id))
+    self.app.post('api/v1/subscriptions/{}'.format(series_id))
     series = Series.query.filter(Series.id == series_id).first()
     self.assertEquals(series.subscribers_count, 1)
 
-    self.app.delete('api/v1/subscriptions/{}/'.format(series_id))
+    self.app.delete('api/v1/subscriptions/{}'.format(series_id))
     series = Series.query.filter(Series.id == series_id).first()
     self.assertEquals(series.subscribers_count, 0)
+
+  def test_is_subscribed(self):
+    user = User.query \
+      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
+    series_id = '1211520413'
+    series = series_dao.get_series(series_id, user.id)
+    self.assertFalse(series.is_subscribed)
+
+    self.app.post('api/v1/subscriptions/{}'.format(series_id))
+    series = series_dao.get_series(series_id, user.id)
+    self.assertTrue(series.is_subscribed)
+
+    self.app.delete('api/v1/subscriptions/{}'.format(series_id))
+    series = series_dao.get_series(series_id, user.id)
+    self.assertFalse(series.is_subscribed)
