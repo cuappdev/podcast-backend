@@ -43,3 +43,10 @@ def get_user_by_id(user_id):
 def get_users_by_id(user_ids):
   user_ids = set(user_ids)
   return User.query.filter(User.id.in_(user_ids)).all()
+
+def get_user_by_google_id(google_id):
+  optional_user = User.query.filter(User.google_id == google_id).first()
+  if not optional_user:
+    raise Exception('User with google_id: {} does not exist'.format(google_id))
+  else:
+    return optional_user
