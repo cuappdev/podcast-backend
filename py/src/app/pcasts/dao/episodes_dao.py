@@ -21,13 +21,13 @@ def clear_all_recommendations_counts():
 
 def is_bookmarked_by_user(episode_id, user_id):
   optional_bookmark = Bookmark.query \
-    .filter(Bookmark.episode_id == episode_id and Bookmark.user_id == user_id) \
+    .filter(Bookmark.episode_id == episode_id, Bookmark.user_id == user_id) \
     .first()
   return optional_bookmark is not None
 
 def is_recommended_by_user(episode_id, user_id):
   optional_recommendation = Recommendation.query \
-    .filter(Recommendation.episode_id == episode_id and
+    .filter(Recommendation.episode_id == episode_id,
             Recommendation.user_id == user_id) \
     .first()
   return optional_recommendation is not None

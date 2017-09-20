@@ -56,7 +56,7 @@ def get_user_by_google_id(google_id):
 
 def is_following_user(my_id, their_id):
     optional_following = Following.query \
-      .filter(Following.follower_id == my_id
-              and Following.followed_id == their_id) \
+      .filter(Following.follower_id == my_id,
+              Following.followed_id == their_id) \
       .first()
     return optional_following is not None
