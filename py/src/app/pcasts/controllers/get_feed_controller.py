@@ -1,6 +1,16 @@
 import heapq
 from . import *
 
+class Enum(set):
+  def __getattr__(self, name):
+    if name in self:
+      return name
+    raise AttributeError
+
+FeedContexts = Enum(['FOLLOWING_RECOMMENDATION',
+                     'FOLLOWING_SUBSCRIPTION',
+                     'NEW_SUBSCRIBED_EPISODE'])
+
 class GetFeedController(AppDevController):
 
   def get_path(self):
@@ -22,27 +32,67 @@ class GetFeedController(AppDevController):
     new_subscribed_episodes = \
       subscriptions_dao.get_new_subscribed_episodes(user.id, maxtime, page_size)
 
-    feed = merge_sorted_feed_sources([following_recommendations,
-                                      following_subscriptions,
-                                      new_subscribed_episodes], page_size)
+    feed = self.merge_sorted_feed_sources(
+        [
+            following_recommendations,
+            following_subscriptions,
+            new_subscribed_episodes
+        ],
+        [
+            FeedContexts.FOLLOWING_RECOMMENDATION,
+            FeedContexts.FOLLOWING_SUBSCRIPTION,
+            FeedContexts.NEW_SUBSCRIBED_EPISODE
+        ],
+        page_size)
 
-    #TODO: serialize feed, get context source (you already get the context, look for it)
+    return {'feed': [f.serialize() for f in feed]}
 
   @classmethod
-  def merge_sorted_feed_sources(cls, sources, page_size):
-    result, heap, add_count = [], [], 0
-    for i, s in enumerate(sources):
-      if len(s) > 0:  #pylint: disable=C1801
-        heapq.heappush(heap, (s[0], i))
-    next_index_to_add = [1 for _ in range(sources)]
-    while len(heap) > 0 and add_count < page_size:  #pylint: disable=C1801
-      item, i = heapq.heappop(heap)
-      add_count += 1
-      result.append(item)
-      if next_index_to_add[i] < len(sources[i]):
-        heapq.heapush(heap, sources[i][next_index_to_add[i]])
-        next_index_to_add[i] += 1
+  def merge_sorted_feed_sources(cls, sources, contexts, page_size):
+    sources = [reversed(s) for s in sources]  # reverse so we can just .pop()
+    result, heap, count = [], [], 0
+    for source_idx, s in sources:
+      if s:
+        item = s.pop()
+        heapq.heappush(heap, (-item.created_at, item, source_idx))
+    while len(heap) > 0 and count < page_size:  #pylint: disable=C1801
+      _, item, source_idx = heapq.heappop(heap)
+      result.append(FeedElement(item, contexts[source_idx]))
+      if sources[source_idx]:
+        raw_content = sources[source_idx].pop()
+        heapq.heapush(heap, (-raw_content.created_at, raw_content, source_idx))
+      count += 1
     return result
 
-    class FeedElement(object):
-      pass
+  class FeedElement(object):
+
+    def __init__(self, raw_content, context):
+      self.context = context
+      self.time = raw_content.created_at
+      if context == FeedContexts.FOLLOWING_RECOMMENDATION:
+        self.context_supplier = raw_content.user
+        self.content = raw_content.episode
+      elif context == FeedContexts.FOLLOWING_SUBSCRIPTION:
+        self.context_supplier = raw_content.user
+        self.content = raw_content.series
+      elif context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
+        self.context_supplier = raw_content.series
+        self.content = raw_content
+
+    def serialize(self):
+      json = {
+          "context": self.context,
+          "time": self.time
+      }
+      if context == FeedContexts.FOLLOWING_RECOMMENDATION:
+        supplier_schema = user_schema
+        content_schema = episode_schema
+      elif context == FeedContexts.FOLLOWING_SUBSCRIPTION:
+        supplier_schema = user_schema
+        content_schema = series_schema
+      elif context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
+        supplier_schema = series_schema
+        content_schema = episode_schema
+      json['context_supplier'] = \
+        supplier_schema.dump(self.context_supplier).data
+      json['content'] = content_schema.dump(self.content).data
