@@ -23,6 +23,7 @@ from app.pcasts.controllers.get_user_followings_controller import * # pylint: di
 from app.pcasts.controllers.create_delete_listening_history_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_listening_history_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.clear_listening_history_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.get_feed_controller import * # pylint: disable=C0413
 
 controllers = [
     HelloWorldController(),
@@ -40,6 +41,7 @@ controllers = [
     CreateDeleteListeningHistoryController(),
     GetListeningHistoryController(),
     ClearListeningHistoryController(),
+    GetFeedController(),
 ]
 
 # Setup all controllers

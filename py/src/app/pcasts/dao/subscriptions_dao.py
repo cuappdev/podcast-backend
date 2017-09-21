@@ -1,3 +1,4 @@
+import datetime
 from app.pcasts.dao import series_dao
 from . import *
 
@@ -50,10 +51,11 @@ def attach_series(subscriptions):
 
 def get_new_subscribed_episodes(user_id, maxtime, page_size):
   subscriptions = get_user_subscriptions(user_id)
-  subscription_ids = [s.id for s in subscriptions]
+  series_ids = [s.series_id for s in subscriptions]
+  maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
   return Episode.query \
-    .filter(Episode.series_id.in_(subscription_ids) and
-            Episode.created_at < maxtime) \
+    .filter(Episode.series_id.in_(series_ids),
+            Episode.created_at <= maxdatetime) \
     .order_by(Episode.created_at.desc()) \
     .limit(page_size) \
     .all()

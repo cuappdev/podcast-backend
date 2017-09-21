@@ -1,3 +1,4 @@
+import time
 import heapq
 from . import *
 
@@ -22,8 +23,8 @@ class GetFeedController(AppDevController):
   @authorize
   def content(self, **kwargs):
     user = kwargs.get('user')
-    maxtime = kwargs.get('time')
-    page_size = kwargs.get('page_size')
+    maxtime = request.args['time']
+    page_size = int(request.args['page_size'])
 
     following_recommendations = \
       followings_dao.get_following_recommendations(user.id, maxtime, page_size)
@@ -49,50 +50,71 @@ class GetFeedController(AppDevController):
 
   @classmethod
   def merge_sorted_feed_sources(cls, sources, contexts, page_size):
-    sources = [reversed(s) for s in sources]  # reverse so we can just .pop()
+    """
+    Given a list of sources from which to generate a feed page, this function
+      merges the lists together in descending order of when the elements were
+      created.
+
+    Args:
+        sources (list): A list where each element is a list of models containing
+          information for a feed element. Each sublist must already be sorted
+          by descending time.
+        contexts (list): A list where contexts[i] is the `FeedContexts` type
+          of sources[i].
+        page_size (int): Desired length of feed page.
+
+    Returns:
+        list: A list of `FeedElements` of length
+          min(page_size, sum([len(source) for source in sources])) that is
+          sorted by descending time created.
+    """
+    sources = [list(reversed(s)) for s in sources]  # reverse so we can .pop()
     result, heap, count = [], [], 0
-    for source_idx, s in sources:
+    for source_idx, s in enumerate(sources):
       if s:
         item = s.pop()
-        heapq.heappush(heap, (-item.created_at, item, source_idx))
+        heapq.heappush(heap, (-time.mktime(item.created_at.timetuple()),
+                              item, source_idx))
     while len(heap) > 0 and count < page_size:  #pylint: disable=C1801
       _, item, source_idx = heapq.heappop(heap)
       result.append(FeedElement(item, contexts[source_idx]))
       if sources[source_idx]:
         raw_content = sources[source_idx].pop()
-        heapq.heapush(heap, (-raw_content.created_at, raw_content, source_idx))
+        heapq.heappush(heap, (-time.mktime(raw_content.created_at.timetuple()),
+                              raw_content, source_idx))
       count += 1
     return result
 
-  class FeedElement(object):
+class FeedElement(object):
 
-    def __init__(self, raw_content, context):
-      self.context = context
-      self.time = raw_content.created_at
-      if context == FeedContexts.FOLLOWING_RECOMMENDATION:
-        self.context_supplier = raw_content.user
-        self.content = raw_content.episode
-      elif context == FeedContexts.FOLLOWING_SUBSCRIPTION:
-        self.context_supplier = raw_content.user
-        self.content = raw_content.series
-      elif context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
-        self.context_supplier = raw_content.series
-        self.content = raw_content
+  def __init__(self, raw_content, context):
+    self.context = context
+    self.time = int(time.mktime(raw_content.created_at.timetuple()))
+    if context == FeedContexts.FOLLOWING_RECOMMENDATION:
+      self.context_supplier = raw_content.user
+      self.content = raw_content.episode
+    elif context == FeedContexts.FOLLOWING_SUBSCRIPTION:
+      self.context_supplier = raw_content.user
+      self.content = raw_content.series
+    elif context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
+      self.context_supplier = raw_content.series
+      self.content = raw_content
 
-    def serialize(self):
-      json = {
-          "context": self.context,
-          "time": self.time
-      }
-      if context == FeedContexts.FOLLOWING_RECOMMENDATION:
-        supplier_schema = user_schema
-        content_schema = episode_schema
-      elif context == FeedContexts.FOLLOWING_SUBSCRIPTION:
-        supplier_schema = user_schema
-        content_schema = series_schema
-      elif context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
-        supplier_schema = series_schema
-        content_schema = episode_schema
-      json['context_supplier'] = \
-        supplier_schema.dump(self.context_supplier).data
-      json['content'] = content_schema.dump(self.content).data
+  def serialize(self):
+    json = {
+        "context": self.context,
+        "time": self.time
+    }
+    if self.context == FeedContexts.FOLLOWING_RECOMMENDATION:
+      supplier_schema = user_schema
+      content_schema = episode_schema
+    elif self.context == FeedContexts.FOLLOWING_SUBSCRIPTION:
+      supplier_schema = user_schema
+      content_schema = series_schema
+    elif self.context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
+      supplier_schema = series_schema
+      content_schema = episode_schema
+    json['context_supplier'] = \
+      supplier_schema.dump(self.context_supplier).data
+    json['content'] = content_schema.dump(self.content).data
+    return json
