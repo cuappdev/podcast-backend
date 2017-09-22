@@ -2,7 +2,7 @@ from app.pcasts.dao import episodes_dao
 from . import *
 
 def create_or_update_listening_history(episode_id, user):
-  optional_episode = episodes_dao.get_episode(episode_id)
+  optional_episode = episodes_dao.get_episode(episode_id, user.id)
   if optional_episode:
     optional_listening_history = ListeningHistory.\
       query.\
@@ -47,7 +47,8 @@ def get_listening_history(user, max_hs, offset):
     all()
 
   episodes = \
-    episodes_dao.get_episodes([h.episode_id for h in listening_histories])
+    episodes_dao.get_episodes([h.episode_id for h in listening_histories],
+                              user.id)
 
   for h, e in zip(listening_histories, episodes):
     h.episode = e

@@ -3,7 +3,7 @@ from . import *
 class CreateDeleteFollowingController(AppDevController):
 
   def get_path(self):
-    return '/followings/<followed_id>'
+    return '/followings/<followed_id>/'
 
   def get_methods(self):
     return ['POST', 'DELETE']

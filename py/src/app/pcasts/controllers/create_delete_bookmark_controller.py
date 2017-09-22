@@ -4,7 +4,7 @@ from . import *
 class CreateDeleteBookmarkController(AppDevController):
 
   def get_path(self):
-    return '/bookmarks/<episode_id>'
+    return '/bookmarks/<episode_id>/'
 
   def get_methods(self):
     return ['POST', 'DELETE']

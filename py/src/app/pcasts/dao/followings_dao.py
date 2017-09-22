@@ -16,7 +16,7 @@ def get_followers(user_id):
 def create_following(follower_id, followed_id):
   if int(follower_id) != int(followed_id):
     following = Following(follower_id=follower_id, followed_id=followed_id)
-    users = users_dao.get_users_by_id([follower_id, followed_id])
+    users = users_dao.get_users_by_id(follower_id, [follower_id, followed_id])
     if len(users) == 2:
       follower = users[0] if users[0].id == follower_id else users[1]
       followed = users[0] if users[0].id == followed_id else users[1]
@@ -36,7 +36,7 @@ def delete_following(follower_id, followed_id):
     .first()
 
   if maybe_following:
-    users = users_dao.get_users_by_id([follower_id, followed_id])
+    users = users_dao.get_users_by_id(follower_id, [follower_id, followed_id])
     follower = users[0] if users[0].id == follower_id else users[1]
     followed = users[0] if users[0].id == followed_id else users[1]
     follower.followings_count -= 1

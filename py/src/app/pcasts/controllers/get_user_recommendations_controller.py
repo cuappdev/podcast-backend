@@ -3,7 +3,7 @@ from . import *
 class GetUserRecommendationsController(AppDevController):
 
   def get_path(self):
-    return '/recommendations/users/<user_id>'
+    return '/recommendations/users/<user_id>/'
 
   def get_methods(self):
     return ['GET']

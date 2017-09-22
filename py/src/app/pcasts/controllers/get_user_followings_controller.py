@@ -3,7 +3,7 @@ from . import *
 class GetUserFollowingsController(AppDevController):
 
   def get_path(self):
-    return '/followings/show/<user_id>'
+    return '/followings/show/<user_id>/'
 
   def get_methods(self):
     return ['GET']
