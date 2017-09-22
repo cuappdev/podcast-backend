@@ -33,16 +33,19 @@ def get_user_by_valid_session(session_token):
 
   return optional_session.user
 
-def get_user_by_id(user_id):
-  users = get_users_by_id([userid])
+def get_user_by_id(my_id, their_id):
+  users = get_users_by_id(my_id, [their_id])
   if not users:
     raise Exception('User with user_id: {} does not exist'.format(str(user_id)))
   else:
     return users[0]
 
-def get_users_by_id(user_ids):
-  user_ids = set(user_ids)
-  return User.query.filter(User.id.in_(user_ids)).all()
+def get_users_by_id(my_id, their_ids):
+  their_ids = set(their_ids)
+  them = User.query.filter(User.id.in_(their_ids)).all()
+  for u in them:
+    u.is_following = is_following_user(my_id, u.id)
+  return them
 
 def get_user_by_google_id(google_id):
   optional_user = User.query.filter(User.google_id == google_id).first()
@@ -50,3 +53,10 @@ def get_user_by_google_id(google_id):
     raise Exception('User with google_id: {} does not exist'.format(google_id))
   else:
     return optional_user
+
+def is_following_user(my_id, their_id):
+    optional_following = Following.query \
+      .filter(Following.follower_id == my_id,
+              Following.followed_id == their_id) \
+      .first()
+    return optional_following is not None
