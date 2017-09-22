@@ -17,7 +17,7 @@ class GetCreateDeleteRecommendationController(AppDevController):
       offset = request.args['offset']
       max_recs = request.args['max']
       recommendations = recommendations_dao. \
-        get_episode_recommendations(episode_id, max_recs, offset)
+        get_episode_recommendations(episode_id, user.id, max_recs, offset)
 
       return {'recommendations': \
         [recommendation_schema.dump(r).data for r in recommendations]}

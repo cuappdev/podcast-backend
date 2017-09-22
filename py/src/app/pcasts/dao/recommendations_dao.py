@@ -28,12 +28,12 @@ def get_user_recommendations(user_id):
       Recommendation.query.filter(Recommendation.user_id == user_id).all()
   )
   episodes = episodes_dao.get_episodes([r.episode_id for r in recommendations],
-                                       user.id)
+                                       user_id)
   for r, e in zip(recommendations, episodes):
     r.episode = e
   return recommendations
 
-def get_episode_recommendations(episode_id, max_recs, offset):
+def get_episode_recommendations(episode_id, user_id, max_recs, offset):
   recommendations = (
       Recommendation.query.filter(Recommendation.episode_id == episode_id)
       .limit(max_recs)
@@ -41,7 +41,7 @@ def get_episode_recommendations(episode_id, max_recs, offset):
       .all()
   )
   episodes = episodes_dao.get_episodes([r.episode_id for r in recommendations],
-                                       user.id)
+                                       user_id)
   for r, e in zip(recommendations, episodes):
     r.episode = e
   return recommendations
