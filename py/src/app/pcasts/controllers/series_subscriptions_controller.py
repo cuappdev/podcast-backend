@@ -3,7 +3,7 @@ from . import *
 class SeriesSubscriptionsController(AppDevController):
 
   def get_path(self):
-    return '/subscriptions/<series_id>'
+    return '/subscriptions/<series_id>/'
 
   def get_methods(self):
     return ['GET', 'POST', 'DELETE']

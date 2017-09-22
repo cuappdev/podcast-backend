@@ -3,7 +3,7 @@ from . import *
 class GetCreateDeleteRecommendationController(AppDevController):
 
   def get_path(self):
-    return '/recommendations/<episode_id>'
+    return '/recommendations/<episode_id>/'
 
   def get_methods(self):
     return ['GET', 'POST', 'DELETE']

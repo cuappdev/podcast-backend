@@ -22,10 +22,10 @@ class BookmarksTestCase(TestCase):
     episode = episodes_dao.get_episode(episode_id, user.id)
     self.assertFalse(episode.is_bookmarked)
 
-    self.app.post('api/v1/bookmarks/{}'.format(episode_id))
+    self.app.post('api/v1/bookmarks/{}/'.format(episode_id))
     episode = episodes_dao.get_episode(episode_id, user.id)
     self.assertTrue(episode.is_bookmarked)
 
-    self.app.delete('api/v1/bookmarks/{}'.format(episode_id))
+    self.app.delete('api/v1/bookmarks/{}/'.format(episode_id))
     episode = episodes_dao.get_episode(episode_id, user.id)
     self.assertFalse(episode.is_bookmarked)

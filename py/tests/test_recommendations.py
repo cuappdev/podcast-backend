@@ -23,10 +23,10 @@ class RecommendationsTestCase(TestCase):
     episode = episodes_dao.get_episode(episode_id, user.id)
     self.assertFalse(episode.is_recommended)
 
-    self.app.post('api/v1/recommendations/{}'.format(episode_id))
+    self.app.post('api/v1/recommendations/{}/'.format(episode_id))
     episode = episodes_dao.get_episode(episode_id, user.id)
     self.assertTrue(episode.is_recommended)
 
-    self.app.delete('api/v1/recommendations/{}'.format(episode_id))
+    self.app.delete('api/v1/recommendations/{}/'.format(episode_id))
     episode = episodes_dao.get_episode(episode_id, user.id)
     self.assertFalse(episode.is_recommended)
