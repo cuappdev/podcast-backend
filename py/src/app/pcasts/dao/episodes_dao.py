@@ -13,6 +13,12 @@ def get_episode(episode_id, user_id):
   episode.is_bookmarked = is_bookmarked_by_user(episode_id, user_id)
   return episode
 
+def get_episode_by_title(title, user_id):
+  episode = Episode.query.filter(Episode.title == title).first()
+  episode.is_recommended = is_recommended_by_user(episode.id, user_id)
+  episode.is_bookmarked = is_bookmarked_by_user(episode.id, user_id)
+  return episode
+
 def clear_all_recommendations_counts():
   episodes = Episode.query.filter(Episode.recommendations_count > 0).all()
   for e in episodes:

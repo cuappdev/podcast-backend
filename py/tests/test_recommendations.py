@@ -18,8 +18,14 @@ class RecommendationsTestCase(TestCase):
     db_session_commit()
 
   def test_create_recommendations(self):
-    episode_id1 = '202161'
-    episode_id2 = '202162'
+    user = User.query \
+      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
+    episode_title1 = 'Colombians to deliver their verdict on peace accord'
+    episode_id1 = episodes_dao.get_episode_by_title(episode_title1, user.id).id
+
+    episode_title2 = 'Battle of the camera drones'
+    episode_id2 = episodes_dao.get_episode_by_title(episode_title2, user.id).id
+
     recommended = Recommendation.query.\
         filter(Recommendation.episode_id == episode_id1).first()
     self.assertIsNone(recommended)
@@ -41,8 +47,14 @@ class RecommendationsTestCase(TestCase):
     self.assertEquals(len(recommendations), 2)
 
   def test_get_user_recommendations(self):
-    episode_id1 = '202161'
-    episode_id2 = '202162'
+    user = User.query \
+      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
+    episode_title1 = 'Colombians to deliver their verdict on peace accord'
+    episode_id1 = episodes_dao.get_episode_by_title(episode_title1, user.id).id
+
+    episode_title2 = 'Battle of the camera drones'
+    episode_id2 = episodes_dao.get_episode_by_title(episode_title2, user.id).id
+
     test_user_id = users_dao.\
         get_user_by_google_id(constants.TEST_USER_GOOGLE_ID1).id
 
@@ -72,8 +84,14 @@ class RecommendationsTestCase(TestCase):
     )
 
   def test_get_recommendations(self):
-    episode_id1 = '202161'
-    episode_id2 = '202162'
+    user = User.query \
+      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
+    episode_title1 = 'Colombians to deliver their verdict on peace accord'
+    episode_id1 = episodes_dao.get_episode_by_title(episode_title1, user.id).id
+
+    episode_title2 = 'Battle of the camera drones'
+    episode_id2 = episodes_dao.get_episode_by_title(episode_title2, user.id).id
+
     test_user_id = users_dao.\
         get_user_by_google_id(constants.TEST_USER_GOOGLE_ID1).id
 
@@ -94,36 +112,45 @@ class RecommendationsTestCase(TestCase):
     self.assertEquals(data['data']['recommendations'][0]['user']['id'],
                       test_user_id)
 
-    def test_delete_recommendations(self):
-      episode_id1 = '202161'
-      episode_id2 = '202162'
+  def test_delete_recommendations(self):
+    user = User.query \
+      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
+    test_user_id = user.id
+    episode_title1 = 'Colombians to deliver their verdict on peace accord'
+    episode_id1 = episodes_dao.get_episode_by_title(episode_title1, user.id).id
 
-      self.app.post('api/v1/recommendations/{}/'.format(episode_id1))
-      self.app.post('api/v1/recommendations/{}/'.format(episode_id2))
+    episode_title2 = 'Battle of the camera drones'
+    episode_id2 = episodes_dao.get_episode_by_title(episode_title2, user.id).id
 
-      response = self.app.get('api/v1/recommendations/users/{}/'
-                              .format(test_user_id))
-      data = json.loads(response.data)
-      self.assertEquals(len(data['data']['recommendations']), 2)
+    self.app.post('api/v1/recommendations/{}/'.format(episode_id1))
+    self.app.post('api/v1/recommendations/{}/'.format(episode_id2))
 
+    response = self.app.get('api/v1/recommendations/users/{}/'
+                            .format(test_user_id))
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['recommendations']), 2)
+
+    self.app.delete('api/v1/recommendations/{}/'.format(episode_id1))
+    self.app.delete('api/v1/recommendations/{}/'.format(episode_id2))
+
+    response = self.app.get('api/v1/recommendations/users/{}/'
+                            .format(test_user_id))
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['recommendations']), 0)
+
+    with self.assertRaises(Exception):
       self.app.delete('api/v1/recommendations/{}/'.format(episode_id1))
+
+    with self.assertRaises(Exception):
       self.app.delete('api/v1/recommendations/{}/'.format(episode_id2))
-
-      response = self.app.get('api/v1/recommendations/users/{}/'
-                              .format(test_user_id))
-      data = json.loads(response.data)
-      self.assertEquals(len(data['data']['recommendations']), 0)
-
-      with self.assertRaises(Exception):
-        self.app.delete('api/v1/recommendations/{}/'.format(episode_id1))
-
-      with self.assertRaises(Exception):
-        self.app.delete('api/v1/recommendations/{}/'.format(episode_id2))
 
   def test_is_recommendations(self):
     user = User.query \
       .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
-    episode_id = '202161'
+
+    episode_title = 'Colombians to deliver their verdict on peace accord'
+    episode_id = episodes_dao.get_episode_by_title(episode_title, user.id).id
+
     episode = episodes_dao.get_episode(episode_id, user.id)
     self.assertFalse(episode.is_recommended)
 

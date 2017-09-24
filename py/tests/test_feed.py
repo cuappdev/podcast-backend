@@ -22,10 +22,16 @@ class FeedTestCase(TestCase):
     user2 = User.query \
        .filter(User.google_id == constants.TEST_USER_GOOGLE_ID2).first()
 
+    episode_title1 = 'Colombians to deliver their verdict on peace accord'
+    episode_id1 = episodes_dao.get_episode_by_title(episode_title1, user1.id).id
+
+    episode_title2 = 'Battle of the camera drones'
+    episode_id2 = episodes_dao.get_episode_by_title(episode_title2, user1.id).id
+
     followings_dao.create_following(user1.id, user2.id)
-    recommendations_dao.create_recommendation('202161', user2)
+    recommendations_dao.create_recommendation(episode_id1, user2)
     time.sleep(1)
-    recommendations_dao.create_recommendation('202162', user2)
+    recommendations_dao.create_recommendation(episode_id2, user2)
     time.sleep(1)
     subscriptions_dao.create_subscription(user2.id, '1211520413')
     subscriptions_dao.create_subscription(user1.id, '1211520413')
