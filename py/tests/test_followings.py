@@ -32,8 +32,7 @@ class FollowingsTestCase(TestCase):
     self.assertEquals(int(user2.followers_count), 1)
     self.assertEquals(int(user2.followings_count), 0)
 
-    with self.assertRaises(Exception):
-      self.app.post('api/v1/followings/{}/'.format(test_user_id2))
+    self.assertRaises(Exception, self.app.post(), 'api/v1/followings/{}/'.format(test_user_id2))
 
   def test_get_user_followers_and_followings(self):
     test_user_id1 = users_dao.\
@@ -101,8 +100,7 @@ class FollowingsTestCase(TestCase):
     data = json.loads(response.data)
     self.assertEquals(len(data['data']), 0)
 
-    with self.assertRaises(Exception):
-      self.app.delete('api/v1/followings/{}/'.format(test_user_id2))
+    self.assertRaises(Exception, self.app.delete(), 'api/v1/followings/{}/'.format(test_user_id2))
 
   def test_is_following(self):
     following = User.query \

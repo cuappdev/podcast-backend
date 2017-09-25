@@ -22,8 +22,7 @@ class SubscriptionsTestCase(TestCase):
     series = Series.query.filter(Series.id == series_id1).first()
     self.assertEquals(series.subscribers_count, 1)
 
-    with self.assertRaises(Exception):
-      self.app.post('api/v1/subscriptions/{}/'.format(series_id1))
+    self.assertRaises(Exception, self.app.post(), 'api/v1/subscriptions/{}/'.format(series_id1))
 
     self.app.post('api/v1/subscriptions/{}/'.format(series_id2))
     series = Series.query.filter(Series.id == series_id1).first()
@@ -114,11 +113,9 @@ class SubscriptionsTestCase(TestCase):
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 0)
 
-    with self.assertRaises(Exception):
-      self.app.delete('api/v1/subscriptions/{}/'.format(series_id1))
+    self.assertRaises(Exception, self.app.delete(), 'api/v1/subscriptions/{}/'.format(series_id1))
 
-    with self.assertRaises(Exception):
-      self.app.delete('api/v1/subscriptions/{}/'.format(series_id2))
+    self.assertRaises(Exception, self.app.delete(), 'api/v1/subscriptions/{}/'.format(series_id2))
 
   def test_subscribers_count(self):
     series_id = '1211520413'
