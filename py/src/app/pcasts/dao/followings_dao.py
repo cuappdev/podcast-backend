@@ -1,4 +1,6 @@
-from app.pcasts.dao import users_dao
+import datetime
+import time
+from app.pcasts.dao import users_dao, episodes_dao, series_dao
 from . import *
 
 def get_followings(user_id):
@@ -44,3 +46,35 @@ def delete_following(follower_id, followed_id):
     db_utils.delete_model(maybe_following)
   else:
     raise Exception("Specified following does not exist")
+
+def get_following_recommendations(user_id, maxtime, page_size):
+  followings = get_followings(user_id)
+  following_ids = [f.followed_id for f in followings]
+  maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
+  recommendations = Recommendation.query \
+    .filter(Recommendation.user_id.in_(following_ids),
+            Recommendation.created_at <= maxdatetime) \
+    .order_by(Recommendation.created_at.desc()) \
+    .limit(page_size) \
+    .all()
+  episodes = episodes_dao.get_episodes([r.episode_id for r in recommendations],
+                                       user_id)
+  for r, e in zip(recommendations, episodes):
+    r.episode = e
+  return recommendations
+
+def get_following_subscriptions(user_id, maxtime, page_size):
+  followings = get_followings(user_id)
+  following_ids = [f.followed_id for f in followings]
+  maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
+  subscriptions = Subscription.query \
+    .filter(Subscription.user_id.in_(following_ids),
+            Subscription.created_at <= maxdatetime) \
+    .order_by(Subscription.created_at.desc()) \
+    .limit(page_size) \
+    .all()
+  series = series_dao.get_multiple_series([s.series_id for s in subscriptions],
+                                          user_id)
+  for sub, ser in zip(subscriptions, series):
+    sub.series = ser
+  return subscriptions

@@ -32,11 +32,17 @@ class SubscriptionsTestCase(TestCase):
   def test_get_subscriptions(self):
     series_id1 = '1211520413'
     series_id2 = '1210383304'
+
+    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.
+                            format(series_id1, 0, 1))
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['subscriptions']), 0)
+
     self.app.post('api/v1/subscriptions/{}/'.format(series_id1))
     self.app.post('api/v1/subscriptions/{}/'.format(series_id2))
 
-    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.\
-        format(series_id1, 0, 1))
+    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.
+                            format(series_id1, 0, 1))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 1)
     self.assertEquals(
@@ -47,13 +53,13 @@ class SubscriptionsTestCase(TestCase):
         constants.TEST_USER_GOOGLE_ID1
     )
 
-    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.\
-        format(series_id1, 0, 0))
+    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.
+                            format(series_id1, 0, 0))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 0)
 
-    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.\
-        format(series_id2, 0, 1))
+    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.
+                            format(series_id2, 0, 1))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 1)
     self.assertEquals(
