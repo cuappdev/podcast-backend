@@ -91,8 +91,7 @@ python src/scripts/load_data.py test
 ````
 
 ## Testing
-To run unit tests, from the `/tests` directory, run
+To run all unit tests, from the `/tests` directory, run:
 ````
-python ../venv/bin/nosetests
+./test.sh
 ````
-to run all of the tests in the directory.
