@@ -15,7 +15,7 @@ FeedContexts = Enum(['FOLLOWING_RECOMMENDATION',
 class GetFeedController(AppDevController):
 
   def get_path(self):
-    return '/feed'
+    return '/feed/'
 
   def get_methods(self):
     return ['GET']
@@ -23,7 +23,7 @@ class GetFeedController(AppDevController):
   @authorize
   def content(self, **kwargs):
     user = kwargs.get('user')
-    maxtime = request.args['time']
+    maxtime = request.args['maxtime']
     page_size = int(request.args['page_size'])
 
     following_recommendations = \
@@ -101,20 +101,15 @@ class FeedElement(object):
       self.content = raw_content
 
   def serialize(self):
-    json = {
-        "context": self.context,
-        "time": self.time
+    context_to_schemas = {
+        FeedContexts.FOLLOWING_RECOMMENDATION: (user_schema, episode_schema),
+        FeedContexts.FOLLOWING_SUBSCRIPTION: (user_schema, series_schema),
+        FeedContexts.NEW_SUBSCRIBED_EPISODE: (series_schema, episode_schema),
     }
-    if self.context == FeedContexts.FOLLOWING_RECOMMENDATION:
-      supplier_schema = user_schema
-      content_schema = episode_schema
-    elif self.context == FeedContexts.FOLLOWING_SUBSCRIPTION:
-      supplier_schema = user_schema
-      content_schema = series_schema
-    elif self.context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
-      supplier_schema = series_schema
-      content_schema = episode_schema
-    json['context_supplier'] = \
-      supplier_schema.dump(self.context_supplier).data
-    json['content'] = content_schema.dump(self.content).data
-    return json
+    supplier_schema, content_schema = context_to_schemas[self.context]
+    return {
+        "context": self.context,
+        "time": self.time,
+        "context_supplier": supplier_schema.dump(self.context_supplier).data,
+        "content": content_schema.dump(self.content).data
+    }

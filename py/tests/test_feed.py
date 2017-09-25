@@ -37,7 +37,7 @@ class FeedTestCase(TestCase):
     subscriptions_dao.create_subscription(user1.id, '1211520413')
 
     maxtime = int(time.time())
-    raw_response = self.app.get('api/v1/feed?time={}&page_size=5'
+    raw_response = self.app.get('api/v1/feed/?maxtime={}&page_size=5'
                                 .format(maxtime)).data
     response = json.loads(raw_response)
     self.assertEqual(len(response['data']['feed']), 5)
