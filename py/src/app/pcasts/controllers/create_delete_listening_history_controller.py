@@ -3,7 +3,7 @@ from . import *
 class CreateDeleteListeningHistoryController(AppDevController):
 
   def get_path(self):
-    return '/history/listening/<episode_id>'
+    return '/history/listening/<episode_id>/'
 
   def get_methods(self):
     return ['POST', 'DELETE']

@@ -2,11 +2,6 @@ import sys
 from flask import json
 from tests.test_case import *
 from app.pcasts.dao import episodes_dao
-from app.pcasts.controllers import series_subscriptions_controller
-
-src_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src'
-sys.path.append(src_path)
-
 from app import constants # pylint: disable=C0413
 
 class BookmarksTestCase(TestCase):

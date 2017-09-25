@@ -65,4 +65,3 @@ def get_new_subscribed_episodes(user_id, maxtime, page_size):
     .order_by(Episode.created_at.desc()) \
     .limit(page_size) \
     .all()
-
