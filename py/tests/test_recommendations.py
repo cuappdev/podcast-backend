@@ -30,7 +30,8 @@ class RecommendationsTestCase(TestCase):
         filter(Recommendation.episode_id == episode_id1).first()
     self.assertEquals(recommended.episode_id, int(episode_id1))
 
-    self.assertRaises(Exception, self.app.post(), 'api/v1/recommendations/{}/'.format(episode_id1))
+    self.assertRaises(Exception, self.app.post(),
+                      'api/v1/recommendations/{}/'.format(episode_id1))
 
     self.app.post('api/v1/recommendations/{}/'.format(episode_id2))
     recommended = Recommendation.query.\
@@ -132,9 +133,11 @@ class RecommendationsTestCase(TestCase):
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['recommendations']), 0)
 
-    self.assertRaises(Exception, self.app.delete(), 'api/v1/recommendations/{}/'.format(episode_id1))
+    self.assertRaises(Exception, self.app.delete(),
+                      'api/v1/recommendations/{}/'.format(episode_id1))
 
-    self.assertRaises(Exception, self.app.delete(), 'api/v1/recommendations/{}/'.format(episode_id2))
+    self.assertRaises(Exception, self.app.delete(),
+                      'api/v1/recommendations/{}/'.format(episode_id2))
 
   def test_is_recommendations(self):
     user = User.query \

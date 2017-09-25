@@ -27,7 +27,8 @@ class BookmarksTestCase(TestCase):
     bookmark = Bookmark.query.filter(Bookmark.episode_id == episode_id1).first()
     self.assertEquals(bookmark.episode_id, int(episode_id1))
 
-    self.assertRaises(Exception, self.app.post(), 'api/v1/bookmarks/{}/'.format(episode_id1))
+    self.assertRaises(Exception, self.app.post(),
+                      'api/v1/bookmarks/{}/'.format(episode_id1))
 
     self.app.post('api/v1/bookmarks/{}/'.format(episode_id2))
     bookmark = Bookmark.query.filter(Bookmark.episode_id == episode_id2).first()
@@ -93,9 +94,11 @@ class BookmarksTestCase(TestCase):
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['bookmarks']), 0)
 
-    self.assertRaises(Exception, self.app.delete(), 'api/v1/bookmarks/{}/'.format(episode_id1))
+    self.assertRaises(Exception, self.app.delete(),
+                      'api/v1/bookmarks/{}/'.format(episode_id1))
 
-    self.assertRaises(Exception, self.app.delete(), 'api/v1/bookmarks/{}/'.format(episode_id2))
+    self.assertRaises(Exception, self.app.delete(),
+                      'api/v1/bookmarks/{}/'.format(episode_id2))
 
   def test_is_bookmarked(self):
     user = User.query \
