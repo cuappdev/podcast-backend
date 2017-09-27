@@ -4,51 +4,51 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # Database info
-DB_USERNAME  = os.environ['DB_USERNAME']
-DB_PASSWORD  = os.environ['DB_PASSWORD']
-DB_HOST      = os.environ['DB_HOST']
-DB_NAME      = os.environ['DB_NAME']
-DB_URL       = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
-  DB_USERNAME,
-  DB_PASSWORD,
-  DB_HOST,
-  DB_NAME
+DB_USERNAME = os.environ['DB_USERNAME']
+DB_PASSWORD = os.environ['DB_PASSWORD']
+DB_HOST = os.environ['DB_HOST']
+DB_NAME = os.environ['DB_NAME']
+DB_URL = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
+    DB_USERNAME,
+    DB_PASSWORD,
+    DB_HOST,
+    DB_NAME
 )
 
 # Separate DB for podcast-specific stuff
 PODCAST_DB_USERNAME = os.environ['PODCAST_DB_USERNAME']
 PODCAST_DB_PASSWORD = os.environ['PODCAST_DB_PASSWORD']
-PODCAST_DB_HOST     = os.environ['PODCAST_DB_HOST']
-PODCAST_DB_NAME     = os.environ['PODCAST_DB_NAME']
-PODCAST_DB_URL      = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
-  PODCAST_DB_USERNAME,
-  PODCAST_DB_PASSWORD,
-  PODCAST_DB_HOST,
-  PODCAST_DB_NAME
+PODCAST_DB_HOST = os.environ['PODCAST_DB_HOST']
+PODCAST_DB_NAME = os.environ['PODCAST_DB_NAME']
+PODCAST_DB_URL = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
+    PODCAST_DB_USERNAME,
+    PODCAST_DB_PASSWORD,
+    PODCAST_DB_HOST,
+    PODCAST_DB_NAME
 )
 
 # Analog of database for testing purposes
-TEST_DB_USERNAME  = os.environ['TEST_DB_USERNAME']
-TEST_DB_PASSWORD  = os.environ['TEST_DB_PASSWORD']
-TEST_DB_HOST      = os.environ['TEST_DB_HOST']
-TEST_DB_NAME      = os.environ['TEST_DB_NAME']
-TEST_DB_URL       = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
-  TEST_DB_USERNAME,
-  TEST_DB_PASSWORD,
-  TEST_DB_HOST,
-  TEST_DB_NAME
+TEST_DB_USERNAME = os.environ.get('TEST_DB_USERNAME')
+TEST_DB_PASSWORD = os.environ.get('TEST_DB_PASSWORD')
+TEST_DB_HOST = os.environ.get('TEST_DB_HOST')
+TEST_DB_NAME = os.environ.get('TEST_DB_NAME')
+TEST_DB_URL = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
+    TEST_DB_USERNAME,
+    TEST_DB_PASSWORD,
+    TEST_DB_HOST,
+    TEST_DB_NAME
 )
 
 # Analog of podcast database for testing purposes
-TEST_PODCAST_DB_USERNAME = os.environ['TEST_PODCAST_DB_USERNAME']
-TEST_PODCAST_DB_PASSWORD = os.environ['TEST_PODCAST_DB_PASSWORD']
-TEST_PODCAST_DB_HOST     = os.environ['TEST_PODCAST_DB_HOST']
-TEST_PODCAST_DB_NAME     = os.environ['TEST_PODCAST_DB_NAME']
-TEST_PODCAST_DB_URL      = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
-  TEST_PODCAST_DB_USERNAME,
-  TEST_PODCAST_DB_PASSWORD,
-  TEST_PODCAST_DB_HOST,
-  TEST_PODCAST_DB_NAME
+TEST_PODCAST_DB_USERNAME = os.environ.get('TEST_PODCAST_DB_USERNAME')
+TEST_PODCAST_DB_PASSWORD = os.environ.get('TEST_PODCAST_DB_PASSWORD')
+TEST_PODCAST_DB_HOST = os.environ.get('TEST_PODCAST_DB_HOST')
+TEST_PODCAST_DB_NAME = os.environ.get('TEST_PODCAST_DB_NAME')
+TEST_PODCAST_DB_URL = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
+    TEST_PODCAST_DB_USERNAME,
+    TEST_PODCAST_DB_PASSWORD,
+    TEST_PODCAST_DB_HOST,
+    TEST_PODCAST_DB_NAME
 )
 
 class Config(object):
@@ -62,8 +62,8 @@ class Config(object):
   # Mounting our DBs
   SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
   SQLALCHEMY_BINDS = {
-    'db': DB_URL,
-    'podcast_db': PODCAST_DB_URL
+      'db': DB_URL,
+      'podcast_db': PODCAST_DB_URL
   }
 
 class ProductionConfig(Config):
@@ -80,6 +80,6 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
   TESTING = True
   SQLALCHEMY_BINDS = {
-    'db': TEST_DB_URL,
-    'podcast_db': TEST_PODCAST_DB_URL
+      'db': TEST_DB_URL,
+      'podcast_db': TEST_PODCAST_DB_URL
   }
