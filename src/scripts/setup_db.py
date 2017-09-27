@@ -17,11 +17,11 @@ def setup_dbs():
   os.chdir('scripts')
   print 'Finished setting up databases...'
 
-def delete_migrations():
+def delete_migrations(db_list):
   try:
     os.chdir('..')
     shutil.rmtree('migrations')
-    for db in ['DB', 'PODCAST_DB', 'TEST_DB', 'TEST_PODCAST_DB']:
+    for db in db_list:
       os.system('mysql --user={} --password={} {} '
                 .format(os.environ['{}_USERNAME'.format(db)],
                         os.environ['{}_PASSWORD'.format(db)],
@@ -34,5 +34,10 @@ def delete_migrations():
     print 'No migrations folder to delete...'
 
 if __name__ == '__main__':
-  delete_migrations()
+  # Determine the DBs to deal with
+  if sys.argv[1] == 'dev':
+    db_lst = ['DB', 'PODCAST_DB']
+  elif sys.argv[1] == 'test':
+    db_lst = ['TEST_DB', 'TEST_PODCAST_DB']
+  delete_migrations(db_lst)
   setup_dbs()
