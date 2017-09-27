@@ -5,3 +5,4 @@ venv
 src/migrations
 target
 google.json
+vagrant/*
