@@ -1,14 +1,21 @@
+from app.pcasts.dao import episodes_dao
 from . import *
 
 def get_series(series_id, user_id):
   series = Series.query.filter(Series.id == series_id).first()
   series.is_subscribed = is_subscribed_by_user(series_id, user_id)
+  most_recent_episode = Episode.query.filter(Episode.series_id == series_id) \
+    .order_by(Episode.created_at.desc()).limit(1).first()
+  series.last_updated = most_recent_episode.created_at
   return series
 
 def get_multiple_series(series_ids, user_id):
   series = Series.query.filter(Series.id.in_(series_ids)).all()
   for s in series:
     s.is_subscribed = is_subscribed_by_user(s.id, user_id)
+    most_recent_episode = Episode.query.filter(Episode.series_id == s.id) \
+      .order_by(Episode.created_at.desc()).limit(1).first()
+    s.last_updated = most_recent_episode.created_at
   return series
 
 def clear_all_subscriber_counts():
