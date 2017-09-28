@@ -23,3 +23,9 @@ def is_subscribed_by_user(series_id, user_id):
             Subscription.user_id == user_id) \
     .first()
   return optional_series is not None
+
+def search_series(search_name, offset, max_search):
+  possible_series = Series.query.filter \
+      (Series.title.like(search_name+'%')) \
+      .limit(max_search).offset(offset).all()
+  return possible_series
