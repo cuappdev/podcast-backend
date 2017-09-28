@@ -1,2 +1,2 @@
 #!/bin/bash
-python ../venv/bin/nosetests
+python ../venv/bin/nosetests --nocapture
