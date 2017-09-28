@@ -15,5 +15,5 @@ class SearchSeriesController(AppDevController):
     max_search = request.args['max']
     possible_series = series_dao.\
         search_series(search_name, offset, max_search)
-    return {'episodes': \
+    return {'series': \
         [series_schema.dump(s).data for s in possible_series]}

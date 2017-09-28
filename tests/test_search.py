@@ -48,26 +48,26 @@ class SearchTestCase(TestCase):
     search_results = self.app.get('api/v1/search/series/{}?offset={}&max={}'\
          .format(no_result_title, 0, 1000))
     no_result_data = json.loads(search_results.data)
-    self.assertEquals(0, len(no_result_data['data']['episodes']))
+    self.assertEquals(0, len(no_result_data['data']['series']))
 
     one_result_title = 'Jud'
     search_results = self.app.get('api/v1/search/series/{}?offset={}&max={}'\
          .format(one_result_title, 0, 1000))
     one_result_data = json.loads(search_results.data)
-    self.assertEquals(1, len(one_result_data['data']['episodes']))
+    self.assertEquals(1, len(one_result_data['data']['series']))
 
     many_result_title = 'a'
     search_results = self.app.get('api/v1/search/series/{}?offset={}&max={}'\
          .format(many_result_title, 0, 1000))
     many_result_data = json.loads(search_results.data)
-    self.assertEquals(32, len(many_result_data['data']['episodes']))
+    self.assertEquals(32, len(many_result_data['data']['series']))
 
     ##Test limit
     ten_result_title = 'a'
     search_results = self.app.get('api/v1/search/series/{}?offset={}&max={}'\
          .format(ten_result_title, 0, 4))
     ten_result_data = json.loads(search_results.data)
-    self.assertEquals(4, len(ten_result_data['data']['episodes']))
+    self.assertEquals(4, len(ten_result_data['data']['series']))
 
     ##Test offset
     ten_result_title = 'Cl'
@@ -75,7 +75,7 @@ class SearchTestCase(TestCase):
          .format(ten_result_title, 2, 10))
     ten_result_data = json.loads(search_results.data)
     self.assertEquals("Clever", \
-        ten_result_data['data']['episodes'][0]['title'])
+        ten_result_data['data']['series'][0]['title'])
 
 
   def search_user(self):
