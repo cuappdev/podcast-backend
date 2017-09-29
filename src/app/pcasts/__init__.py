@@ -28,6 +28,7 @@ from app.pcasts.controllers.update_session_controller import * # pylint: disable
 from app.pcasts.controllers.sign_out_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.search_episode_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.search_series_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.search_users_controller import * # pylint: disable=C0413
 
 
 controllers = [
@@ -51,6 +52,7 @@ controllers = [
     SignOutController(),
     SearchEpisodeController(),
     SearchSeriesController(),
+    SearchUsersController(),
 ]
 
 # Setup all controllers

@@ -60,3 +60,9 @@ def is_following_user(my_id, their_id):
               Following.followed_id == their_id) \
       .first()
     return optional_following is not None
+
+def search_users(search_name, offset, max_search):
+  possible_users = User.query.filter \
+      (User.username.like(search_name+'%')) \
+      .limit(max_search).offset(offset).all()
+  return possible_users
