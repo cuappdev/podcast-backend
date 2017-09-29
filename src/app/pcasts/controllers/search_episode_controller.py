@@ -15,5 +15,21 @@ class SearchEpisodeController(AppDevController):
     max_search = request.args['max']
     possible_episodes = episodes_dao.\
         search_episode(search_title, offset, max_search)
-    return {'episodes': \
-        [episode_schema.dump(e).data for e in possible_episodes]}
+    cleaned_episodes = []
+    for e in possible_episodes:
+      cleaned_episodes.append({
+          "type": "episode",
+          "seriesId": e.series.id,
+          "seriesTitle" : e.series.title,
+          "imageUrlSm": "None",
+          "imageUrlLg": "None",
+          "title": e.title,
+          "author": e.author,
+          "summary": e.summary,
+          "pubDate": e.pub_date,
+          "duration": e.duration,
+          "audioUrl": e.audio_url,
+          "tags": e.tags,
+          "id": e.id,
+      })
+    return {'episodes': cleaned_episodes}
