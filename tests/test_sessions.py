@@ -48,15 +48,14 @@ class SessionsTestCase(TestCase):
 
     # Check everything
     self.assertEqual(updated_session.id, previous_session_id)
-    self.assertTrue(updated_session.session_token != previous_session_token)
-    self.assertTrue(updated_session.update_token != previous_update_token)
-    self.assertTrue(updated_session.expires_at > previous_expires_at)
+    self.assertNotEqual(updated_session.session_token, previous_session_token)
+    self.assertNotEqual(updated_session.update_token, previous_update_token)
+    self.assertGreater(updated_session.expires_at, previous_expires_at)
     self.assertTrue(updated_session.is_active)
 
   def test_session_deactivation(self):
     # Setup session
     user_id, session_id, _, _, _ = self._setup_session()
-    sleep(2) # sleep to simulate time passing
 
     # Deactivate session
     self.app.post('api/v1/users/sign_out/')
@@ -64,5 +63,7 @@ class SessionsTestCase(TestCase):
     deactivated_session = Session.query.\
       filter(Session.user_id == user_id).\
       first()
+
+    # Check everything
     self.assertEqual(session_id, deactivated_session.id)
     self.assertTrue(not deactivated_session.is_active)

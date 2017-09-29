@@ -12,7 +12,8 @@ class SignOutController(AppDevController):
   def content(self, **kwargs):
     user = kwargs.get('user')
     success = sessions_dao.deactivate_session(user.id)
-    if success:
-      return dict()
-    else:
-      raise Exception('Issue logging out!')
+
+    if not success:
+      raise Exception('There is no active session associated with this user!')
+
+    return dict()
