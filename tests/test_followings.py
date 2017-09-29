@@ -112,9 +112,21 @@ class FollowingsTestCase(TestCase):
     followed = users_dao.get_user_by_id(following.id, followed_id)
     self.assertFalse(followed.is_following)
 
+    response = self.app.get('api/v1/users/{}/'.format(followed_id))
+    data = json.loads(response.data)
+    self.assertFalse(data['data']['user']['is_following'])
+
     self.app.post('api/v1/followings/{}/'.format(followed_id))
     followed = users_dao.get_user_by_id(following.id, followed_id)
     self.assertTrue(followed.is_following)
+
+    response = self.app.get('api/v1/followings/show/{}/'.format(following.id))
+    data = json.loads(response.data)
+    self.assertTrue(data['data']['followings'][0]['followed']['is_following'])
+
+    response = self.app.get('api/v1/users/{}/'.format(followed_id))
+    data = json.loads(response.data)
+    self.assertTrue(data['data']['user']['is_following'])
 
     self.app.delete('api/v1/followings/{}/'.format(followed_id))
     followed = users_dao.get_user_by_id(following.id, followed_id)
