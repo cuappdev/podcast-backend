@@ -50,4 +50,3 @@ class FeedTestCase(TestCase):
     for item in response['data']['feed']:
       self.assertEqual(type(item['time']), int)
       self.assertTrue(item['time'] <= maxtime)
-    print raw_response
