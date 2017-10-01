@@ -26,6 +26,10 @@ from app.pcasts.controllers.clear_listening_history_controller import * # pylint
 from app.pcasts.controllers.get_feed_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.update_session_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.sign_out_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.search_episode_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.search_series_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.search_users_controller import * # pylint: disable=C0413
+
 
 controllers = [
     HelloWorldController(),
@@ -46,6 +50,9 @@ controllers = [
     GetFeedController(),
     UpdateSessionController(),
     SignOutController(),
+    SearchEpisodeController(),
+    SearchSeriesController(),
+    SearchUsersController(),
 ]
 
 # Setup all controllers
