@@ -24,8 +24,12 @@ class Session(Base):
   def _urlsafe_base_64(self):
     return hashlib.sha1(os.urandom(64)).hexdigest()
 
+  # Activates the session (is_active is true, updates tokens, etc.)
   def activate_session(self):
     self.session_token = self._urlsafe_base_64()
     self.expires_at = datetime.datetime.now() + datetime.timedelta(days=1)
     self.update_token = self._urlsafe_base_64()
     self.is_active = True
+
+  def deactivate(self):
+    self.is_active = False
