@@ -47,5 +47,5 @@ def is_recommended_by_user(episode_id, user_id):
 def search_episode(search_name, offset, max_search):
   possible_episodes = Episode.query.filter \
       (Episode.title.like(search_name+'%')) \
-      .limit(max_search).offset(offset).all()
+      .offset(offset).limit(max_search).all()
   return possible_episodes
