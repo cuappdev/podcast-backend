@@ -64,5 +64,5 @@ def is_following_user(my_id, their_id):
 def search_users(search_name, offset, max_search):
   possible_users = User.query.filter \
       (User.username.like(search_name+'%')) \
-      .limit(max_search).offset(offset).all()
+      .offset(offset).limit(max_search).all()
   return possible_users

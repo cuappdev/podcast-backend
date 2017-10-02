@@ -27,5 +27,5 @@ def is_subscribed_by_user(series_id, user_id):
 def search_series(search_name, offset, max_search):
   possible_series = Series.query.filter \
       (Series.title.like(search_name+'%')) \
-      .limit(max_search).offset(offset).all()
+      .offset(offset).limit(max_search).all()
   return possible_series
