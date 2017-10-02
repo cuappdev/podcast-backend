@@ -1,6 +1,8 @@
 from . import *
 
 def get_episodes(episode_ids, user_id):
+  if not episode_ids:
+    return []
   episodes = Episode.query.filter(Episode.id.in_(episode_ids)).all()
   for e in episodes:
     e.is_recommended = is_recommended_by_user(e.id, user_id)

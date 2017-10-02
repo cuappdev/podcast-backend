@@ -62,6 +62,7 @@ class SubscriptionsTestCase(TestCase):
                             format(series_id2, 0, 1))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 1)
+    self.assertTrue(data['data']['subscriptions'][0]['series']['last_updated'])
     self.assertEquals(
         data['data']['subscriptions'][0]['series_id'], int(series_id2)
     )
