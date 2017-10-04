@@ -90,12 +90,15 @@ class SearchTestCase(TestCase):
     self.assertEquals(4, len(ten_result_data['data']['episodes']))
 
     ##Test offset
-    ten_result_title = 'big d'
-    search_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
-         .format(ten_result_title, 2, 10))
-    ten_result_data = json.loads(search_results.data)
-    self.assertEquals("Big Dare", \
-        ten_result_data['data']['episodes'][0]['title'])
+    offset_result_title = 'big d'
+    normal_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
+        .format(offset_result_title, 0, 10))
+    offset_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
+        .format(offset_result_title, 2, 10))
+    offset_results_data = json.loads(offset_results.data)
+    normal_result_data = json.loads(normal_results.data)
+    self.assertEquals(offset_results_data['data']['episodes'][0]['title'], \
+        normal_result_data['data']['episodes'][2]['title'])
 
   def test_search_series(self):
     no_result_title = 'ABCDEFGHIJKL'
@@ -125,11 +128,14 @@ class SearchTestCase(TestCase):
 
     ##Test offset
     ten_result_title = 'Cl'
-    search_results = self.app.get('api/v1/search/series/{}/?offset={}&max={}'\
-         .format(ten_result_title, 2, 10))
-    ten_result_data = json.loads(search_results.data)
-    self.assertEquals("Clever", \
-        ten_result_data['data']['series'][0]['title'])
+    offset_results = self.app.get('api/v1/search/series/{}/?offset={}&max={}'\
+        .format(ten_result_title, 2, 10))
+    normal_results = self.app.get('api/v1/search/series/{}/?offset={}&max={}'\
+        .format(ten_result_title, 0, 10))
+    normal_result_data = json.loads(normal_results.data)
+    offset_result_data = json.loads(offset_results.data)
+    self.assertEquals(offset_result_data['data']['series'][0]['title'], \
+        normal_result_data['data']['series'][2]['title'])
 
 
   def test_search_user(self):
@@ -160,8 +166,11 @@ class SearchTestCase(TestCase):
 
     ##Test offset
     two_result_username = 'temp-default_google_id'
-    search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
-         .format(two_result_username, 1, 10))
-    ten_result_data = json.loads(search_results.data)
-    self.assertEquals("temp-default_google_id2", \
-        ten_result_data['data']['users'][0]['username'])
+    normal_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
+        .format(two_result_username, 0, 10))
+    offset_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
+        .format(two_result_username, 1, 10))
+    normal_result_data = json.loads(normal_results.data)
+    offset_result_data = json.loads(offset_results.data)
+    self.assertEquals(offset_result_data['data']['users'][0]['username'], \
+        normal_result_data['data']['users'][1]['username'])
