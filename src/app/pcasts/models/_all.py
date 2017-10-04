@@ -13,6 +13,7 @@ from app.pcasts.models.listening_history import *
 class UserSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
     model = User
+  is_following = fields.Boolean()
 
 class SessionSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
@@ -28,10 +29,13 @@ class SeriesSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
     model = Series
   last_updated = fields.DateTime()
+  is_subscribed = fields.Boolean()
 
 class EpisodeSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
     model = Episode
+  is_recommended = fields.Boolean()
+  is_bookmarked = fields.Boolean()
 
 class BookmarkSchema(ModelSchema):
   class Meta(ModelSchema.Meta):

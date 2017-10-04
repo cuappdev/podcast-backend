@@ -145,6 +145,11 @@ class SubscriptionsTestCase(TestCase):
     series = series_dao.get_series(series_id, user.id)
     self.assertTrue(series.is_subscribed)
 
+    response = self.app.\
+        get('api/v1/subscriptions/users/{}/'.format(user.id))
+    data = json.loads(response.data)
+    self.assertTrue(data['data']['subscriptions'][0]['series']['is_subscribed'])
+
     self.app.delete('api/v1/subscriptions/{}/'.format(series_id))
     series = series_dao.get_series(series_id, user.id)
     self.assertFalse(series.is_subscribed)
