@@ -30,6 +30,7 @@ from app.pcasts.controllers.search_episode_controller import * # pylint: disable
 from app.pcasts.controllers.search_series_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.search_users_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.search_all_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.get_episodes_controller import * # pylint: disable=C0413
 
 
 controllers = [
@@ -55,6 +56,7 @@ controllers = [
     SearchSeriesController(),
     SearchUsersController(),
     SearchAllController(),
+    GetEpisodesController(),
 ]
 
 # Setup all controllers

@@ -19,6 +19,12 @@ def get_episode_by_title(title, user_id):
   episode.is_bookmarked = is_bookmarked_by_user(episode.id, user_id)
   return episode
 
+def get_episodes_by_series(series_id, offset, max_search):
+  episodes = Episode.query.filter(Episode.series_id == \
+      series_id).order_by(Episode.pub_date.desc())\
+      .offset(offset).limit(max_search).all()
+  return episodes
+
 def clear_all_recommendations_counts():
   episodes = Episode.query.filter(Episode.recommendations_count > 0).all()
   for e in episodes:
@@ -41,5 +47,5 @@ def is_recommended_by_user(episode_id, user_id):
 def search_episode(search_name, offset, max_search):
   possible_episodes = Episode.query.filter \
       (Episode.title.like(search_name+'%')) \
-      .limit(max_search).offset(offset).all()
+      .offset(offset).limit(max_search).all()
   return possible_episodes
