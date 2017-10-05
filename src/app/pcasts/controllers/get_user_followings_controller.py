@@ -13,4 +13,4 @@ class GetUserFollowingsController(AppDevController):
     user_id = request.view_args['user_id']
     followings = followings_dao.get_followings(user_id)
 
-    return {'followings': [following_schema.dump(f) for f in followings]}
+    return {'followings': [following_schema.dump(f).data for f in followings]}

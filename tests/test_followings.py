@@ -43,13 +43,14 @@ class FollowingsTestCase(TestCase):
 
     response = self.app.get('api/v1/followings/show/{}/'.format(test_user_id1))
     data = json.loads(response.data)
-    self.assertEquals(len(data['data']), 0)
+    self.assertEquals(len(data['data']['followings']), 0)
 
     self.app.post('api/v1/followings/{}/'.format(test_user_id2))
 
     response = self.app.get('api/v1/followings/show/{}/'.format(test_user_id1))
     data = json.loads(response.data)
-    self.assertEquals(len(data['data']), 1)
+    self.assertEquals(len(data['data']['followings']), 1)
+
     self.assertEquals(
         data['data']['followings'][0]['follower']['id'],
         test_user_id1
@@ -61,15 +62,15 @@ class FollowingsTestCase(TestCase):
 
     response = self.app.get('api/v1/followers/show/{}/'.format(test_user_id1))
     data = json.loads(response.data)
-    self.assertEquals(len(data['data']), 0)
+    self.assertEquals(len(data['data']['followers']), 0)
 
     response = self.app.get('api/v1/followings/show/{}/'.format(test_user_id2))
     data = json.loads(response.data)
-    self.assertEquals(len(data['data']), 0)
+    self.assertEquals(len(data['data']['followings']), 0)
 
     response = self.app.get('api/v1/followers/show/{}/'.format(test_user_id2))
     data = json.loads(response.data)
-    self.assertEquals(len(data['data']), 1)
+    self.assertEquals(len(data['data']['followers']), 1)
     self.assertEquals(
         data['data']['followers'][0]['follower']['id'],
         test_user_id1
@@ -87,19 +88,19 @@ class FollowingsTestCase(TestCase):
 
     response = self.app.get('api/v1/followings/show/{}/'.format(test_user_id1))
     data = json.loads(response.data)
-    self.assertEquals(len(data['data']), 0)
+    self.assertEquals(len(data['data']['followings']), 0)
 
     self.app.post('api/v1/followings/{}/'.format(test_user_id2))
 
     response = self.app.get('api/v1/followings/show/{}/'.format(test_user_id1))
     data = json.loads(response.data)
-    self.assertEquals(len(data['data']), 1)
+    self.assertEquals(len(data['data']['followings']), 1)
 
     self.app.delete('api/v1/followings/{}/'.format(test_user_id2))
 
     response = self.app.get('api/v1/followings/show/{}/'.format(test_user_id1))
     data = json.loads(response.data)
-    self.assertEquals(len(data['data']), 0)
+    self.assertEquals(len(data['data']['followings']), 0)
 
     self.assertRaises(Exception, self.app.delete(),
                       'api/v1/followings/{}/'.format(test_user_id2))
