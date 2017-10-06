@@ -26,7 +26,8 @@ class SessionsTestCase(TestCase):
       session.id, \
       session.session_token, \
       session.update_token, \
-      session.expires_at
+      session.expires_at, \
+      session.updated_at
 
   def test_session_update(self):
     # Setup session
@@ -34,7 +35,8 @@ class SessionsTestCase(TestCase):
       previous_session_id, \
       previous_session_token, \
       previous_update_token, \
-      previous_expires_at = self._setup_session()
+      previous_expires_at, \
+      previous_updated_at = self._setup_session()
 
     sleep(2) # sleep to simulate time passing
 
@@ -52,10 +54,11 @@ class SessionsTestCase(TestCase):
     self.assertNotEqual(updated_session.update_token, previous_update_token)
     self.assertGreater(updated_session.expires_at, previous_expires_at)
     self.assertTrue(updated_session.is_active)
+    self.assertGreater(updated_session.updated_at, previous_updated_at)
 
   def test_session_deactivation(self):
     # Setup session
-    user_id, session_id, _, _, _ = self._setup_session()
+    user_id, session_id, _, _, _, _ = self._setup_session()
 
     # Deactivate session
     self.app.post('api/v1/users/sign_out/')
