@@ -10,10 +10,12 @@ class SearchSeriesController(AppDevController):
 
   @authorize
   def content(self, **kwargs):
+    user_id = kwargs.get('user').id
     search_name = request.view_args['query']
     offset = request.args['offset']
     max_search = request.args['max']
+
     possible_series = series_dao.\
-        search_series(search_name, offset, max_search)
-    return {'series': \
-        [series_schema.dump(s).data for s in possible_series]}
+        search_series(search_name, offset, max_search, user_id)
+
+    return {'series': [series_schema.dump(s).data for s in possible_series]}

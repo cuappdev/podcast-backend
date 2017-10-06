@@ -63,6 +63,15 @@ class SearchTestCase(TestCase):
     self.assertEquals(3, len(limited_result_data['data']['episodes']))
     self.assertEquals(3, len(limited_result_data['data']['series']))
 
+  def test_search_episode_returns_booleans(self):
+    title = 'Junk'
+    search_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
+         .format(title, 0, 1000))
+    result_data = json.loads(search_results.data)
+    self.assertEquals(1, len(result_data['data']['episodes']))
+    self.assertIsNotNone(result_data['data']['episodes'][0]['is_bookmarked'])
+    self.assertIsNotNone(result_data['data']['episodes'][0]['is_recommended'])
+
   def test_search_episode(self):
     no_result_title = 'ABCDEFGHIJKL'
     search_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
@@ -99,6 +108,14 @@ class SearchTestCase(TestCase):
     normal_result_data = json.loads(normal_results.data)
     self.assertEquals(offset_results_data['data']['episodes'][0]['title'], \
         normal_result_data['data']['episodes'][2]['title'])
+
+  def test_search_series_returns_booleans(self):
+    title = 'Jud'
+    search_results = self.app.get('api/v1/search/series/{}/?offset={}&max={}'\
+         .format(title, 0, 1000))
+    result_data = json.loads(search_results.data)
+    self.assertEquals(1, len(result_data['data']['series']))
+    self.assertIsNotNone(result_data['data']['series'][0]['is_subscribed'])
 
   def test_search_series(self):
     no_result_title = 'ABCDEFGHIJKL'

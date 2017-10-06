@@ -10,10 +10,13 @@ class SearchEpisodeController(AppDevController):
 
   @authorize
   def content(self, **kwargs):
+    user_id = kwargs.get('user').id
     search_title = request.view_args['query']
     offset = request.args['offset']
     max_search = request.args['max']
+
     possible_episodes = episodes_dao.\
-        search_episode(search_title, offset, max_search)
+        search_episode(search_title, offset, max_search, user_id)
+
     return {'episodes': \
         [episode_schema.dump(e).data for e in possible_episodes]}
