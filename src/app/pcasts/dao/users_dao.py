@@ -67,19 +67,14 @@ def search_users(search_name, offset, max_search):
       .offset(offset).limit(max_search).all()
   return possible_users
 
-def change_user_name(old_name, new_name):
-    user = User.query.filter(User.username == old_name).first()
+def change_user_name(user_id, new_name):
+    user = User.query.filter(User.id == user_id).first()
     if user:
-      if User.query.filter(User.username == new_name).first():
-        raise Exception("Username " + new_name + " already in use")
-      #There is no integrity constraint for empty strings in SQL
-      if new_name == '':
-        raise Exception("The new username " + new_name + " is invalid")
       user.username = new_name
       db_utils.db_session_commit()
       return user
     else:
-      raise Exception("The current user name is Invalid")
+      raise Exception("The given user_id is Invalid")
 
 def get_number_users():
     return User.query.count()

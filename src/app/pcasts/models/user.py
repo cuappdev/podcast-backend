@@ -1,4 +1,5 @@
 from . import *
+from sqlalchemy.orm import validates
 
 class User(Base):
   __tablename__ = 'users'
@@ -33,3 +34,9 @@ class User(Base):
         self.followers_count == other_user.followers_count and \
         self.followings_count == other_user.followings_count and \
         self.username == other_user.username
+
+  @validates('username')
+  def validate_username(self, key, username):
+    if len(username) < 1:
+        raise Exception("Username length must greater than 0")
+    return username
