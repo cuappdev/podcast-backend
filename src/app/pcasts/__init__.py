@@ -31,7 +31,8 @@ from app.pcasts.controllers.search_series_controller import * # pylint: disable=
 from app.pcasts.controllers.search_users_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.search_all_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_episodes_controller import * # pylint: disable=C0413
-from app.pcasts.controllers.get_change_user_by_id_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.get_user_by_id_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.update_username_controller import * # pylint: disable=C0413
 
 controllers = [
     HelloWorldController(),
@@ -58,6 +59,7 @@ controllers = [
     SearchAllController(),
     GetEpisodesController(),
     GetUserByIdController(),
+    UpdateUsernameController(),
 ]
 
 # Setup all controllers
