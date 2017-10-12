@@ -27,6 +27,18 @@ def get_episodes_by_series(series_id, offset, max_search):
       .offset(offset).limit(max_search).all()
   return episodes
 
+def get_episodes_maxtime(user_id, series_ids, maxdatetime, page_size):
+  episodes = Episode.query \
+    .filter(Episode.series_id.in_(series_ids),
+            Episode.created_at <= maxdatetime) \
+    .order_by(Episode.created_at.desc()) \
+    .limit(page_size) \
+    .all()
+  for e in episodes:
+    e.is_recommended = is_recommended_by_user(e.id, user_id)
+    e.is_bookmarked = is_bookmarked_by_user(e.id, user_id)
+  return episodes
+
 def clear_all_recommendations_counts():
   episodes = Episode.query.filter(Episode.recommendations_count > 0).all()
   for e in episodes:

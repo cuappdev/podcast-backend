@@ -95,3 +95,8 @@ To run all unit tests, from the `/tests` directory, run:
 ````
 ./test.sh
 ````
+
+To run a single test, from the `/tests` directory, run:
+````
+./test.sh test_file_name.py
+````

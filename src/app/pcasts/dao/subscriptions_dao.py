@@ -1,5 +1,5 @@
 import datetime
-from app.pcasts.dao import series_dao
+from app.pcasts.dao import series_dao, episodes_dao
 from . import *
 
 def get_user_subscriptions(user_id):
@@ -59,9 +59,9 @@ def get_new_subscribed_episodes(user_id, maxtime, page_size):
   subscriptions = get_user_subscriptions(user_id)
   series_ids = [s.series_id for s in subscriptions]
   maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
-  return Episode.query \
-    .filter(Episode.series_id.in_(series_ids),
-            Episode.created_at <= maxdatetime) \
-    .order_by(Episode.created_at.desc()) \
-    .limit(page_size) \
-    .all()
+  return episodes_dao.get_episodes_maxtime(
+      user_id,
+      series_ids,
+      maxdatetime,
+      page_size
+  )

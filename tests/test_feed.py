@@ -2,7 +2,7 @@ import time
 import json
 from tests.test_case import *
 from app.pcasts.dao import subscriptions_dao, series_dao, recommendations_dao, \
-  followings_dao, episodes_dao
+  followings_dao, episodes_dao, bookmarks_dao
 from app.pcasts.controllers.get_feed_controller import FeedContexts
 
 class FeedTestCase(TestCase):
@@ -50,3 +50,13 @@ class FeedTestCase(TestCase):
     for item in response['data']['feed']:
       self.assertEqual(type(item['time']), int)
       self.assertTrue(item['time'] <= maxtime)
+
+    # Ensure is_bookmarked is working correctly with new subscribed episodes
+    subscribed_ep = episodes_dao.get_episodes_by_series('1211520413', 0, 3)[0]
+    bookmarks_dao.create_bookmark(subscribed_ep.id, user1)
+    raw_response = self.app.get('api/v1/feed/?maxtime={}&page_size=5'
+                                .format(maxtime)).data
+    response = json.loads(raw_response)
+
+    self.assertTrue(response['data']['feed'][3]['content']['is_bookmarked'])
+    self.assertFalse(response['data']['feed'][4]['content']['is_bookmarked'])
