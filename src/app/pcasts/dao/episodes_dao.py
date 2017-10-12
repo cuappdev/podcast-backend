@@ -46,8 +46,15 @@ def is_recommended_by_user(episode_id, user_id):
     .first()
   return optional_recommendation is not None
 
-def search_episode(search_name, offset, max_search):
-  possible_episodes = Episode.query.filter \
-      (Episode.title.like(search_name+'%')) \
-      .offset(offset).limit(max_search).all()
-  return possible_episodes
+def search_episode(search_name, offset, max_search, user_id):
+  possible_episode_ids = [
+      tup[0] for tup in
+      Episode.query.\
+      with_entities(Episode.id).\
+      filter(Episode.title.like(search_name + '%')).\
+      offset(offset).\
+      limit(max_search).\
+      all()
+  ]
+
+  return get_episodes(possible_episode_ids, user_id)

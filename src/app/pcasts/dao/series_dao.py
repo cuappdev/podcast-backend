@@ -38,8 +38,15 @@ def is_subscribed_by_user(series_id, user_id):
     .first()
   return optional_series is not None
 
-def search_series(search_name, offset, max_search):
-  possible_series = Series.query.filter \
-      (Series.title.like(search_name+'%')) \
-      .offset(offset).limit(max_search).all()
-  return possible_series
+def search_series(search_name, offset, max_search, user_id):
+  possible_series_ids = [
+      tup[0] for tup in
+      Series.query.\
+      with_entities(Series.id).\
+      filter(Series.title.like(search_name + '%')).\
+      offset(offset).\
+      limit(max_search).\
+      all()
+  ]
+
+  return get_multiple_series(possible_series_ids, user_id)
