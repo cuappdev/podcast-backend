@@ -45,11 +45,5 @@ class User(Base):
   @validates('username')
   def validate_username(self, key, username):
     if len(username) < 1:
-      raise Exception('Username length must greater than 0')
+      raise Exception('Username length must be greater than 0')
     return username
-
-  @validates('google_id', 'facebook_id')
-  def validate_ids(self, key, value):
-    if (self.google_id, self.facebook_id, value) == (None, None, None):
-      raise Exception("Id's can't be none")
-    return value

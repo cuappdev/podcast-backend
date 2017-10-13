@@ -94,7 +94,7 @@ def change_user_name(user_id, new_name):
     db_utils.db_session_commit()
     return user
   else:
-    raise Exception("The given user_id is Invalid")
+    raise Exception("The given user_id is invalid")
 
 def get_number_users():
   return User.query.count()
