@@ -84,6 +84,7 @@ export TEST_PODCAST_DB_NAME=test_pcasts_podcast_db_dev
 export APP_SETTINGS=config.DevelopmentConfig
 export FACEBOOK_APP_ID=CHANGEME
 export FACEBOOK_APP_SECRET=CHANGEME
+export ELASTICSEARCH_ADDRESS=192.168.33.10
 ````
 
 
@@ -93,14 +94,14 @@ export APP_SETTINGS=config.TestingConfig
 ````
 ## Loading in Test Data
 From the root directory, run:
-````
+````bash
 python src/scripts/load_data.py dev
 python src/scripts/load_data.py test
 ````
 
 ## Testing
 To run all unit tests, from the `/tests` directory, run:
-````
+````bash
 ./test.sh
 ````
 
@@ -108,3 +109,13 @@ To run a single test, from the `/tests` directory, run:
 ````
 ./test.sh test_file_name.py
 ````
+
+## Elasticsearch
+To run Elasticsearch on your local machine, refer to the instructions for
+cloning and setting up the virtualenv for the [podcast-devOps](https://github.com/cuappdev/devOps) repository.
+
+In the `podcasts-search` directory, run:
+````bash
+vagrant up
+````
+to bring the vagrant image up. Elasticsearch can then be hit at address `192.168.33.10`
