@@ -66,3 +66,18 @@ def search_users(search_name, offset, max_search):
       (User.username.like(search_name+'%')) \
       .offset(offset).limit(max_search).all()
   return possible_users
+
+def change_user_name(user_id, new_name):
+    user = User.query.filter(User.id == user_id).first()
+    if user:
+      user.username = new_name
+      db_utils.db_session_commit()
+      return user
+    else:
+      raise Exception("The given user_id is Invalid")
+
+def get_number_users():
+    return User.query.count()
+
+def get_all_users():
+    return User.query.filter().all()

@@ -1,4 +1,5 @@
 from . import *
+from sqlalchemy.orm import validates
 
 class User(Base):
   __tablename__ = 'users'
@@ -23,3 +24,19 @@ class User(Base):
     self.followers_count = kwargs.get('followers_count', 0)
     self.followings_count = kwargs.get('followings_count', 0)
     self.username = kwargs.get('username', 'temp-{}'.format(self.google_id))
+
+  def __eq__(self, other_user):
+    return self.google_id == other_user.google_id and \
+        self.email == other_user.email and \
+        self.first_name == other_user.first_name and \
+        self.last_name == other_user.last_name and \
+        self.image_url == other_user.image_url and \
+        self.followers_count == other_user.followers_count and \
+        self.followings_count == other_user.followings_count and \
+        self.username == other_user.username
+
+  @validates('username')
+  def validate_username(self, key, username):
+    if len(username) < 1:
+        raise Exception("Username length must greater than 0")
+    return username

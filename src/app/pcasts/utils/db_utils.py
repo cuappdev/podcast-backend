@@ -38,3 +38,6 @@ def db_session_commit():
   except Exception:
     db.session.rollback()
     raise Exception(DB_COMMIT_ERROR_MESSAGE)
+
+def db_session_expunge_all():
+  db.session.expunge_all()
