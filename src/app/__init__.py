@@ -1,4 +1,5 @@
 import os
+import threading
 import datetime
 import logging
 from logging.handlers import RotatingFileHandler
@@ -38,3 +39,16 @@ if not app.config['TESTING']:
   log_handler.setFormatter(formatter)
   log_handler.setLevel(logging.INFO)
   app.logger.addHandler(log_handler)
+
+from app.pcasts.elasticsearch import populate # pylint: disable=C0413
+def run_es_thread():
+  # Run an async thread that periodically updates Elasticsearch index
+  populate.populate()
+  es_thread = threading.\
+      Timer(os.environ['ELASTICSEARCH_INTERVAL'], run_es_thread)
+  es_thread.start()
+
+# Don't start thread if Elasticsearch is disabled or in testing mode
+if os.environ['ELASTICSEARCH_ENABLED'] == 'True' and \
+    os.environ['APP_SETTINGS'] != 'config.TestingConfig':
+  run_es_thread()

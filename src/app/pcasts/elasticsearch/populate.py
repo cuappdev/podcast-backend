@@ -1,14 +1,7 @@
 import pickle
 from datetime import datetime
 from time import time
-from elasticsearch import Elasticsearch
-from elasticsearch import helpers
 from . import *
-
-es = Elasticsearch(
-    [os.environ.get('ELASTICSEARCH_ADDRESS')],
-    retry_on_timeout=True
-)
 
 def populate_series(last_updated):
   new_series = Series.query.filter(Series.updated_at > last_updated).all()
@@ -18,10 +11,7 @@ def populate_series(last_updated):
           "_index": "series-index",
           "_type": "series",
           "_id": s['id'],
-          "_source": {
-              "any": s,
-              "timestamp": datetime.datetime.now()
-          }
+          "_source": s
       }
       for s in serialized_series
   ]
@@ -35,10 +25,7 @@ def populate_episodes(last_updated):
           "_index": "episodes-index",
           "_type": "episode",
           "_id": e['id'],
-          "_source": {
-              "any": e,
-              "timestamp": datetime.datetime.now()
-          }
+          "_source": e
       }
       for e in serialized_episodes
   ]
@@ -52,10 +39,7 @@ def populate_users(last_updated):
           "_index": "users-index",
           "_type": "episode",
           "_id": u['id'],
-          "_source": {
-              "any": u,
-              "timestamp": datetime.datetime.now()
-          }
+          "_source": u
       }
       for u in serialized_users
   ]
@@ -76,7 +60,8 @@ def set_last_updated(last_updated):
 
 def populate():
   last_updated = get_last_updated()
-  set_last_updated(datetime.datetime.now())
+  new_last_updated = datetime.datetime.now()
   populate_series(last_updated)
   populate_episodes(last_updated)
   populate_users(last_updated)
+  set_last_updated(new_last_updated)
