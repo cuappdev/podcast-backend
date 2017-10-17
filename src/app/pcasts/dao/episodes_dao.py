@@ -1,3 +1,5 @@
+import os
+from app.pcasts.elasticsearch import interface
 from . import *
 
 def populate_episode(episode, user_id):
@@ -67,15 +69,19 @@ def current_progress_for_user(episode_id, user_id):
   return None if not lh else lh.current_progress
 
 def search_episode(search_name, offset, max_search, user_id):
-  possible_episode_ids = [
-      tup[0] for tup in
-      Episode.query.\
-      with_entities(Episode.id).\
-      filter(Episode.title.like('%' + search_name + '%')).\
-      offset(offset).\
-      limit(max_search).\
-      all()
-  ]
+  if os.environ['ELASTICSEARCH_ENABLED'] == 'True':
+    possible_episode_ids = interface.\
+        search_episodes(search_name, offset, max_search)
+  else:
+    possible_episode_ids = [
+        tup[0] for tup in
+        Episode.query.\
+        with_entities(Episode.id).\
+        filter(Episode.title.like('%' + search_name + '%')).\
+        offset(offset).\
+        limit(max_search).\
+        all()
+    ]
 
   return get_episodes(possible_episode_ids, user_id)
 

@@ -85,12 +85,15 @@ export APP_SETTINGS=config.DevelopmentConfig
 export FACEBOOK_APP_ID=CHANGEME
 export FACEBOOK_APP_SECRET=CHANGEME
 export ELASTICSEARCH_ADDRESS=192.168.33.10
+export ELASTICSEARCH_ENABLED=True
+export ELASTICSEARCH_INTERVAL=600
 ````
 
 
 In the `/tests` directory, create another `.env` file that changes the `APP_SETTINGS`:
 ````bash
 export APP_SETTINGS=config.TestingConfig
+export ELASTICSEARCH_ENABLED=False
 ````
 ## Loading in Test Data
 From the root directory, run:

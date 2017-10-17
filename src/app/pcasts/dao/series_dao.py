@@ -1,6 +1,8 @@
 from datetime import datetime as dt
+import os
 from sqlalchemy.sql.expression import func
 from app.pcasts.dao import episodes_dao
+from app.pcasts.elasticsearch import interface
 from . import *
 
 def store_series_and_episodes_from_feed(feed):
@@ -74,15 +76,19 @@ def is_subscribed_by_user(series_id, user_id):
   return optional_series is not None
 
 def search_series(search_name, offset, max_search, user_id):
-  possible_series_ids = [
-      tup[0] for tup in
-      Series.query.\
-      with_entities(Series.id).\
-      filter(Series.title.like('%' + search_name + '%')).\
-      offset(offset).\
-      limit(max_search).\
-      all()
-  ]
+  if os.environ['ELASTICSEARCH_ENABLED'] == 'True':
+    possible_series_ids = interface.\
+        search_series(search_name, offset, max_search)
+  else:
+    possible_series_ids = [
+        tup[0] for tup in
+        Series.query.\
+        with_entities(Series.id).\
+        filter(Series.title.like('%' + search_name + '%')).\
+        offset(offset).\
+        limit(max_search).\
+        all()
+    ]
 
   return get_multiple_series(possible_series_ids, user_id)
 
