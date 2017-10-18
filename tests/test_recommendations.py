@@ -1,7 +1,7 @@
 import sys
 from flask import json
 from tests.test_case import *
-from app.pcasts.dao import episodes_dao, users_dao
+from app.pcasts.dao import episodes_dao, users_dao, recommendations_dao
 from app import constants # pylint: disable=C0413
 
 class RecommendationsTestCase(TestCase):
@@ -77,6 +77,34 @@ class RecommendationsTestCase(TestCase):
         or
         data['data']['recommendations'][1]['episode']['id'] == int(episode_id2)
     )
+
+  def test_get_user_recommendations2(self):
+    user = User.query \
+      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
+    user_2 = users_dao.\
+        get_user_by_google_id(constants.TEST_USER_GOOGLE_ID2)
+
+    episode_title1 = 'Colombians to deliver their verdict on peace accord'
+    episode_title2 = 'Battle of the camera drones'
+    episode_id1 = episodes_dao.get_episode_by_title(episode_title1, user.id).id
+    episode_id2 = episodes_dao.get_episode_by_title(episode_title2, user.id).id
+
+    recommendations_dao.create_recommendation(episode_id1, user_2)
+    recommendations_dao.create_recommendation(episode_id2, user_2)
+    recommendations_dao.create_recommendation(episode_id1, user)
+    response = self.app.get('api/v1/recommendations/users/{}/'
+                            .format(user_2.id))
+    data = json.loads(response.data)
+
+    self.assertEquals(len(data['data']['recommendations']), 2)
+    self.assertEquals(data['data']['recommendations'][0]['episode']\
+        ['is_recommended'], True)
+    self.assertEquals(data['data']['recommendations'][0]['episode']\
+        ['recommendations_count'], 2)
+    self.assertEquals(data['data']['recommendations'][1]['episode']\
+        ['is_recommended'], False)
+    self.assertEquals(data['data']['recommendations'][1]['episode']\
+        ['recommendations_count'], 1)
 
   def test_get_recommendations(self):
     user = User.query \

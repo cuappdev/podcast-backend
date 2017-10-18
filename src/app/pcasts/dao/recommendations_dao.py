@@ -23,12 +23,14 @@ def delete_recommendation(episode_id, user):
   else:
     raise Exception('Specified recommendation does not exist')
 
-def get_user_recommendations(user_id):
+def get_user_recommendations(caller_user_id, requested_user_id):
   recommendations = (
-      Recommendation.query.filter(Recommendation.user_id == user_id).all()
+      Recommendation.query.\
+      filter(Recommendation.user_id == requested_user_id).\
+      all()
   )
   episodes = episodes_dao.get_episodes([r.episode_id for r in recommendations],
-                                       user_id)
+                                       caller_user_id)
   for r, e in zip(recommendations, episodes):
     r.episode = e
   return recommendations
