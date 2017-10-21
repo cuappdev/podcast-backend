@@ -21,6 +21,26 @@ def get_or_create_user_from_google_creds(google_creds):
 
   return db_utils.commit_model(user), True
 
+def get_or_create_user_from_facebook_creds(facebook_creds):
+  if 'id' not in facebook_creds:
+    raise Exception('Issue with facebook credentials!  Your access_token ' + \
+        'might be expired!')
+
+  optional_user = \
+      User.query.filter(User.facebook_id == facebook_creds['id']).first()
+
+  if optional_user is not None:
+    return optional_user, False
+
+  user = User(
+      facebook_id=facebook_creds['id'],
+      first_name=facebook_creds['first_name'],
+      last_name=facebook_creds['last_name'],
+      image_url=facebook_creds['profile_pic']
+  )
+
+  return db_utils.commit_model(user), True
+
 def get_user_by_valid_session(session_token):
   optional_session = Session.query.\
       filter(Session.session_token == session_token).\

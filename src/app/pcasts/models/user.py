@@ -7,6 +7,7 @@ class User(Base):
 
   id = db.Column(db.Integer, primary_key=True)
   google_id = db.Column(db.String(255), unique=True)
+  facebook_id = db.Column(db.String(255), unique=True)
   email = db.Column(db.String(255), nullable=False)
   first_name = db.Column(db.String(255))
   last_name = db.Column(db.String(255))
@@ -17,6 +18,7 @@ class User(Base):
 
   def __init__(self, **kwargs):
     self.google_id = kwargs.get('google_id')
+    self.facebook_id = kwargs.get('facebook_id')
     self.email = kwargs.get('email', '')
     self.first_name = kwargs.get('first_name')
     self.last_name = kwargs.get('last_name')
@@ -28,6 +30,7 @@ class User(Base):
   def __eq__(self, other_user):
     return self.google_id == other_user.google_id and \
         self.email == other_user.email and \
+        self.facebook_id == other_user.facebook_id and \
         self.first_name == other_user.first_name and \
         self.last_name == other_user.last_name and \
         self.image_url == other_user.image_url and \
