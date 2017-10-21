@@ -21,7 +21,7 @@ def delete_models(model_lst):
     for m in model_lst:
       db.session.delete(m)
   except Exception:
-    raise Exception("Deletion of models failed")
+    raise Exception('Deletion of models failed')
   try:
     db.session.commit()
     return model_lst

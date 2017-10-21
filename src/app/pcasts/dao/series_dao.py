@@ -1,6 +1,37 @@
+import datetime
 from sqlalchemy.sql.expression import func
 from app.pcasts.dao import episodes_dao
 from . import *
+
+def store_series_and_episodes_from_feed(feed):
+  series_dict = feed.get('series')
+  new_series = Series(
+      id=series_dict.get('id'),
+      title=series_dict.get('title'),
+      country=series_dict.get('country'),
+      author=series_dict.get('author'),
+      image_url_lg=series_dict.get('image_url_lg'),
+      image_url_sm=series_dict.get('image_url_sm'),
+      feed_url=series_dict.get('feed_url'),
+      genres=series_dict.get('genres')
+  )
+  models_to_commit = [new_series]
+  for episode_dict in feed.get('episodes'):
+    ep = Episode(
+        title=episode_dict.get('title'),
+        author=episode_dict.get('author'),
+        summary=episode_dict.get('summary'),
+        pub_date=datetime.datetime.fromtimestamp(episode_dict.get('pub_date')),
+        duration=episode_dict.get('duration'),
+        audio_url=episode_dict.get('audio_url'),
+        tags=episode_dict.get('tags'),
+        series_id=new_series.id)
+    models_to_commit.append(ep)
+  results = db_utils.commit_models(models_to_commit)
+  return results[0] # return the resultant series
+
+def remove_series(series_id):
+  return Series.query.filter(Series.id == series_id).delete()
 
 def get_series(series_id, user_id):
   series = Series.query.filter(Series.id == series_id).first()
@@ -11,6 +42,7 @@ def get_series(series_id, user_id):
   return series
 
 def get_multiple_series(series_ids, user_id):
+  # returns series in ascending order
   if not series_ids:
     return []
   series = Series.query.filter(Series.id.in_(series_ids)) \
