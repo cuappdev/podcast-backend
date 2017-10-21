@@ -7,7 +7,6 @@ class iTunesTestCase(TestCase):
   def test_search_itunes(self):
     response = self.app.post('api/v1/search/itunes/programming/')
     data = json.loads(response.data)
-    print data
     # There should definitely be non-zero results
     series = data.get('data', dict()).get('series', [])
     self.assertTrue(len(series) > 0)
