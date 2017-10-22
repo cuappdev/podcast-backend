@@ -70,3 +70,16 @@ def search_episode(search_name, offset, max_search, user_id):
   ]
 
   return get_episodes(possible_episode_ids, user_id)
+
+def get_top_episodes(offset, max_search, user_id):
+  found_episode_ids = [
+      tup[0] for tup in
+      Episode.query.\
+      with_entities(Episode.recommendations_count).\
+      order_by(Episode.recommendations_count.desc()).\
+      offset(offset).\
+      limit(max_search).\
+      all()
+  ]
+
+  return get_episodes(found_episode_ids, user_id)
