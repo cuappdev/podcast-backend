@@ -15,7 +15,7 @@ def search_episodes(term, offset, max_size):
   return episode_ids
 
 def search_users(term, offset, max_size):
-  query = Search(using=es, index='users-index').\
+  query = Search(using=es, index='Users-index').\
       query('match', username=term)[offset:offset+max_size]
   results = query.execute()
   user_ids = [u['id'] for u in results]

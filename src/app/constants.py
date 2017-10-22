@@ -12,9 +12,10 @@ GOOGLE = "Google"
 
 FACEBOOK_API_PERMISSIONS = 'email,user_friends'
 TEST_APP_SETTING = 'config.TestingConfig'
-ELASTICSEARCH_PICKLE_PATH = \
-    '{}/pcasts/elasticsearch/elasticsearch_last_updated.p'.\
-    format(
+ELASTICSEARCH_PATH = \
+    '{}/pcasts/elasticsearch'.format(
         os.path.dirname(os.path.realpath(__file__))
     )
+ELASTICSEARCH_PICKLE_PATH = \
+    '{}/updated.p'.format(ELASTICSEARCH_PATH)
 ELASTICSEARCH_PICKLE_KEY = 'last_updated'
