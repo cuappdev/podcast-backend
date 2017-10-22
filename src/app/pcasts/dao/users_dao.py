@@ -88,16 +88,32 @@ def search_users(search_name, offset, max_search):
   return possible_users
 
 def change_user_name(user_id, new_name):
-    user = User.query.filter(User.id == user_id).first()
-    if user:
-      user.username = new_name
-      db_utils.db_session_commit()
-      return user
-    else:
-      raise Exception("The given user_id is Invalid")
+  user = User.query.filter(User.id == user_id).first()
+  if user:
+    user.username = new_name
+    db_utils.db_session_commit()
+    return user
+  else:
+    raise Exception("The given user_id is Invalid")
 
 def get_number_users():
-    return User.query.count()
+  return User.query.count()
 
 def get_all_users():
-    return User.query.filter().all()
+  return User.query.filter().all()
+
+def add_facebook_login(user, facebook_info, platform):
+  if 'id' not in facebook_info:
+    raise Exception('Issue with platform credentials!  Your access_token ' + \
+        'might be expired!')
+  updated_user = User.query.filter(User.id == user.id).first()
+  updated_user.facebook_id = facebook_info.id
+  return db_utils.commit_model(user)
+
+def add_google_login(user, google_info, platform):
+  if 'id' not in google_info:
+    raise Exception('Issue with platform credentials!  Your access_token ' + \
+        'might be expired!')
+  updated_user = User.query.filter(User.id == user.id).first()
+  updated_user.google_id = google_info.id
+  return db_utils.commit_model(updated_user)

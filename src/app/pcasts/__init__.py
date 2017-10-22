@@ -35,6 +35,7 @@ from app.pcasts.controllers.series_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_user_by_id_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.update_username_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.facebook_sign_in_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.merge_account_controller import * # pylint: disable=C0413
 
 controllers = [
     HelloWorldController(),
@@ -63,7 +64,8 @@ controllers = [
     SeriesController(),
     GetUserByIdController(),
     UpdateUsernameController(),
-    FacebookSignInController()
+    FacebookSignInController(),
+    MergeAccountController()
 ]
 
 # Setup all controllers

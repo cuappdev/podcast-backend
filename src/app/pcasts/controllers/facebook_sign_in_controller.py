@@ -11,10 +11,10 @@ class FacebookSignInController(AppDevController):
 
   def content(self, **kwargs):
     token = request.args['access_token']
-    facebook_creds = google_utils.get_me(token)
+    facebook_info = facebook_utils.get_me(token)
 
     user, is_new_user = \
-        users_dao.get_or_create_user_from_facebook_creds(facebook_creds)
+        users_dao.get_or_create_user_from_facebook_creds(facebook_info)
     session = sessions_dao.get_or_create_session_and_activate(user.id)
 
     return {

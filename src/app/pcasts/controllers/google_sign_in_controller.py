@@ -11,10 +11,10 @@ class GoogleSignInController(AppDevController):
 
   def content(self, **kwargs):
     token = request.args['access_token']
-    google_creds = google_utils.get_me(token)
+    google_user_info = google_utils.get_me(token)
 
     user, is_new_user = \
-        users_dao.get_or_create_user_from_google_creds(google_creds)
+        users_dao.get_or_create_user_from_google_creds(google_user_info)
     session = sessions_dao.get_or_create_session_and_activate(user.id)
 
     return {
