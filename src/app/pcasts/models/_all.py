@@ -36,8 +36,9 @@ class EpisodeSchema(ModelSchema):
     model = Episode
   is_recommended = fields.Boolean()
   is_bookmarked = fields.Boolean()
-  series = \
-      fields.Nested('SeriesSchema', only=['id', 'image_url_lg', 'image_url_sm'])
+  series = fields.Nested(
+      'SeriesSchema',
+      only=['id', 'image_url_lg', 'image_url_sm', 'title'])
 
 class BookmarkSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
