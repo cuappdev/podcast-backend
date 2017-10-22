@@ -36,7 +36,9 @@ def get_or_create_user_from_facebook_creds(facebook_creds):
       facebook_id=facebook_creds['id'],
       first_name=facebook_creds['first_name'],
       last_name=facebook_creds['last_name'],
-      image_url=facebook_creds['profile_pic']
+      image_url=None, ##Permissions too invasive
+      username=facebook_creds['first_name']+ \
+          facebook_creds['last_name']+facebook_creds['id'][:6]
   )
 
   return db_utils.commit_model(user), True
@@ -102,18 +104,18 @@ def get_number_users():
 def get_all_users():
   return User.query.filter().all()
 
-def add_facebook_login(user, facebook_info, platform):
+def add_facebook_login(user, facebook_info):
   if 'id' not in facebook_info:
     raise Exception('Issue with platform credentials!  Your access_token ' + \
         'might be expired!')
   updated_user = User.query.filter(User.id == user.id).first()
-  updated_user.facebook_id = facebook_info.id
+  updated_user.facebook_id = facebook_info['id']
   return db_utils.commit_model(user)
 
-def add_google_login(user, google_info, platform):
+def add_google_login(user, google_info):
   if 'id' not in google_info:
     raise Exception('Issue with platform credentials!  Your access_token ' + \
         'might be expired!')
   updated_user = User.query.filter(User.id == user.id).first()
-  updated_user.google_id = google_info.id
+  updated_user.google_id = google_info['id']
   return db_utils.commit_model(updated_user)

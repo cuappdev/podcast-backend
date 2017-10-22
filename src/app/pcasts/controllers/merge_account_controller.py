@@ -15,15 +15,15 @@ class MergeAccountController(AppDevController):
     token = request.args['access_token']
     new_platform = request.args['platform']
 
-    if platform == "facebook":
+    if new_platform == "facebook":
       facebook_info = facebook_utils.get_me(token)
-      user = users_dao.update_user_platform(user, facebook_info, new_platform)
-    elif platform == "google":
+      user = users_dao.add_facebook_login(user, facebook_info)
+    elif new_platform == "google":
       google_info = google_utils.get_me(token)
-      user = users_dao.update_user_platform(user, google_info, new_platform)
+      user = users_dao.add_google_login(user, google_info)
     else:
-      raise Exception("Platform not supported yet")
+      raise Exception("Platform "+ new_platform +" not supported yet")
 
     return {
-      'user': user_schema.dump(user).data
+        'user': user_schema.dump(user).data
     }
