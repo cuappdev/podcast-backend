@@ -69,7 +69,8 @@ def current_progress_for_user(episode_id, user_id):
   return None if not lh else lh.current_progress
 
 def search_episode(search_name, offset, max_search, user_id):
-  if os.environ['ELASTICSEARCH_ENABLED'] == 'True':
+  if os.environ['ELASTICSEARCH_ENABLED'] == 'True' and \
+      os.environ['APP_SETTINGS'] != 'config.TestingConfig':
     possible_episode_ids = interface.\
         search_episodes(search_name, offset, max_search)
   else:
