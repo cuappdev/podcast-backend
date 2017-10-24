@@ -76,7 +76,8 @@ def is_subscribed_by_user(series_id, user_id):
   return optional_series is not None
 
 def search_series(search_name, offset, max_search, user_id):
-  if os.environ['ELASTICSEARCH_ENABLED'] == 'True':
+  if os.environ['ELASTICSEARCH_ENABLED'] == 'True' and \
+      os.environ['APP_SETTINGS'] != 'config.TestingConfig':
     possible_series_ids = interface.\
         search_series(search_name, offset, max_search)
   else:
