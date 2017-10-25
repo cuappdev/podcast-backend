@@ -51,7 +51,7 @@ def search_series(search_name, offset, max_search, user_id):
 
   return get_multiple_series(possible_series_ids, user_id)
 
-def get_top_series(offset, max_search, user_id):
+def get_top_series_by_subscribers(offset, max_search, user_id):
   found_series_ids = [
       tup[0] for tup in
       Series.query.\
