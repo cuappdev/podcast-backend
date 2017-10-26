@@ -37,8 +37,6 @@ def get_or_create_user_from_facebook_creds(facebook_creds):
       first_name=facebook_creds['first_name'],
       last_name=facebook_creds['last_name'],
       image_url=None, ##Permissions too invasive
-      username=facebook_creds['first_name']+ \
-          facebook_creds['last_name']+facebook_creds['id'][:6]
   )
 
   return db_utils.commit_model(user), True
@@ -105,6 +103,7 @@ def get_all_users():
   return User.query.filter().all()
 
 def add_facebook_login(user, facebook_info):
+  #TODO: Improve error handling through specific handler
   if 'id' not in facebook_info:
     raise Exception('Issue with platform credentials!  Your access_token ' + \
         'might be expired!')
