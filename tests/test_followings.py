@@ -59,6 +59,13 @@ class FollowingsTestCase(TestCase):
         data['data']['followings'][0]['followed']['id'],
         test_user_id2
     )
+    # From the point of view of user1, are we following user1 or user2
+    self.assertFalse(
+        data['data']['followings'][0]['follower']['is_following']
+    )
+    self.assertTrue(
+        data['data']['followings'][0]['followed']['is_following']
+    )
 
     response = self.app.get('api/v1/followers/show/{}/'.format(test_user_id1))
     data = json.loads(response.data)
@@ -70,6 +77,7 @@ class FollowingsTestCase(TestCase):
 
     response = self.app.get('api/v1/followers/show/{}/'.format(test_user_id2))
     data = json.loads(response.data)
+
     self.assertEquals(len(data['data']['followers']), 1)
     self.assertEquals(
         data['data']['followers'][0]['follower']['id'],
@@ -78,6 +86,13 @@ class FollowingsTestCase(TestCase):
     self.assertEquals(
         data['data']['followers'][0]['followed']['id'],
         test_user_id2
+    )
+    # From the point of view of user1 are we following user1 and user2
+    self.assertFalse(
+        data['data']['followers'][0]['follower']['is_following']
+    )
+    self.assertTrue(
+        data['data']['followers'][0]['followed']['is_following']
     )
 
   def test_delete_followings(self):
