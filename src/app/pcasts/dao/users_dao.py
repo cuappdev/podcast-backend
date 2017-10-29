@@ -75,11 +75,11 @@ def get_user_by_google_id(google_id):
     return optional_user
 
 def is_following_user(my_id, their_id):
-    optional_following = Following.query \
-      .filter(Following.follower_id == my_id,
-              Following.followed_id == their_id) \
-      .first()
-    return optional_following is not None
+  optional_following = Following.query \
+    .filter(Following.follower_id == my_id,
+            Following.followed_id == their_id) \
+    .first()
+  return optional_following is not None
 
 def search_users(search_name, offset, max_search):
   possible_users = User.query.filter \

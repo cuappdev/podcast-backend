@@ -44,7 +44,7 @@ class User(Base):
   @validates('username')
   def validate_username(self, key, username):
     if len(username) < 1:
-        raise Exception("Username length must greater than 0")
+      raise Exception("Username length must greater than 0")
     return username
 
   @validates('google_id', 'facebook_id')

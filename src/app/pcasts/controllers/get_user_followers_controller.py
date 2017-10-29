@@ -10,7 +10,10 @@ class GetUserFollowersController(AppDevController):
 
   @authorize
   def content(self, **kwargs):
+    my_id = kwargs.get('user').id
     user_id = request.view_args['user_id']
-    followings = followings_dao.get_followers(user_id)
+    followers = followings_dao.get_followers(user_id)
+    followers_json = [following_schema.dump(f).data for f in followers]
+    followings_dao.attach_is_following_to_json(my_id, followers_json)
 
-    return {'followers': [following_schema.dump(f).data for f in followings]}
+    return {'followers': followers_json}

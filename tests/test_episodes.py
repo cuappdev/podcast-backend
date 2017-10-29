@@ -37,6 +37,12 @@ class EpisodeTestCase(TestCase):
         one_result_series.image_url_sm
     )
 
+    # Check for title
+    self.assertEquals(
+        one_result_data['data']['episodes'][0]['series']['title'],
+        one_result_series.title
+    )
+
     many_result_title = '78775671'
     search_results = self.app.get('api/v1/podcasts/episodes/by_series/\
         {}/?offset={}&max={}'.format(many_result_title, 0, 1000))
