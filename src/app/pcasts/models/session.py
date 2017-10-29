@@ -5,7 +5,6 @@ from . import *
 
 class Session(Base):
   __tablename__ = 'sessions'
-  __bind_key__ = 'db'
 
   id = db.Column(db.Integer, primary_key=True)
   session_token = db.Column(db.String(255), unique=True, nullable=False)

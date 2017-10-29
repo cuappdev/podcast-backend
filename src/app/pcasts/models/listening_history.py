@@ -4,7 +4,6 @@ from . import *
 
 class ListeningHistory(Base):
   __tablename__ = 'listening_histories'
-  __bind_key__ = 'db'
   __table_args__ = (
       UniqueConstraint('user_id', 'episode_id'),
   )

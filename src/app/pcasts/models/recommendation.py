@@ -3,7 +3,6 @@ from . import *
 
 class Recommendation(Base):
   __tablename__ = 'recommendations'
-  __bind_key__ = 'db'
   __table_args__ = (
       UniqueConstraint('user_id', 'episode_id'),
   )

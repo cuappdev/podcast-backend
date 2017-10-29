@@ -60,11 +60,8 @@ class Config(object):
   THREADS_PER_PAGE = 2
 
   # Mounting our DBs
-  SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-  SQLALCHEMY_BINDS = {
-      'db': DB_URL,
-      'podcast_db': PODCAST_DB_URL
-  }
+  SQLALCHEMY_DATABASE_URI = DB_URL
+  SQLALCHEMY_BINDS = {'podcast_db': PODCAST_DB_URL}
 
 class ProductionConfig(Config):
   DEBUG = False
@@ -79,7 +76,5 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
   TESTING = True
-  SQLALCHEMY_BINDS = {
-      'db': TEST_DB_URL,
-      'podcast_db': TEST_PODCAST_DB_URL
-  }
+  SQLALCHEMY_DATABASE_URI = TEST_DB_URL
+  SQLALCHEMY_BINDS = {'podcast_db': TEST_PODCAST_DB_URL}

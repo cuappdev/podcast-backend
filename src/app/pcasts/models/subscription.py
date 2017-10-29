@@ -3,7 +3,6 @@ from . import *
 
 class Subscription(Base):
   __tablename__ = 'subscriptions'
-  __bind_key__ = 'db'
   __table_args__ = (
       UniqueConstraint('user_id', 'series_id'),
   )

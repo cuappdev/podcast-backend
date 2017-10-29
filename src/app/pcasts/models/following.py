@@ -3,7 +3,6 @@ from . import *
 
 class Following(Base):
   __tablename__ = 'followings'
-  __bind_key__ = 'db'
   __table_args__ = (
       UniqueConstraint('follower_id', 'followed_id'),
   )
