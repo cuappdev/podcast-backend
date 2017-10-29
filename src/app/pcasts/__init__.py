@@ -34,6 +34,8 @@ from app.pcasts.controllers.get_episodes_controller import * # pylint: disable=C
 from app.pcasts.controllers.series_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_user_by_id_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.update_username_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.facebook_sign_in_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.merge_account_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.search_itunes_controller import * # pylint: disable=C0413
 
 controllers = [
@@ -63,6 +65,8 @@ controllers = [
     SeriesController(),
     GetUserByIdController(),
     UpdateUsernameController(),
+    FacebookSignInController(),
+    MergeAccountController(),
     SearchiTunesController(),
 ]
 

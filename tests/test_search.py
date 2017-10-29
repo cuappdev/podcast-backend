@@ -162,27 +162,27 @@ class SearchTestCase(TestCase):
     no_result_data = json.loads(search_results.data)
     self.assertEquals(0, len(no_result_data['data']['users']))
 
-    one_result_username = 'temp-default_google_id1'
+    one_result_username = 'temp-google-default_google_id2'
     search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
          .format(one_result_username, 0, 1000))
     one_result_data = json.loads(search_results.data)
     self.assertEquals(1, len(one_result_data['data']['users']))
 
-    many_result_username = 'temp-default_google_id'
+    many_result_username = 'temp-google-default_google_id'
     search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
          .format(many_result_username, 0, 1000))
     many_result_data = json.loads(search_results.data)
     self.assertEquals(2, len(many_result_data['data']['users']))
 
     ##Test limit
-    two_result_username = 'temp-default_google_id'
+    two_result_username = 'temp-google-default_google_id'
     search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
          .format(two_result_username, 0, 1))
     ten_result_data = json.loads(search_results.data)
     self.assertEquals(1, len(ten_result_data['data']['users']))
 
     ##Test offset
-    two_result_username = 'temp-default_google_id'
+    two_result_username = 'temp-google-default_google_id'
     normal_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
         .format(two_result_username, 0, 10))
     offset_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
