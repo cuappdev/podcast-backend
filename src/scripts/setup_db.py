@@ -22,9 +22,10 @@ def delete_migrations(db_list):
     os.chdir('..')
     shutil.rmtree('migrations')
     for db in db_list:
-      os.system('mysql --user={} --password={} {} '
+      os.system('mysql --user={} --password={} --host={} {} '
                 .format(os.environ['{}_USERNAME'.format(db)],
                         os.environ['{}_PASSWORD'.format(db)],
+                        os.environ['{}_HOST'.format(db)],
                         os.environ['{}_NAME'.format(db)])
                 + '-e "drop table alembic_version"')
     os.chdir('scripts')
