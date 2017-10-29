@@ -13,6 +13,7 @@ def load_users():
   default_users = [
       User(
           google_id=constants.TEST_USER_GOOGLE_ID1,
+          facebook_id=constants.TEST_USER_FACEBOOK_ID1,
           email='default_email1',
           first_name='default_first_name1',
           last_name='default_last_name1',
@@ -22,6 +23,7 @@ def load_users():
       ),
       User(
           google_id=constants.TEST_USER_GOOGLE_ID2,
+          facebook_id=constants.TEST_USER_FACEBOOK_ID2,
           email='default_email2',
           first_name='default_first_name2',
           last_name='default_last_name2',
