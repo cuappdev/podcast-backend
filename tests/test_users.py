@@ -44,7 +44,10 @@ class UsersTestCase(TestCase):
     db_before_query = users_dao.get_all_users()
     #Want to use users after the rollback due to failure
     db_session_expunge_all()
-    new_name = 'temp-default_google_id2'
+    existing_user = User.query.\
+      filter(User.google_id == constants.TEST_USER_GOOGLE_ID2).\
+      first()
+    new_name = existing_user.username
     response = self.app.post('api/v1/users/change_username/?username={}' \
         .format(new_name))
     response_data = json.loads(response.data)['data']

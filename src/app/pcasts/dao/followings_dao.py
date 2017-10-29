@@ -78,3 +78,10 @@ def get_following_subscriptions(user_id, maxtime, page_size):
   for sub, ser in zip(subscriptions, series):
     sub.series = ser
   return subscriptions
+
+def attach_is_following_to_json(my_id, followings_json):
+  for json in followings_json:
+    json['follower'][unicode('is_following', "utf-8")] = users_dao.\
+        is_following_user(my_id, json['follower']['id'])
+    json['followed'][unicode('is_following', "utf-8")] = users_dao.\
+        is_following_user(my_id, json['followed']['id'])

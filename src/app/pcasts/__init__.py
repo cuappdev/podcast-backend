@@ -36,6 +36,9 @@ from app.pcasts.controllers.get_user_by_id_controller import * # pylint: disable
 from app.pcasts.controllers.update_username_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.discover_series_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.discover_episodes_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.facebook_sign_in_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.merge_account_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.search_itunes_controller import * # pylint: disable=C0413
 
 controllers = [
     HelloWorldController(),
@@ -66,6 +69,9 @@ controllers = [
     UpdateUsernameController(),
     DiscoverSeriesController(),
     DiscoverEpisodesController(),
+    FacebookSignInController(),
+    MergeAccountController(),
+    SearchiTunesController(),
 ]
 
 # Setup all controllers

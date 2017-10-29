@@ -21,6 +21,26 @@ def get_or_create_user_from_google_creds(google_creds):
 
   return db_utils.commit_model(user), True
 
+def get_or_create_user_from_facebook_creds(facebook_creds):
+  if 'id' not in facebook_creds:
+    raise Exception('Issue with facebook credentials!  Your access_token ' + \
+        'might be expired!')
+
+  optional_user = \
+      User.query.filter(User.facebook_id == facebook_creds['id']).first()
+
+  if optional_user is not None:
+    return optional_user, False
+
+  user = User(
+      facebook_id=facebook_creds['id'],
+      first_name=facebook_creds['first_name'],
+      last_name=facebook_creds['last_name'],
+      image_url=None, ##Permissions too invasive
+  )
+
+  return db_utils.commit_model(user), True
+
 def get_user_by_valid_session(session_token):
   optional_session = Session.query.\
       filter(Session.session_token == session_token).\
@@ -55,11 +75,11 @@ def get_user_by_google_id(google_id):
     return optional_user
 
 def is_following_user(my_id, their_id):
-    optional_following = Following.query \
-      .filter(Following.follower_id == my_id,
-              Following.followed_id == their_id) \
-      .first()
-    return optional_following is not None
+  optional_following = Following.query \
+    .filter(Following.follower_id == my_id,
+            Following.followed_id == their_id) \
+    .first()
+  return optional_following is not None
 
 def search_users(search_name, offset, max_search):
   possible_users = User.query.filter \
@@ -68,16 +88,33 @@ def search_users(search_name, offset, max_search):
   return possible_users
 
 def change_user_name(user_id, new_name):
-    user = User.query.filter(User.id == user_id).first()
-    if user:
-      user.username = new_name
-      db_utils.db_session_commit()
-      return user
-    else:
-      raise Exception("The given user_id is Invalid")
+  user = User.query.filter(User.id == user_id).first()
+  if user:
+    user.username = new_name
+    db_utils.db_session_commit()
+    return user
+  else:
+    raise Exception("The given user_id is Invalid")
 
 def get_number_users():
-    return User.query.count()
+  return User.query.count()
 
 def get_all_users():
-    return User.query.filter().all()
+  return User.query.filter().all()
+
+def add_facebook_login(user, facebook_info):
+  #TODO: Improve error handling through specific handler
+  if 'id' not in facebook_info:
+    raise Exception('Issue with platform credentials!  Your access_token ' + \
+        'might be expired!')
+  updated_user = User.query.filter(User.id == user.id).first()
+  updated_user.facebook_id = facebook_info['id']
+  return db_utils.commit_model(user)
+
+def add_google_login(user, google_info):
+  if 'id' not in google_info:
+    raise Exception('Issue with platform credentials!  Your access_token ' + \
+        'might be expired!')
+  updated_user = User.query.filter(User.id == user.id).first()
+  updated_user.google_id = google_info['id']
+  return db_utils.commit_model(updated_user)

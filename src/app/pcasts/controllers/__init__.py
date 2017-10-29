@@ -8,7 +8,8 @@ from app.pcasts.dao import users_dao, \
   episodes_dao, \
   recommendations_dao, \
   followings_dao, \
-  listening_histories_dao
+  listening_histories_dao, \
+  itunes_dao
 
 from app.pcasts.utils.authorize import *
 from app.pcasts.models._all import *
