@@ -17,6 +17,8 @@ class User(Base):
   username = db.Column(db.String(255), nullable=False, unique=True)
 
   def __init__(self, **kwargs):
+    assert kwargs.get('facebook_id') is not None or\
+        kwargs.get('google_id') is not None
     self.google_id = kwargs.get('google_id')
     self.facebook_id = kwargs.get('facebook_id')
     self.email = kwargs.get('email', '')
@@ -46,9 +48,3 @@ class User(Base):
     if len(username) < 1:
       raise Exception("Username length must greater than 0")
     return username
-
-  @validates('google_id', 'facebook_id')
-  def validate_ids(self, key, value):
-    if (self.google_id, self.facebook_id, value) == (None, None, None):
-      raise Exception("Id's can't be none")
-    return value
