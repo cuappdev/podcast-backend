@@ -3,7 +3,6 @@ from . import *
 
 class Bookmark(Base):
   __tablename__ = 'bookmarks'
-  __bind_key__ = 'db'
   __table_args__ = (
       UniqueConstraint('user_id', 'episode_id'),
   )

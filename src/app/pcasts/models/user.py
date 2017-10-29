@@ -3,7 +3,6 @@ from sqlalchemy.orm import validates
 
 class User(Base):
   __tablename__ = 'users'
-  __bind_key__ = 'db'
 
   id = db.Column(db.Integer, primary_key=True)
   google_id = db.Column(db.String(255), unique=True)
