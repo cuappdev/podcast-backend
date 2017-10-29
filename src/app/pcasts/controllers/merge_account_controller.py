@@ -22,7 +22,7 @@ class MergeAccountController(AppDevController):
       google_info = google_utils.get_me(token)
       user = users_dao.add_google_login(user, google_info)
     else:
-      raise Exception("Platform "+ new_platform +" not supported yet")
+      raise Exception('Platform {} not supported yet'.format(new_platform))
 
     return {
         'user': user_schema.dump(user).data
