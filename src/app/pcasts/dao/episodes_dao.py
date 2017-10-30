@@ -75,7 +75,7 @@ def get_top_episodes_by_recommenders(offset, max_search, user_id):
   found_episode_ids = [
       tup[0] for tup in
       Episode.query.\
-      with_entities(Episode.recommendations_count).\
+      with_entities(Episode.id, Episode.recommendations_count).\
       order_by(Episode.recommendations_count.desc()).\
       offset(offset).\
       limit(max_search).\

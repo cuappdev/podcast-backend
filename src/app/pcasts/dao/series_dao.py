@@ -87,11 +87,16 @@ def get_top_series_by_subscribers(offset, max_search, user_id):
   found_series_ids = [
       tup[0] for tup in
       Series.query.\
-      with_entities(Series.subscribers_count).\
+      with_entities(Series.id, Series.subscribers_count).\
       order_by(Series.subscribers_count.desc()).\
-      offset(offet).\
+      offset(offset).\
       limit(max_search).\
       all()
   ]
-
-  return get_multiple_series(found_series_ids, user_id)
+  # Order these accordingly
+  id_to_idx = {s_id : idx for idx, s_id in enumerate(found_series_ids)}
+  results = [None] * len(found_series_ids)
+  full_series = get_multiple_series(found_series_ids, user_id)
+  for s in full_series:
+    results[id_to_idx[s.id]] = s
+  return results

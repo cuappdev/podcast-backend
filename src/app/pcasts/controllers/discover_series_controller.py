@@ -14,6 +14,7 @@ class DiscoverSeriesController(AppDevController):
     offset = int(request.args['offset'])
     max_ss = int(request.args['max'])
 
-    top_series = get_top_series_by_subscribers(offset, max_ss, user_id)
+    top_series = series_dao.\
+      get_top_series_by_subscribers(offset, max_ss, user_id)
 
-    return {'series':[series_schema.dump(s).data for s in top_series]}
+    return {'series' : [series_schema.dump(s).data for s in top_series]}
