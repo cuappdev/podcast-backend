@@ -12,6 +12,11 @@ class SessionsTestCase(TestCase):
     Session.query.delete()
     db_session_commit()
 
+  def tearDown(self):
+    super(SessionsTestCase, self).tearDown()
+    Session.query.delete()
+    db_session_commit()
+
   def _setup_session(self):
     user = User.query.\
       filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).\

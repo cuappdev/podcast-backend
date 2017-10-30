@@ -12,6 +12,12 @@ class SubscriptionsTestCase(TestCase):
     series_dao.clear_all_subscriber_counts()
     db_session_commit()
 
+  def tearDown(self):
+    super(SubscriptionsTestCase, self).tearDown()
+    Subscription.query.delete()
+    series_dao.clear_all_subscriber_counts()
+    db_session_commit()
+
   def test_create_subscription(self):
     series_id1 = '1211520413'
     series_id2 = '1210383304'

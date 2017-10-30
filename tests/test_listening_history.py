@@ -11,6 +11,11 @@ class ListeningHistoryTestCase(TestCase):
     ListeningHistory.query.delete()
     db_session_commit()
 
+  def tearDown(self):
+    super(ListeningHistoryTestCase, self).tearDown()
+    ListeningHistory.query.delete()
+    db_session_commit()
+
   def test_create_listening_history(self):
     user = User.query \
       .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
