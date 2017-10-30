@@ -81,5 +81,5 @@ def get_top_episodes_by_recommenders(offset, max_search, user_id):
       limit(max_search).\
       all()
   ]
-
-  return get_episodes(found_episode_ids, user_id)
+  found_episodes = get_episodes(found_episode_ids, user_id)
+  return order_by_ids(found_episode_ids, found_episodes)

@@ -13,9 +13,9 @@ class SeriesTestCase(TestCase):
     db_session_commit()
 
   def tearDown(self):
-    # Make sure all subscriptions are cleared
     super(SeriesTestCase, self).tearDown()
     Subscription.query.delete()
+    series_dao.clear_all_subscriber_counts()
     db_session_commit()
 
   def test_get_series_by_id(self):

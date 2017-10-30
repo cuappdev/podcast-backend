@@ -14,7 +14,7 @@ class DiscoverEpisodesController(AppDevController):
     offset = int(request.args['offset'])
     max_es = int(request.args['max'])
 
-    top_eps = episode_dao.\
+    top_eps = episodes_dao.\
       get_top_episodes_by_recommenders(offset, max_es, user_id)
 
     return {'episodes' : [episode_schema.dump(e).data for e in top_eps]}

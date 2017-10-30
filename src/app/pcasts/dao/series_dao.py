@@ -94,9 +94,5 @@ def get_top_series_by_subscribers(offset, max_search, user_id):
       all()
   ]
   # Order these accordingly
-  id_to_idx = {s_id : idx for idx, s_id in enumerate(found_series_ids)}
-  results = [None] * len(found_series_ids)
-  full_series = get_multiple_series(found_series_ids, user_id)
-  for s in full_series:
-    results[id_to_idx[s.id]] = s
-  return results
+  found_series = get_multiple_series(found_series_ids, user_id)
+  return order_by_ids(found_series_ids, found_series)

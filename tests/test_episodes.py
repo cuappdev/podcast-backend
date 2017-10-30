@@ -8,6 +8,26 @@ class EpisodeTestCase(TestCase):
 
   def setUp(self):
     super(EpisodeTestCase, self).setUp()
+    Recommendation.query.delete()
+    episodes_dao.clear_all_recommendations_counts()
+    db_session_commit()
+
+  def tearDown(self):
+    super(EpisodeTestCase, self).tearDown()
+    Recommendation.query.delete()
+    episodes_dao.clear_all_recommendations_counts()
+    db_session_commit()
+
+  def test_discover_episodes(self):
+    user = User.query \
+      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
+    episode_title1 = 'Colombians to deliver their verdict on peace accord'
+    episode_id1 = episodes_dao.get_episode_by_title(episode_title1, user.id).id
+    self.app.post('api/v1/recommendations/{}/'.format(episode_id1))
+    response = \
+      self.app.get('api/v1/discover/episodes/?offset={}&max={}'.format(0, 2))
+    episode_results = json.loads(response.data)['data']['episodes']
+    self.assertEquals(episode_id1, episode_results[0]['id'])
 
   def test_get_episode_by_series(self):
     test_user_id = users_dao.\
