@@ -27,20 +27,21 @@ class UsersTestCase(TestCase):
 
     search_old = users_dao.search_users(old_name, 0, 2)
     self.assertEquals(0, len(search_old))
-    self.assertEquals(2, users_dao.get_number_users())
+    self.assertEquals(3, users_dao.get_number_users())
 
     # Test empty new_name
     db_before_query = users_dao.get_all_users()
     old_name = 'bob'
     new_name = ''
+
     response = self.app.post('api/v1/users/change_username/?username={}' \
         .format(new_name))
     response_data = json.loads(response.data)['data']
-    error_string = "Username length must greater than 0"
+    error_string = "Username length must be greater than 0"
     self.assertEquals(error_string, response_data['errors'][0])
 
     db_after_query = users_dao.get_all_users()
-    self.assertEquals(2, users_dao.get_number_users())
+    self.assertEquals(3, users_dao.get_number_users())
     self.assertEquals(len(db_before_query), len(db_after_query))
     self.assertEquals(db_before_query, db_after_query)
 
@@ -59,6 +60,6 @@ class UsersTestCase(TestCase):
     self.assertEquals(error_string, response_data['errors'][0])
     db_after_query = users_dao.get_all_users()
 
-    self.assertEquals(2, users_dao.get_number_users())
+    self.assertEquals(3, users_dao.get_number_users())
     self.assertEquals(len(db_before_query), len(db_after_query))
     self.assertEquals(db_before_query, db_after_query)

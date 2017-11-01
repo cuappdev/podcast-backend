@@ -17,19 +17,18 @@ def get_followers(user_id):
 
 def create_following(follower_id, followed_id):
   if int(follower_id) != int(followed_id):
-    following = Following(follower_id=follower_id, followed_id=followed_id)
     users = users_dao.get_users_by_id(follower_id, [follower_id, followed_id])
     if len(users) == 2:
+      following = Following(follower_id=follower_id, followed_id=followed_id)
       follower = users[0] if users[0].id == follower_id else users[1]
       followed = users[0] if users[0].id == followed_id else users[1]
       follower.followings_count += 1
       followed.followers_count += 1
+      return db_utils.commit_model(following)
     else:
       raise Exception("Improper follower_id and/or followed_id")
   else:
     raise Exception("follower_id cannot equal followed_id")
-
-  return db_utils.commit_model(following)
 
 def delete_following(follower_id, followed_id):
   maybe_following = Following.query \
