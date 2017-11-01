@@ -10,7 +10,7 @@ class FacebookSignInController(AppDevController):
     return ['POST']
 
   def content(self, **kwargs):
-    token = request.args['access_token']
+    token = request.data
     facebook_info = facebook_utils.get_me(token)
 
     user, is_new_user = \

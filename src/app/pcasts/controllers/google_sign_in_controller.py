@@ -10,7 +10,7 @@ class GoogleSignInController(AppDevController):
     return ['POST']
 
   def content(self, **kwargs):
-    token = request.args['access_token']
+    token = request.data
     google_user_info = google_utils.get_me(token)
 
     user, is_new_user = \
