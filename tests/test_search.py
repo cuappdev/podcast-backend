@@ -9,6 +9,9 @@ class SearchTestCase(TestCase):
   def setUp(self):
     super(SearchTestCase, self).setUp()
 
+  def tearDown(self):
+    super(SearchTestCase, self).tearDown()
+
   def test_search_all(self):
     no_result_title = 'ABCDEFGHIJKL'
     search_results = self.app.get('api/v1/search/all/{}/?offset={}&max={}'\

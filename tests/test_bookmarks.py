@@ -11,6 +11,11 @@ class BookmarksTestCase(TestCase):
     Bookmark.query.delete()
     db_session_commit()
 
+  def tearDown(self):
+    super(BookmarksTestCase, self).tearDown()
+    Bookmark.query.delete()
+    db_session_commit()
+
   def test_create_bookmark(self):
     user = User.query \
       .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()

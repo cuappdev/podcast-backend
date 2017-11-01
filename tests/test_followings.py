@@ -14,6 +14,11 @@ class FollowingsTestCase(TestCase):
     Following.query.delete()
     db_session_commit()
 
+  def tearDown(self):
+    super(FollowingsTestCase, self).tearDown()
+    Following.query.delete()
+    db_session_commit()
+
   def test_create_following(self):
     test_user_id1 = users_dao.\
         get_user_by_google_id(constants.TEST_USER_GOOGLE_ID1).id

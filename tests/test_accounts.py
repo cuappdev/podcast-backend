@@ -3,7 +3,7 @@ from tests.test_case import *
 from app import constants
 from app.pcasts.dao import users_dao
 
-##Custom tests to be run by hand and not nosetests
+# Custom tests to be run by hand and not nosetests
 class AccountsTestCase(TestCase):
 
   def setUp(self):
@@ -11,10 +11,15 @@ class AccountsTestCase(TestCase):
     User.query.delete()
     super(AccountsTestCase, self).setUp()
     db_session_commit()
-    #####Your tokens here#####
+    ##### Your tokens here #####
     self.google_token = None
     self.facebook_token = None
     self.bad_token = "bad_token"
+
+  def tearDown(self):
+    super(AccountsTestCase, self).tearDown()
+    User.query.delete()
+    db_session_commit()
 
   def test_login_google(self):
     if not self.runtests:

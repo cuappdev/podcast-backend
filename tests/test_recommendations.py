@@ -12,6 +12,12 @@ class RecommendationsTestCase(TestCase):
     episodes_dao.clear_all_recommendations_counts()
     db_session_commit()
 
+  def tearDown(self):
+    super(RecommendationsTestCase, self).tearDown()
+    Recommendation.query.delete()
+    episodes_dao.clear_all_recommendations_counts()
+    db_session_commit()
+
   def test_create_recommendations(self):
     user = User.query \
       .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()

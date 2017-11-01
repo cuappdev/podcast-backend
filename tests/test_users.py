@@ -11,9 +11,13 @@ class UsersTestCase(TestCase):
     super(UsersTestCase, self).setUp()
     db_session_commit()
 
-  def test_change_user_name(self):
+  def tearDown(self):
+    User.query.delete()
+    super(UsersTestCase, self).tearDown()
+    db_session_commit()
 
-    #Test with valid parameters
+  def test_change_user_name(self):
+    # Test with valid parameters
     old_name = 'temp-default_google_id1'
     new_name = 'bob'
     response = self.app.post('api/v1/users/change_username/?username={}' \
@@ -25,7 +29,7 @@ class UsersTestCase(TestCase):
     self.assertEquals(0, len(search_old))
     self.assertEquals(2, users_dao.get_number_users())
 
-    #Test empty new_name
+    # Test empty new_name
     db_before_query = users_dao.get_all_users()
     old_name = 'bob'
     new_name = ''
@@ -40,9 +44,9 @@ class UsersTestCase(TestCase):
     self.assertEquals(len(db_before_query), len(db_after_query))
     self.assertEquals(db_before_query, db_after_query)
 
-    #Test changing to username already in use
+    # Test changing to username already in use
     db_before_query = users_dao.get_all_users()
-    #Want to use users after the rollback due to failure
+    # Want to use users after the rollback due to failure
     db_session_expunge_all()
     existing_user = User.query.\
       filter(User.google_id == constants.TEST_USER_GOOGLE_ID2).\

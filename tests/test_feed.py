@@ -14,6 +14,17 @@ class FeedTestCase(TestCase):
     Following.query.delete()
     Recommendation.query.delete()
     episodes_dao.clear_all_recommendations_counts()
+    Bookmark.query.delete()
+    db_session_commit()
+
+  def tearDown(self):
+    super(FeedTestCase, self).tearDown()
+    Subscription.query.delete()
+    series_dao.clear_all_subscriber_counts()
+    Following.query.delete()
+    Recommendation.query.delete()
+    episodes_dao.clear_all_recommendations_counts()
+    Bookmark.query.delete()
     db_session_commit()
 
   def test_standard_feed(self):
