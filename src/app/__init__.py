@@ -40,17 +40,8 @@ if not app.config['TESTING']:
   log_handler.setLevel(logging.INFO)
   app.logger.addHandler(log_handler)
 
-from app.pcasts.elasticsearch import populate # pylint: disable=C0413
-def run_es_thread():
-  # Run an async thread that periodically updates Elasticsearch index
-  populate.populate()
-  es_thread = threading.\
-      Timer(os.environ['ELASTICSEARCH_INTERVAL'], run_es_thread)
-  es_thread.start()
-
 from app.pcasts.elasticsearch import es_async_thread # pylint: disable=C0413
 # Don't start thread if Elasticsearch is disabled or in testing mode
-if os.environ['ELASTICSEARCH_ENABLED'] == 'True' and \
-    os.environ['APP_SETTINGS'] != 'config.TestingConfig':
+if config.ELASTICSEARCH_ENABLED and not app.config['TESTING']:
   es_thread = es_async_thread.\
       EsAsyncThread(int(os.environ['ELASTICSEARCH_INTERVAL']))

@@ -1,7 +1,7 @@
-import os
 import json
 import shutil
 import pickle
+import config
 from datetime import datetime
 from time import time
 from . import *
@@ -69,5 +69,5 @@ def populate():
 
   os.chdir(constants.ELASTICSEARCH_PATH)
   os.system('cat ./data/*.json | {}/bin/logstash -f logstash.conf'.\
-      format(os.environ['LOGSTASH_PATH']))
+      format(config.LOGSTASH_PATH))
   set_last_updated(new_last_updated)
