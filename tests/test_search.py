@@ -18,7 +18,7 @@ class SearchTestCase(TestCase):
     self.assertEquals(0, len(no_result_data['data']['episodes']))
     self.assertEquals(0, len(no_result_data['data']['series']))
 
-    #Full query
+    # Full query
     some_result_title = 'te'
     search_results = self.app.get('api/v1/search/all/{}/?offset={}&max={}'\
         .format(some_result_title, 0, 1000))
@@ -27,7 +27,7 @@ class SearchTestCase(TestCase):
     self.assertEquals(215, len(some_result_data['data']['episodes']))
     self.assertEquals(6, len(some_result_data['data']['series']))
 
-    #Partially Empty query
+    # Partially Empty query
     two_empty_result_title = 'tat'
     te_result = self.app.get('api/v1/search/all/{}/?offset={}&max={}'\
         .format(two_empty_result_title, 0, 1000))
@@ -36,7 +36,7 @@ class SearchTestCase(TestCase):
     self.assertEquals(4, len(te_result['data']['episodes']))
     self.assertEquals(0, len(te_result['data']['series']))
 
-    ##offset
+    # offset
     some_result_title = 'te'
     offset_results = self.app.get('api/v1/search/all/{}/?offset={}&max={}'\
         .format(some_result_title, 1, 2))
@@ -54,7 +54,7 @@ class SearchTestCase(TestCase):
     self.assertEquals(normal_result_data['data']['series'][1]['title'], \
         offset_result_data['data']['series'][0]['title'])
 
-    ##Limit
+    # Limit
     some_result_title = 'te'
     search_results = self.app.get('api/v1/search/all/{}/?offset={}&max={}'\
         .format(some_result_title, 0, 3))
@@ -91,14 +91,14 @@ class SearchTestCase(TestCase):
     many_result_data = json.loads(search_results.data)
     self.assertEquals(102, len(many_result_data['data']['episodes']))
 
-    ##Test limit
+    # Test limit
     ten_result_title = 'newer'
     search_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
          .format(ten_result_title, 0, 4))
     ten_result_data = json.loads(search_results.data)
     self.assertEquals(4, len(ten_result_data['data']['episodes']))
 
-    ##Test offset
+    # Test offset
     offset_result_title = 'big d'
     normal_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
         .format(offset_result_title, 0, 10))
@@ -136,14 +136,14 @@ class SearchTestCase(TestCase):
     many_result_data = json.loads(search_results.data)
     self.assertEquals(32, len(many_result_data['data']['series']))
 
-    ##Test limit
+    # Test limit
     ten_result_title = 'a'
     search_results = self.app.get('api/v1/search/series/{}/?offset={}&max={}'\
          .format(ten_result_title, 0, 4))
     ten_result_data = json.loads(search_results.data)
     self.assertEquals(4, len(ten_result_data['data']['series']))
 
-    ##Test offset
+    # Test offset
     ten_result_title = 'Cl'
     offset_results = self.app.get('api/v1/search/series/{}/?offset={}&max={}'\
         .format(ten_result_title, 2, 10))
@@ -174,14 +174,14 @@ class SearchTestCase(TestCase):
     many_result_data = json.loads(search_results.data)
     self.assertEquals(2, len(many_result_data['data']['users']))
 
-    ##Test limit
+    # Test limit
     two_result_username = 'temp-google-default_google_id'
     search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
          .format(two_result_username, 0, 1))
     ten_result_data = json.loads(search_results.data)
     self.assertEquals(1, len(ten_result_data['data']['users']))
 
-    ##Test offset
+    # Test offset
     two_result_username = 'temp-google-default_google_id'
     normal_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
         .format(two_result_username, 0, 10))

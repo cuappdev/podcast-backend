@@ -13,29 +13,35 @@ class LoginTestCase(TestCase):
     Session.query.delete()
     db_session_commit()
 
-
   def test_facebook_login(self):
-
-    access_token = api_utils.get_facebook_access_token()
-    auth_token = api_utils.create_facebook_user(access_token, 'User One')
-    response = self.app.post('api/v1/users/facebook_sign_in/', data=auth_token)
+    a_access_token = api_utils.get_facebook_app_access_token()
+    u_access_token = api_utils.create_facebook_user(a_access_token, 'User One')
+    payload = {
+        'access_token': u_access_token
+    }
+    response = self.app.post('api/v1/users/facebook_sign_in/', \
+        data=json.dumps(payload))
     response_data = json.loads(response.data)['data']
     self.assertTrue(response_data['is_new_user'])
     self.assertTrue(response_data['user']['facebook_id'] != "null")
-    self.assertEquals(config.TEST_NUM_USERS + 1, users_dao.get_number_users())
+    self.assertEquals(config.NUM_TEST_USERES + 1, users_dao.get_number_users())
 
-    #Bad login
+    # Bad login
     bad_token = 'bad token'
-    response = self.app.post('api/v1/users/facebook_sign_in/', data=bad_token)
+    payload = {
+        'access_token': bad_token
+    }
+    response = self.app.post('api/v1/users/facebook_sign_in/',\
+        data=json.dumps(payload))
     response = json.loads(response.data)
     self.assertFalse(response['success'])
-    self.assertEquals(config.TEST_NUM_USERS + 1, users_dao.get_number_users())
+    self.assertEquals(config.NUM_TEST_USERES + 1, users_dao.get_number_users())
 
   def test_google_login(self):
     #Impossible without API key
     pass
 
   def tearDown(self):
-    super(LoginTestCase, self).setUp()
+    super(LoginTestCase, self).tearDown()
     Session.query.delete()
     db_session_commit()

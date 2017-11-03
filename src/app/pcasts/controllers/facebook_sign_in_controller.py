@@ -1,3 +1,4 @@
+import json
 from app.pcasts.utils import facebook_utils
 from . import *
 
@@ -10,8 +11,9 @@ class FacebookSignInController(AppDevController):
     return ['POST']
 
   def content(self, **kwargs):
-    token = request.data
-    facebook_info = facebook_utils.get_me(token)
+    body = request.data
+    body_json = json.loads(body)
+    facebook_info = facebook_utils.get_me(body_json['access_token'])
 
     user, is_new_user = \
         users_dao.get_or_create_user_from_facebook_creds(facebook_info)

@@ -57,7 +57,7 @@ FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
 FACEBOOK_API_PERMISSIONS = 'email,user_friends'
 
 # Test Case Constants
-TEST_NUM_USERS = 2
+NUM_TEST_USERES = 2
 
 class Config(object):
   DEBUG = False
