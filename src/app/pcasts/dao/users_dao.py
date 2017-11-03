@@ -1,4 +1,6 @@
+import config
 import datetime
+from app import app
 from app.pcasts.elasticsearch import interface
 from . import *
 
@@ -84,8 +86,7 @@ def is_following_user(my_id, their_id):
   return optional_following is not None
 
 def search_users(search_name, offset, max_search, user_id):
-  if os.environ['ELASTICSEARCH_ENABLED'] == 'True' and \
-      os.environ['APP_SETTINGS'] != 'config.TestingConfig':
+  if config.ELASTICSEARCH_ENABLED and not app.config['TESTING']:
     possible_users = get_users_by_id(
         user_id, interface.search_users(search_name, offset, max_search)
     )

@@ -1,4 +1,5 @@
 import sys
+import config
 from datetime import datetime
 from flask import json
 from tests.test_case import *
@@ -8,10 +9,10 @@ from app.pcasts.dao import users_dao, series_dao, episodes_dao
 class ElasticsearchTestCase(TestCase):
 
   def setUp(self):
-    pass
+    super(ElasticsearchTestCase, self).setUp()
 
   def test_query(self):
-    if os.environ['ELASTICSEARCH_ENABLED'] == 'True':
+    if config.ELASTICSEARCH_ENABLED:
       populate.populate()
       user_id = users_dao.\
           get_user_by_google_id(constants.TEST_USER_GOOGLE_ID1).id

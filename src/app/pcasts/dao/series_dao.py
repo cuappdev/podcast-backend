@@ -1,6 +1,7 @@
+import config
 from datetime import datetime as dt
-import os
 from sqlalchemy.sql.expression import func
+from app import app
 from app.pcasts.dao import episodes_dao
 from app.pcasts.elasticsearch import interface
 from . import *
@@ -76,8 +77,7 @@ def is_subscribed_by_user(series_id, user_id):
   return optional_series is not None
 
 def search_series(search_name, offset, max_search, user_id):
-  if os.environ['ELASTICSEARCH_ENABLED'] == 'True' and \
-      os.environ['APP_SETTINGS'] != 'config.TestingConfig':
+  if config.ELASTICSEARCH_ENABLED and not app.config['TESTING']:
     possible_series_ids = interface.\
         search_series(search_name, offset, max_search)
   else:
