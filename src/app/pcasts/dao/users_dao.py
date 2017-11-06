@@ -81,10 +81,12 @@ def is_following_user(my_id, their_id):
     .first()
   return optional_following is not None
 
-def search_users(search_name, offset, max_search):
+def search_users(search_name, offset, max_search, user_id):
   possible_users = User.query.filter \
       (User.username.like(search_name+'%')) \
       .offset(offset).limit(max_search).all()
+  for u in possible_users:
+    u.is_following = is_following_user(user_id, u.id)
   return possible_users
 
 def change_user_name(user_id, new_name):
