@@ -18,6 +18,8 @@ class UsersTestCase(TestCase):
 
   def test_change_user_name(self):
     # Test with valid parameters
+    user = User.query \
+      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
     old_name = 'temp-default_google_id1'
     new_name = 'bob'
     response = self.app.post('api/v1/users/change_username/?username={}' \
@@ -25,7 +27,7 @@ class UsersTestCase(TestCase):
     response_data = json.loads(response.data)['data']
     self.assertEquals("bob", response_data['user']['username'])
 
-    search_old = users_dao.search_users(old_name, 0, 2)
+    search_old = users_dao.search_users(old_name, 0, 2, user.id)
     self.assertEquals(0, len(search_old))
     self.assertEquals(3, users_dao.get_number_users())
 
