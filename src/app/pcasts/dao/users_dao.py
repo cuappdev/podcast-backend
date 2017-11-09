@@ -56,7 +56,8 @@ def get_user_by_valid_session(session_token):
 def get_user_by_id(my_id, their_id):
   users = get_users_by_id(my_id, [their_id])
   if not users:
-    raise Exception('User with user_id: {} does not exist'.format(str(user_id)))
+    raise Exception('User with user_id: {} does not exist'.\
+                    format(str(their_id)))
   else:
     return users[0]
 
