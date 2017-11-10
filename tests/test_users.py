@@ -11,9 +11,15 @@ class UsersTestCase(TestCase):
     super(UsersTestCase, self).setUp()
     db_session_commit()
 
-  def test_change_user_name(self):
+  def tearDown(self):
+    User.query.delete()
+    super(UsersTestCase, self).tearDown()
+    db_session_commit()
 
-    #Test with valid parameters
+  def test_change_user_name(self):
+    # Test with valid parameters
+    user = User.query \
+      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
     old_name = 'temp-default_google_id1'
     new_name = 'bob'
     response = self.app.post('api/v1/users/change_username/?username={}' \
@@ -21,28 +27,29 @@ class UsersTestCase(TestCase):
     response_data = json.loads(response.data)['data']
     self.assertEquals("bob", response_data['user']['username'])
 
-    search_old = users_dao.search_users(old_name, 0, 2)
+    search_old = users_dao.search_users(old_name, 0, 2, user.id)
     self.assertEquals(0, len(search_old))
-    self.assertEquals(2, users_dao.get_number_users())
+    self.assertEquals(3, users_dao.get_number_users())
 
-    #Test empty new_name
+    # Test empty new_name
     db_before_query = users_dao.get_all_users()
     old_name = 'bob'
     new_name = ''
+
     response = self.app.post('api/v1/users/change_username/?username={}' \
         .format(new_name))
     response_data = json.loads(response.data)['data']
-    error_string = "Username length must greater than 0"
+    error_string = "Username length must be greater than 0"
     self.assertEquals(error_string, response_data['errors'][0])
 
     db_after_query = users_dao.get_all_users()
-    self.assertEquals(2, users_dao.get_number_users())
+    self.assertEquals(3, users_dao.get_number_users())
     self.assertEquals(len(db_before_query), len(db_after_query))
     self.assertEquals(db_before_query, db_after_query)
 
-    #Test changing to username already in use
+    # Test changing to username already in use
     db_before_query = users_dao.get_all_users()
-    #Want to use users after the rollback due to failure
+    # Want to use users after the rollback due to failure
     db_session_expunge_all()
     existing_user = User.query.\
       filter(User.google_id == constants.TEST_USER_GOOGLE_ID2).\
@@ -55,6 +62,6 @@ class UsersTestCase(TestCase):
     self.assertEquals(error_string, response_data['errors'][0])
     db_after_query = users_dao.get_all_users()
 
-    self.assertEquals(2, users_dao.get_number_users())
+    self.assertEquals(3, users_dao.get_number_users())
     self.assertEquals(len(db_before_query), len(db_after_query))
     self.assertEquals(db_before_query, db_after_query)

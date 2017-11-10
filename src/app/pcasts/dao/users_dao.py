@@ -56,7 +56,8 @@ def get_user_by_valid_session(session_token):
 def get_user_by_id(my_id, their_id):
   users = get_users_by_id(my_id, [their_id])
   if not users:
-    raise Exception('User with user_id: {} does not exist'.format(str(user_id)))
+    raise Exception('User with user_id: {} does not exist'.\
+                    format(str(their_id)))
   else:
     return users[0]
 
@@ -81,10 +82,12 @@ def is_following_user(my_id, their_id):
     .first()
   return optional_following is not None
 
-def search_users(search_name, offset, max_search):
+def search_users(search_name, offset, max_search, user_id):
   possible_users = User.query.filter \
       (User.username.like(search_name+'%')) \
       .offset(offset).limit(max_search).all()
+  for u in possible_users:
+    u.is_following = is_following_user(user_id, u.id)
   return possible_users
 
 def change_user_name(user_id, new_name):
@@ -94,7 +97,7 @@ def change_user_name(user_id, new_name):
     db_utils.db_session_commit()
     return user
   else:
-    raise Exception("The given user_id is Invalid")
+    raise Exception("The given user_id is invalid")
 
 def get_number_users():
   return User.query.count()

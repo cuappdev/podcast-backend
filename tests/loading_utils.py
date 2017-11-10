@@ -30,6 +30,16 @@ def load_users():
           image_url='',
           followers_count=0,
           followings_count=0,
+      ),
+      User(
+          google_id=constants.TEST_USER_GOOGLE_ID3,
+          facebook_id=constants.TEST_USER_FACEBOOK_ID3,
+          email='default_email3',
+          first_name='default_first_name3',
+          last_name='default_last_name3',
+          image_url='',
+          followers_count=0,
+          followings_count=0,
       )
   ]
 

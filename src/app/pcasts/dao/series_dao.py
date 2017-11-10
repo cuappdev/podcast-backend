@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime as dt
 from sqlalchemy.sql.expression import func
 from app.pcasts.dao import episodes_dao
 from . import *
@@ -17,11 +17,13 @@ def store_series_and_episodes_from_feed(feed):
   )
   models_to_commit = [new_series]
   for episode_dict in feed.get('episodes'):
+    pub_date = None if episode_dict.get('pub_date') is None else \
+      dt.fromtimestamp(episode_dict.get('pub_date'))
     ep = Episode(
         title=episode_dict.get('title'),
         author=episode_dict.get('author'),
         summary=episode_dict.get('summary'),
-        pub_date=datetime.datetime.fromtimestamp(episode_dict.get('pub_date')),
+        pub_date=pub_date,
         duration=episode_dict.get('duration'),
         audio_url=episode_dict.get('audio_url'),
         tags=episode_dict.get('tags'),

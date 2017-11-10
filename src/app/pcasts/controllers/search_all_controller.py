@@ -18,7 +18,7 @@ class SearchAllController(AppDevController):
     possible_episodes = \
         episodes_dao.search_episode(search_query, offset, max_search, user_id)
     possible_users = \
-        users_dao.search_users(search_query, offset, max_search)
+        users_dao.search_users(search_query, offset, max_search, user_id)
     possible_series = \
         series_dao.search_series(search_query, offset, max_search, user_id)
 

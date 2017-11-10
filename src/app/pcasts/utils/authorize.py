@@ -1,6 +1,7 @@
 import datetime
 import os
 from functools import wraps
+from app import app
 from app import constants
 from app.pcasts.dao import users_dao
 from flask import request, jsonify
@@ -8,7 +9,7 @@ from flask import request, jsonify
 def authorize(f):
   @wraps(f)
   def authorization_decorator(*args, **kwargs):
-    if os.environ['APP_SETTINGS'] == constants.TEST_APP_SETTING:
+    if app.config['TESTING']:
       test_user = users_dao.\
         get_user_by_google_id(constants.TEST_USER_GOOGLE_ID1)
       if test_user:
