@@ -38,9 +38,10 @@ def remove_series(series_id):
 def get_series(series_id, user_id):
   series = Series.query.filter(Series.id == series_id).first()
   series.is_subscribed = is_subscribed_by_user(series_id, user_id)
-  most_recent_episode = Episode.query.filter(Episode.series_id == series_id) \
-    .order_by(Episode.created_at.desc()).limit(1).first()
-  series.last_updated = most_recent_episode.created_at
+  most_recent_episode_pub_date = Episode.query.\
+    with_entities(func.max(Episode.pub_date)).\
+    filter(Episode.series_id == series_id).first()[0]
+  series.last_updated = most_recent_episode_pub_date
   return series
 
 def get_multiple_series(series_ids, user_id):
@@ -50,7 +51,7 @@ def get_multiple_series(series_ids, user_id):
   series = Series.query.filter(Series.id.in_(series_ids)) \
     .order_by(Series.id.asc()).all()
   last_updated_result = Episode.query \
-    .with_entities(Episode.series_id, func.max(Episode.created_at)) \
+    .with_entities(Episode.series_id, func.max(Episode.pub_date)) \
     .filter(Episode.series_id.in_(series_ids)) \
     .group_by(Episode.series_id) \
     .order_by(Episode.series_id.asc()).all()
@@ -77,7 +78,7 @@ def search_series(search_name, offset, max_search, user_id):
       tup[0] for tup in
       Series.query.\
       with_entities(Series.id).\
-      filter(Series.title.like(search_name + '%')).\
+      filter(Series.title.like('%' + search_name + '%')).\
       offset(offset).\
       limit(max_search).\
       all()

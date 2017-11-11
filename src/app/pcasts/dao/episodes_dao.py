@@ -63,7 +63,7 @@ def search_episode(search_name, offset, max_search, user_id):
       tup[0] for tup in
       Episode.query.\
       with_entities(Episode.id).\
-      filter(Episode.title.like(search_name + '%')).\
+      filter(Episode.title.like('%' + search_name + '%')).\
       offset(offset).\
       limit(max_search).\
       all()
