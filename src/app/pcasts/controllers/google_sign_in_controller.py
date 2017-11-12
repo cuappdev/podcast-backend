@@ -1,3 +1,4 @@
+import json
 from app.pcasts.utils import google_utils
 from . import *
 
@@ -10,8 +11,9 @@ class GoogleSignInController(AppDevController):
     return ['POST']
 
   def content(self, **kwargs):
-    token = request.args['access_token']
-    google_user_info = google_utils.get_me(token)
+    body = request.data
+    body_json = json.loads(body)
+    google_user_info = google_utils.get_me(body_json['access_token'])
 
     user, is_new_user = \
         users_dao.get_or_create_user_from_google_creds(google_user_info)

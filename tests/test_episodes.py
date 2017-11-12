@@ -68,27 +68,29 @@ class EpisodeTestCase(TestCase):
         {}/?offset={}&max={}'.format(many_result_title, 0, 1000))
     many_result_data = json.loads(search_results.data)
     self.assertEquals(10, len(many_result_data['data']['episodes']))
-    ##Enforce ordering and id
+
+    # Enforce ordering and id
     maxDate = many_result_data['data']['episodes'][0]['pub_date']
     for episode in many_result_data['data']['episodes']:
       self.assertEquals(episode['series']['id'], int(many_result_title))
       self.assertTrue(episode['pub_date'] <= maxDate)
       maxDate = episode['pub_date']
 
-    ##Test limit
+    # Test limit
     many_result_title = '78775671'
     search_results = self.app.get('api/v1/podcasts/episodes/by_series/\
         {}/?offset={}&max={}'.format(many_result_title, 0, 4))
     many_result_data = json.loads(search_results.data)
     self.assertEquals(4, len(many_result_data['data']['episodes']))
-    ##Enforce ordering and id
+
+    # Enforce ordering and id
     maxDate = many_result_data['data']['episodes'][0]['pub_date']
     for episode in many_result_data['data']['episodes']:
       self.assertEquals(episode['series']['id'], int(many_result_title))
       self.assertTrue(episode['pub_date'] <= maxDate)
       maxDate = episode['pub_date']
 
-    ##Test offset
+    # Test offset
     many_result_title = '78775671'
     offset_results = self.app.get('api/v1/podcasts/episodes/by_series/\
         {}/?offset={}&max={}'.format(many_result_title, 2, 10))
@@ -98,7 +100,8 @@ class EpisodeTestCase(TestCase):
     offset_result_data = json.loads(offset_results.data)
     self.assertEquals(offset_result_data['data']['episodes'][0]['title'], \
         normal_result_data['data']['episodes'][2]['title'])
-    ##Enforce ordering and id
+
+    # Enforce ordering and id
     maxDate = offset_result_data['data']['episodes'][0]['pub_date']
     for episode in offset_result_data['data']['episodes']:
       self.assertEquals(episode['series']['id'], int(many_result_title))

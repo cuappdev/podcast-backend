@@ -56,8 +56,13 @@ TEST_PODCAST_DB_PASSWORD
 TEST_PODCAST_DB_HOST
 TEST_PODCAST_DB_NAME
 APP_SETTINGS # e.g. config.DevelopmentConfig
+FACEBOOK_APP_ID
+FACEBOOK_APP_SECRET
 ````
 
+FACEBOOK_APP_ID and FACEBOOK_APP_SECRET can be obtained by logging in to
+facebook developers page(https://developers.facebook.com/apps) and creating an
+app or from the project lead.
 If using `autoenv` for local development, create a `.env` file, like the sample below:
 ````bash
 export DB_USERNAME=CHANGEME
@@ -77,7 +82,10 @@ export TEST_PODCAST_DB_PASSWORD=CHANGEME
 export TEST_PODCAST_DB_HOST=localhost
 export TEST_PODCAST_DB_NAME=test_pcasts_podcast_db_dev
 export APP_SETTINGS=config.DevelopmentConfig
+export FACEBOOK_APP_ID=CHANGEME
+export FACEBOOK_APP_SECRET=CHANGEME
 ````
+
 
 In the `/tests` directory, create another `.env` file that changes the `APP_SETTINGS`:
 ````bash
