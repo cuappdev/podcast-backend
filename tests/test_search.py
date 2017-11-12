@@ -6,12 +6,6 @@ from app import constants # pylint: disable=C0413
 
 class SearchTestCase(TestCase):
 
-  def setUp(self):
-    super(SearchTestCase, self).setUp()
-
-  def tearDown(self):
-    super(SearchTestCase, self).tearDown()
-
   def test_search_all(self):
     no_result_title = 'ABCDEFGHIJKL'
     search_results = self.app.get('api/v1/search/all/{}/?offset={}&max={}'\
@@ -28,8 +22,8 @@ class SearchTestCase(TestCase):
     some_result_data = json.loads(search_results.data)
     self.assertEquals(3, len(some_result_data['data']['users']))
     self.assertFalse(some_result_data['data']['users'][0]['is_following'])
-    self.assertEquals(215, len(some_result_data['data']['episodes']))
-    self.assertEquals(6, len(some_result_data['data']['series']))
+    self.assertEquals(1000, len(some_result_data['data']['episodes']))
+    self.assertEquals(125, len(some_result_data['data']['series']))
 
     # Partially Empty query
     two_empty_result_title = 'tat'
@@ -37,8 +31,8 @@ class SearchTestCase(TestCase):
         .format(two_empty_result_title, 0, 1000))
     te_result = json.loads(te_result.data)
     self.assertEquals(0, len(te_result['data']['users']))
-    self.assertEquals(4, len(te_result['data']['episodes']))
-    self.assertEquals(0, len(te_result['data']['series']))
+    self.assertEquals(1000, len(te_result['data']['episodes']))
+    self.assertEquals(18, len(te_result['data']['series']))
 
     # offset
     some_result_title = 'te'
@@ -72,7 +66,7 @@ class SearchTestCase(TestCase):
     search_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
          .format(title, 0, 1000))
     result_data = json.loads(search_results.data)
-    self.assertEquals(1, len(result_data['data']['episodes']))
+    self.assertTrue(len(result_data['data']['episodes']) > 0)
     self.assertIsNotNone(result_data['data']['episodes'][0]['is_bookmarked'])
     self.assertIsNotNone(result_data['data']['episodes'][0]['is_recommended'])
 
@@ -83,17 +77,11 @@ class SearchTestCase(TestCase):
     no_result_data = json.loads(search_results.data)
     self.assertEquals(0, len(no_result_data['data']['episodes']))
 
-    one_result_title = 'Junk'
-    search_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
-         .format(one_result_title, 0, 1000))
-    one_result_data = json.loads(search_results.data)
-    self.assertEquals(1, len(one_result_data['data']['episodes']))
-
     many_result_title = 'Happy'
     search_results = self.app.get('api/v1/search/episodes/{}/?offset={}&max={}'\
          .format(many_result_title, 0, 1000))
     many_result_data = json.loads(search_results.data)
-    self.assertEquals(102, len(many_result_data['data']['episodes']))
+    self.assertEquals(260, len(many_result_data['data']['episodes']))
 
     # Test limit
     ten_result_title = 'newer'
@@ -118,7 +106,7 @@ class SearchTestCase(TestCase):
     search_results = self.app.get('api/v1/search/series/{}/?offset={}&max={}'\
          .format(title, 0, 1000))
     result_data = json.loads(search_results.data)
-    self.assertEquals(1, len(result_data['data']['series']))
+    self.assertEquals(2, len(result_data['data']['series']))
     self.assertIsNotNone(result_data['data']['series'][0]['is_subscribed'])
 
   def test_search_series(self):
@@ -128,17 +116,11 @@ class SearchTestCase(TestCase):
     no_result_data = json.loads(search_results.data)
     self.assertEquals(0, len(no_result_data['data']['series']))
 
-    one_result_title = 'Jud'
-    search_results = self.app.get('api/v1/search/series/{}/?offset={}&max={}'\
-         .format(one_result_title, 0, 1000))
-    one_result_data = json.loads(search_results.data)
-    self.assertEquals(1, len(one_result_data['data']['series']))
-
-    many_result_title = 'a'
+    many_result_title = 'Jud'
     search_results = self.app.get('api/v1/search/series/{}/?offset={}&max={}'\
          .format(many_result_title, 0, 1000))
-    many_result_data = json.loads(search_results.data)
-    self.assertEquals(32, len(many_result_data['data']['series']))
+    many_result_title = json.loads(search_results.data)
+    self.assertEquals(2, len(many_result_title['data']['series']))
 
     # Test limit
     ten_result_title = 'a'
@@ -157,7 +139,6 @@ class SearchTestCase(TestCase):
     offset_result_data = json.loads(offset_results.data)
     self.assertEquals(offset_result_data['data']['series'][0]['title'], \
         normal_result_data['data']['series'][2]['title'])
-
 
   def test_search_user(self):
     no_result_username = 'ABCDEFGHIJKL'
