@@ -30,8 +30,8 @@ def get_episodes_by_series(series_id, offset, max_search):
 def get_episodes_maxtime(user_id, series_ids, maxdatetime, page_size):
   episodes = Episode.query \
     .filter(Episode.series_id.in_(series_ids),
-            Episode.created_at <= maxdatetime) \
-    .order_by(Episode.created_at.desc()) \
+            Episode.pub_date <= maxdatetime) \
+    .order_by(Episode.pub_date.desc()) \
     .limit(page_size) \
     .all()
   for e in episodes:
