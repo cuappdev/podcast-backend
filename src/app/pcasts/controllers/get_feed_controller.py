@@ -33,11 +33,17 @@ class GetFeedController(AppDevController):
     new_subscribed_episodes = \
       subscriptions_dao.get_new_subscribed_episodes(user.id, maxtime, page_size)
 
+    # TODO - huge hack, fix later
+    augmented_episodes = []
+    for e in new_subscribed_episodes:
+      e.created_at = e.pub_date
+      augmented_episodes.append(e)
+
     feed = self.merge_sorted_feed_sources(
         [
             following_recommendations,
             following_subscriptions,
-            new_subscribed_episodes
+            augmented_episodes
         ],
         [
             FeedContexts.FOLLOWING_RECOMMENDATION,
