@@ -121,3 +121,11 @@ def add_google_login(user, google_info):
   updated_user = User.query.filter(User.id == user.id).first()
   updated_user.google_id = google_info['id']
   return db_utils.commit_model(updated_user)
+
+
+def get_users_by_facebook_ids(facebook_ids, user_id):
+  if not facebook_ids or facebook_ids == []:
+   return []
+  users = Users.query.filter(Users.facebook_id.in_(facebook_ids)) \
+     .order_by(Users.name.desc()).all()
+  return users
