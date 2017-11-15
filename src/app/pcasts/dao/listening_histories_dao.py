@@ -12,8 +12,8 @@ def create_or_update_listening_histories(episode_update_info_map, user):
   result = []
   for e in episodes:
     try:
-      time_at = episode_update_info_map[e.id]['time_at']
-      listening_duration = episode_update_info_map[e.id]['listening_duration']
+      current_progress = episode_update_info_map[e.id]['current_progress']
+      percentage_listened = episode_update_info_map[e.id]['percentage_listened']
     except KeyError:
       raise Exception('Invalid episode_id {} provided'.format(e.id))
     real_duration = \
@@ -21,12 +21,12 @@ def create_or_update_listening_histories(episode_update_info_map, user):
       else episode_update_info_map[e.id]['real_duration']
     if e.id in listening_histories_by_episode:
       lh = listening_histories_by_episode[e.id]
-      lh.time_at = time_at
-      lh.listening_duration = lh.listening_duration + listening_duration
+      lh.current_progress = current_progress
+      lh.percentage_listened = lh.percentage_listened + percentage_listened
     else:
       lh = \
         ListeningHistory(episode_id=e.id, user_id=user.id,
-                         listening_duration=listening_duration, time_at=time_at)
+                         percentage_listened=percentage_listened, current_progress=current_progress)
       db.session.add(lh)
     if not e.real_duration and real_duration:
       e.real_duration = real_duration

@@ -33,12 +33,12 @@ class ListeningHistoryTestCase(TestCase):
 
     data = {
         episode_id1: {
-            'listening_duration': 0.5,
-            'time_at': 0.5
+            'percentage_listened': 0.5,
+            'current_progress': 0.5
         },
         episode_id2: {
-            'listening_duration': 0.9,
-            'time_at': 0.11,
+            'percentage_listened': 0.9,
+            'current_progress': 0.11,
             'real_duration': 3670.5
         }
     }
@@ -59,18 +59,20 @@ class ListeningHistoryTestCase(TestCase):
     episode1 = episodes_dao.get_episode(episode_id1, user.id)
     self.changed_episodes.append(episode1)
     self.assertEquals(listening_history1.episode_id, int(episode_id1))
-    self.assertEquals(listening_history1.listening_duration, 0.5)
-    self.assertEquals(listening_history1.time_at, 0.5)
+    self.assertEquals(listening_history1.percentage_listened, 0.5)
+    self.assertEquals(listening_history1.current_progress, 0.5)
     self.assertIsNone(episode1.real_duration)
+    self.assertEquals(episode1.current_progress, 0.5)
 
     listening_history2 = ListeningHistory.query.\
         filter(ListeningHistory.episode_id == episode_id2).first()
     episode2 = episodes_dao.get_episode(episode_id2, user.id)
     self.changed_episodes.append(episode2)
     self.assertEquals(listening_history2.episode_id, int(episode_id2))
-    self.assertEquals(listening_history2.listening_duration, 0.9)
-    self.assertEquals(listening_history2.time_at, 0.11)
+    self.assertEquals(listening_history2.percentage_listened, 0.9)
+    self.assertEquals(listening_history2.current_progress, 0.11)
     self.assertEquals(episode2.real_duration, 3670.5)
+    self.assertEquals(episode2.current_progress, 0.11)
 
   def test_update_listening_histories(self):
     episode_id1, _, user = self.generate_listening_histories()
@@ -79,14 +81,15 @@ class ListeningHistoryTestCase(TestCase):
         filter(ListeningHistory.episode_id == episode_id1).first()
     episode1 = episodes_dao.get_episode(episode_id1, user.id)
     self.assertEquals(listening_history1.episode_id, int(episode_id1))
-    self.assertEquals(listening_history1.listening_duration, 0.5)
-    self.assertEquals(listening_history1.time_at, 0.5)
+    self.assertEquals(listening_history1.percentage_listened, 0.5)
+    self.assertEquals(listening_history1.current_progress, 0.5)
     self.assertIsNone(episode1.real_duration)
+    self.assertEquals(episode1.current_progress, 0.5)
 
     data = {
         episode_id1: {
-            'listening_duration': 1.2,
-            'time_at': 0.75,
+            'percentage_listened': 1.2,
+            'current_progress': 0.75,
             'real_duration': 9000.1
         }
     }
@@ -99,9 +102,10 @@ class ListeningHistoryTestCase(TestCase):
     self.changed_episodes.append(episode1)
 
     self.assertEquals(listening_history1.episode_id, int(episode_id1))
-    self.assertEquals(listening_history1.listening_duration, 1.7)
-    self.assertEquals(listening_history1.time_at, 0.75)
+    self.assertEquals(listening_history1.percentage_listened, 1.7)
+    self.assertEquals(listening_history1.current_progress, 0.75)
     self.assertEquals(episode1.real_duration, 9000.1)
+    self.assertEquals(episode1.current_progress, 0.75)
 
   def test_get_listening_history(self):
     episode_id1, episode_id2, _ = self.generate_listening_histories()
