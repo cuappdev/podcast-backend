@@ -11,6 +11,7 @@ class Episode(Base):
   summary = db.Column(MEDIUMTEXT)
   pub_date = db.Column(db.DateTime, default=db.func.current_timestamp())
   duration = db.Column(db.String(255))
+  real_duration = db.Column(db.Float)
   audio_url = db.Column(db.Text)
   tags = db.Column(db.Text) # semicolon-separated
   recommendations_count = db.Column(db.Integer, nullable=False)
@@ -25,6 +26,7 @@ class Episode(Base):
     self.summary = kwargs.get('summary', None)
     self.pub_date = kwargs.get('pub_date', None)
     self.duration = kwargs.get('duration', None)
+    self.real_duration = kwargs.get('real_duration', None)
     self.audio_url = kwargs.get('audio_url', None)
     self.tags = ';'.join(kwargs.get('tags', []))
     self.series_id = kwargs.get('series_id')

@@ -21,7 +21,7 @@ from app.pcasts.controllers.create_delete_following_controller import * # pylint
 from app.pcasts.controllers.get_user_followers_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_user_followings_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.create_delete_listening_history_controller import * # pylint: disable=C0413
-from app.pcasts.controllers.get_listening_history_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.listening_history_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.clear_listening_history_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_feed_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.update_session_controller import * # pylint: disable=C0413
@@ -54,7 +54,7 @@ controllers = [
     GetUserFollowersController(),
     GetUserFollowingsController(),
     CreateDeleteListeningHistoryController(),
-    GetListeningHistoryController(),
+    ListeningHistoryController(),
     ClearListeningHistoryController(),
     GetFeedController(),
     UpdateSessionController(),
