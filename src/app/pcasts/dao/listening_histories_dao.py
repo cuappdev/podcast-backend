@@ -32,7 +32,6 @@ def create_or_update_listening_histories(episode_update_info_map, user):
       e.real_duration = real_duration
     result.append(lh)
   db_utils.db_session_commit()
-  print type(e.real_duration)
   return result
 
 def delete_listening_history(episode_id, user):

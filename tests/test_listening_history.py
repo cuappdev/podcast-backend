@@ -34,8 +34,7 @@ class ListeningHistoryTestCase(TestCase):
     data = {
         episode_id1: {
             'listening_duration': 0.5,
-            'time_at': 0.5,
-            'real_duration': None
+            'time_at': 0.5
         },
         episode_id2: {
             'listening_duration': 0.9,
