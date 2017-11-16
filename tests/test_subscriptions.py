@@ -159,3 +159,14 @@ class SubscriptionsTestCase(TestCase):
     self.app.delete('api/v1/subscriptions/{}/'.format(series_id))
     series = series_dao.get_series(series_id, user.id)
     self.assertFalse(series.is_subscribed)
+
+    user2 = User.query \
+       .filter(User.google_id == constants.TEST_USER_GOOGLE_ID2).first()
+
+    subscriptions_dao.create_subscription(user2.id, series_id)
+    response = self.app.\
+        get('api/v1/subscriptions/users/{}/'.format(user2.id))
+    data = json.loads(response.data)
+    self.assertFalse(
+        data['data']['subscriptions'][0]['series']['is_subscribed']
+    )
