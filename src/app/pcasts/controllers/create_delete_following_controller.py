@@ -14,10 +14,17 @@ class CreateDeleteFollowingController(AppDevController):
     followed_id = request.view_args['followed_id']
     if request.method == 'POST':
       following = followings_dao.create_following(follower.id, followed_id)
-
+      app.logger.info(
+          '(follower_id: %s, followed_id: %s) following created',
+          follower.id, followed_id
+      )
       return {'following': following_schema.dump(following).data}
 
     elif request.method == 'DELETE':
       followings_dao.delete_following(follower.id, followed_id)
+      app.logger.info(
+          '(follower_id: %s, followed_id: %s) following deleted',
+          follower.id, followed_id
+      )
 
       return dict()
