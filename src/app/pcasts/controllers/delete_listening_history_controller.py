@@ -1,6 +1,6 @@
 from . import *
 
-class CreateDeleteListeningHistoryController(AppDevController):
+class DeleteListeningHistoryController(AppDevController):
 
   def get_path(self):
     return '/history/listening/<episode_id>/'
