@@ -6,3 +6,5 @@ src/migrations
 target
 google.json
 vagrant/*
+*.log
+logs/

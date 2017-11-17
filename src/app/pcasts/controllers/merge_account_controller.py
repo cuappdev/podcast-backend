@@ -24,6 +24,10 @@ class MergeAccountController(AppDevController):
     else:
       raise Exception('Platform {} not supported yet'.format(new_platform))
 
+    app.logger.info(
+        '(id: %s, username: %s, new_platform: %s) account merged',
+        user.id, user.username, new_platform
+    )
     return {
         'user': user_schema.dump(user).data
     }

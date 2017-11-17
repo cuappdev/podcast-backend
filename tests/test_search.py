@@ -25,6 +25,15 @@ class SearchTestCase(TestCase):
     self.assertEquals(1000, len(some_result_data['data']['episodes']))
     self.assertEquals(125, len(some_result_data['data']['series']))
 
+    some_result_title = 'de'
+    search_results = self.app.get('api/v1/search/all/{}/?offset={}&max={}'\
+        .format(some_result_title, 0, 1000))
+    some_result_data = json.loads(search_results.data)
+    self.assertEquals(3, len(some_result_data['data']['users']))
+    self.assertFalse(some_result_data['data']['users'][0]['is_following'])
+    self.assertEquals(1000, len(some_result_data['data']['episodes']))
+    self.assertEquals(84, len(some_result_data['data']['series']))
+
     # Partially Empty query
     two_empty_result_title = 'tat'
     te_result = self.app.get('api/v1/search/all/{}/?offset={}&max={}'\
@@ -157,6 +166,30 @@ class SearchTestCase(TestCase):
     many_result_username = 'temp-google-default_google_id'
     search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
          .format(many_result_username, 0, 1000))
+    many_result_data = json.loads(search_results.data)
+    self.assertEquals(3, len(many_result_data['data']['users']))
+
+    first_name = 'default_first_name1'
+    search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
+         .format(first_name, 0, 1000))
+    single_result_data = json.loads(search_results.data)
+    self.assertEquals(1, len(single_result_data['data']['users']))
+
+    first_name = 'default_first_name'
+    search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
+         .format(first_name, 0, 1000))
+    many_result_data = json.loads(search_results.data)
+    self.assertEquals(3, len(many_result_data['data']['users']))
+
+    last_name = 'default_last_name1'
+    search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
+         .format(last_name, 0, 1000))
+    single_result_data = json.loads(search_results.data)
+    self.assertEquals(1, len(single_result_data['data']['users']))
+
+    last_name = 'default_last_name'
+    search_results = self.app.get('api/v1/search/users/{}/?offset={}&max={}'\
+         .format(last_name, 0, 1000))
     many_result_data = json.loads(search_results.data)
     self.assertEquals(3, len(many_result_data['data']['users']))
 

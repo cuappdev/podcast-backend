@@ -25,11 +25,19 @@ class GetCreateDeleteRecommendationController(AppDevController):
     elif request.method == "POST":
       recommendation = \
         recommendations_dao.create_recommendation(episode_id, user)
+      app.logger.info(
+          '(id: %s, username: %s, episode_id: %s) created recommendation',
+          user.id, user.username, episode_id
+      )
 
       return {'recommendation': recommendation_schema.dump(recommendation).data}
 
     elif request.method == "DELETE":
       recommendation = \
         recommendations_dao.delete_recommendation(episode_id, user)
+      app.logger.info(
+          '(id: %s, username: %s, episode_id: %s) deleted recommendation',
+          user.id, user.username, episode_id
+      )
 
       return {'recommendation': recommendation_schema.dump(recommendation).data}
