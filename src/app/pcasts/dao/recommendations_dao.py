@@ -27,6 +27,7 @@ def get_user_recommendations(caller_user_id, requested_user_id):
   recommendations = (
       Recommendation.query.\
       filter(Recommendation.user_id == requested_user_id).\
+      order_by(Recommendation.created_at.desc()).
       all()
   )
   episodes = episodes_dao.get_episodes([r.episode_id for r in recommendations],
