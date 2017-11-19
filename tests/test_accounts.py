@@ -25,7 +25,7 @@ class AccountsTestCase(TestCase):
     response = self.app.post('api/v1/users/merge/?access_token={}&platform={}'\
         .format(u_access_token, "facebook"))
     response_data = json.loads(response.data)["data"]
-    self.assertEquals(config.NUM_TEST_USERS, users_dao.get_number_users())
+    self.assertEquals(constants.NUM_TEST_USERS, users_dao.get_number_users())
     self.assertTrue(response_data['user']['facebook_id'] != "null")
 
   def tearDown(self):
