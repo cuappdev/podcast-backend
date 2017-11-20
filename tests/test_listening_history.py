@@ -120,7 +120,7 @@ class ListeningHistoryTestCase(TestCase):
   def test_get_listening_history(self):
     episode_id1, episode_id2, _ = self.generate_listening_histories()
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 2)
 
@@ -135,26 +135,25 @@ class ListeningHistoryTestCase(TestCase):
         lhs[1]['episode_id'] == episode_id2
     )
 
-    self.assertTrue(
-        lhs[0]['episode']['current_progress'] == 0.5 or
-        lhs[1]['episode']['current_progress'] == 0.5
-    )
-
-    self.assertTrue(
-        lhs[0]['episode']['current_progress'] == 0.11 or
-        lhs[1]['episode']['current_progress'] == 0.11
-    )
-
   def test_delete_listening_history(self):
-    episode_id1, episode_id2, _ = self.generate_listening_histories()
+    episode_title1 = 'Colombians to deliver their verdict on peace accord'
+    episode_id1 = episodes_dao.\
+        get_episode_by_title(episode_title1, self.user1.uid).id
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    episode_title2 = 'Battle of the camera drones'
+    episode_id2 = episodes_dao.\
+        get_episode_by_title(episode_title2, self.user1.uid).id
+
+    self.user1.post('api/v1/history/listening/{}/'.format(episode_id1))
+    self.user1.post('api/v1/history/listening/{}/'.format(episode_id2))
+
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 2)
 
-    self.app.delete('api/v1/history/listening/{}/'.format(episode_id1))
+    self.user1.delete('api/v1/history/listening/{}/'.format(episode_id1))
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 1)
     self.assertEquals(
@@ -165,12 +164,12 @@ class ListeningHistoryTestCase(TestCase):
   def test_clear_listening_history(self):
     self.generate_listening_histories()
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 2)
 
-    self.app.delete('api/v1/history/listening/clear/')
+    self.user1.delete('api/v1/history/listening/clear/')
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 0)

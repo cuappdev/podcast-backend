@@ -22,7 +22,7 @@ class UsersTestCase(TestCase):
       .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
     old_name = 'temp-default_google_id1'
     new_name = 'bob'
-    response = self.app.post('api/v1/users/change_username/?username={}' \
+    response = self.user1.post('api/v1/users/change_username/?username={}' \
         .format(new_name))
     response_data = json.loads(response.data)['data']
     self.assertEquals("bob", response_data['user']['username'])
@@ -36,7 +36,7 @@ class UsersTestCase(TestCase):
     old_name = 'bob'
     new_name = ''
 
-    response = self.app.post('api/v1/users/change_username/?username={}' \
+    response = self.user1.post('api/v1/users/change_username/?username={}' \
         .format(new_name))
     response_data = json.loads(response.data)['data']
     error_string = "Username length must be greater than 0"
@@ -55,7 +55,7 @@ class UsersTestCase(TestCase):
       filter(User.google_id == constants.TEST_USER_GOOGLE_ID2).\
       first()
     new_name = existing_user.username
-    response = self.app.post('api/v1/users/change_username/?username={}' \
+    response = self.user1.post('api/v1/users/change_username/?username={}' \
         .format(new_name))
     response_data = json.loads(response.data)['data']
     error_string = "Failure to complete DB transaction"
