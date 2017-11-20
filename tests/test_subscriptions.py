@@ -24,31 +24,34 @@ class SubscriptionsTestCase(TestCase):
     series = Series.query.filter(Series.id == series_id1).first()
     self.assertEquals(series.subscribers_count, 0)
 
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id1))
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
     series = Series.query.filter(Series.id == series_id1).first()
     self.assertEquals(series.subscribers_count, 1)
 
-    self.assertRaises(Exception, self.app.post(),
-                      'api/v1/subscriptions/{}/'.format(series_id1))
+    self.user1.delete('api/v1/subscriptions/{}/'.format(series_id1))
+    self.assertRaises(
+        Exception,
+        self.user1.delete('api/v1/subscriptions/{}/'.format(series_id1))
+    )
 
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id2))
-    series = Series.query.filter(Series.id == series_id1).first()
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
+    series = Series.query.filter(Series.id == series_id2).first()
     self.assertEquals(series.subscribers_count, 1)
 
   def test_get_subscriptions(self):
     series_id1 = '1211520413'
     series_id2 = '1210383304'
 
-    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.
-                            format(series_id1, 0, 1))
+    response = self.user1.get('api/v1/subscriptions/{}/?offset={}&max={}'.
+                              format(series_id1, 0, 1))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 0)
 
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id2))
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
 
-    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.
-                            format(series_id1, 0, 1))
+    response = self.user1.get('api/v1/subscriptions/{}/?offset={}&max={}'.
+                              format(series_id1, 0, 1))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 1)
     self.assertEquals(
@@ -59,13 +62,13 @@ class SubscriptionsTestCase(TestCase):
         constants.TEST_USER_GOOGLE_ID1
     )
 
-    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.
-                            format(series_id1, 0, 0))
+    response = self.user1.get('api/v1/subscriptions/{}/?offset={}&max={}'.
+                              format(series_id1, 0, 0))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 0)
 
-    response = self.app.get('api/v1/subscriptions/{}/?offset={}&max={}'.
-                            format(series_id2, 0, 1))
+    response = self.user1.get('api/v1/subscriptions/{}/?offset={}&max={}'.
+                              format(series_id2, 0, 1))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 1)
     self.assertTrue(data['data']['subscriptions'][0]['series']['last_updated'])
@@ -80,14 +83,11 @@ class SubscriptionsTestCase(TestCase):
   def test_get_user_subscriptions(self):
     series_id1 = '1211520413'
     series_id2 = '1210383304'
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id2))
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
 
-    test_user_id = users_dao.\
-        get_user_by_google_id(constants.TEST_USER_GOOGLE_ID1).id
-
-    response = self.app.\
-        get('api/v1/subscriptions/users/{}/'.format(test_user_id))
+    response = self.user1.\
+        get('api/v1/subscriptions/users/{}/'.format(self.user1.uid))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 2)
     self.assertTrue(
@@ -102,69 +102,68 @@ class SubscriptionsTestCase(TestCase):
   def test_delete_user_subscriptions(self):
     series_id1 = '1211520413'
     series_id2 = '1210383304'
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id2))
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
 
-    test_user_id = users_dao.\
-      get_user_by_google_id(constants.TEST_USER_GOOGLE_ID1).id
-
-    response = self.app.\
-        get('api/v1/subscriptions/users/{}/'.format(test_user_id))
+    response = self.user1.\
+        get('api/v1/subscriptions/users/{}/'.format(self.user1.uid))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 2)
 
-    self.app.delete('api/v1/subscriptions/{}/'.format(series_id1))
-    self.app.delete('api/v1/subscriptions/{}/'.format(series_id2))
+    self.user1.delete('api/v1/subscriptions/{}/'.format(series_id1))
+    self.user1.delete('api/v1/subscriptions/{}/'.format(series_id2))
 
-    response = self.app.\
-        get('api/v1/subscriptions/users/{}/'.format(test_user_id))
+    response = self.user1.\
+        get('api/v1/subscriptions/users/{}/'.format(self.user1.uid))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['subscriptions']), 0)
 
-    self.assertRaises(Exception, self.app.delete(),
-                      'api/v1/subscriptions/{}/'.format(series_id1))
+    self.assertRaises(
+        Exception,
+        self.user1.delete('api/v1/subscriptions/{}/'.format(series_id1)),
+    )
 
-    self.assertRaises(Exception, self.app.delete(),
-                      'api/v1/subscriptions/{}/'.format(series_id2))
+    self.assertRaises(
+        Exception,
+        self.user1.delete('api/v1/subscriptions/{}/'.format(series_id2)),
+    )
 
   def test_subscribers_count(self):
     series_id = '1211520413'
     series = Series.query.filter(Series.id == series_id).first()
     self.assertEquals(series.subscribers_count, 0)
 
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id))
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id))
     series = Series.query.filter(Series.id == series_id).first()
     self.assertEquals(series.subscribers_count, 1)
 
-    self.app.delete('api/v1/subscriptions/{}/'.format(series_id))
+    self.user1.delete('api/v1/subscriptions/{}/'.format(series_id))
     series = Series.query.filter(Series.id == series_id).first()
     self.assertEquals(series.subscribers_count, 0)
 
   def test_is_subscribed(self):
-    user = User.query \
-      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
     series_id = '1211520413'
-    series = series_dao.get_series(series_id, user.id)
+    series = series_dao.get_series(series_id, self.user1.uid)
     self.assertFalse(series.is_subscribed)
 
-    self.app.post('api/v1/subscriptions/{}/'.format(series_id))
-    series = series_dao.get_series(series_id, user.id)
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id))
+    series = series_dao.get_series(series_id, self.user1.uid)
     self.assertTrue(series.is_subscribed)
 
-    response = self.app.\
-        get('api/v1/subscriptions/users/{}/'.format(user.id))
+    response = self.user1.\
+        get('api/v1/subscriptions/users/{}/'.format(self.user1.uid))
     data = json.loads(response.data)
     self.assertTrue(data['data']['subscriptions'][0]['series']['is_subscribed'])
 
-    self.app.delete('api/v1/subscriptions/{}/'.format(series_id))
-    series = series_dao.get_series(series_id, user.id)
+    self.user1.delete('api/v1/subscriptions/{}/'.format(series_id))
+    series = series_dao.get_series(series_id, self.user1.uid)
     self.assertFalse(series.is_subscribed)
 
     user2 = User.query \
        .filter(User.google_id == constants.TEST_USER_GOOGLE_ID2).first()
 
     subscriptions_dao.create_subscription(user2.id, series_id)
-    response = self.app.\
+    response = self.user1.\
         get('api/v1/subscriptions/users/{}/'.format(user2.id))
     data = json.loads(response.data)
     self.assertFalse(

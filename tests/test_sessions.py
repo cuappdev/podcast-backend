@@ -8,9 +8,9 @@ from app import constants
 class SessionsTestCase(TestCase):
 
   def setUp(self):
-    super(SessionsTestCase, self).setUp()
     Session.query.delete()
     db_session_commit()
+    super(SessionsTestCase, self).setUp()
 
   def tearDown(self):
     super(SessionsTestCase, self).tearDown()
@@ -18,16 +18,13 @@ class SessionsTestCase(TestCase):
     db_session_commit()
 
   def _setup_session(self):
-    user = User.query.\
-      filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).\
-      first()
-    sessions_dao.get_or_create_session_and_activate(user.id)
+    sessions_dao.get_or_create_session_and_activate(self.user1.uid)
     session = Session.query.\
-      filter(Session.user_id == user.id).\
+      filter(Session.user_id == self.user1.uid).\
       first()
     self.assertTrue(session is not None)
-    self.assertTrue(session.user_id == user.id)
-    return user.id, \
+    self.assertTrue(session.user_id == self.user1.uid)
+    return self.user1.uid, \
       session.id, \
       session.session_token, \
       session.update_token, \
@@ -46,7 +43,7 @@ class SessionsTestCase(TestCase):
     sleep(2) # sleep to simulate time passing
 
     # Update session
-    self.app.post('api/v1/sessions/update/?update_token={}'.\
+    self.user1.post('api/v1/sessions/update/?update_token={}'.\
       format(previous_update_token))
 
     updated_session = Session.query.\
@@ -63,10 +60,10 @@ class SessionsTestCase(TestCase):
 
   def test_session_deactivation(self):
     # Setup session
-    user_id, session_id, _, _, _, _ = self._setup_session()
-
+    user_id, session_id, new_token, _, _, _ = self._setup_session()
+    self.user1.session_token = new_token
     # Deactivate session
-    self.app.post('api/v1/users/sign_out/')
+    self.user1.post('api/v1/users/sign_out/')
 
     deactivated_session = Session.query.\
       filter(Session.user_id == user_id).\
@@ -74,4 +71,4 @@ class SessionsTestCase(TestCase):
 
     # Check everything
     self.assertEqual(session_id, deactivated_session.id)
-    self.assertTrue(not deactivated_session.is_active)
+    self.assertFalse(deactivated_session.is_active)
