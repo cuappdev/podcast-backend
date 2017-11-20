@@ -15,8 +15,8 @@ class SignOutController(AppDevController):
 
     if not success:
       raise Exception('There is no active session associated with this user!')
-    app.logger.info(
-        '(id: %s, username: %s) session deactivated',
-        user.id, user.username
-    )
+    app.logger.info({
+        'user': user.username,
+        'message': 'session deactivated'
+    })
     return dict()
