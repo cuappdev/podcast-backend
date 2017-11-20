@@ -120,7 +120,7 @@ class ListeningHistoryTestCase(TestCase):
   def test_get_listening_history(self):
     episode_id1, episode_id2, _ = self.generate_listening_histories()
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 2)
 
@@ -137,13 +137,13 @@ class ListeningHistoryTestCase(TestCase):
   def test_delete_listening_history(self):
     episode_id1, episode_id2, _ = self.generate_listening_histories()
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 2)
 
-    self.app.delete('api/v1/history/listening/{}/'.format(episode_id1))
+    self.user1.delete('api/v1/history/listening/{}/'.format(episode_id1))
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 1)
     self.assertEquals(
@@ -154,12 +154,12 @@ class ListeningHistoryTestCase(TestCase):
   def test_clear_listening_history(self):
     self.generate_listening_histories()
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 2)
 
-    self.app.delete('api/v1/history/listening/clear/')
+    self.user1.delete('api/v1/history/listening/clear/')
 
-    response = self.app.get('api/v1/history/listening/?offset=0&max=5')
+    response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 0)
