@@ -30,10 +30,8 @@ def create_or_update_listening_histories(episode_update_info_map, user):
       db.session.add(lh)
     result.append(lh)
   # Update episode durations if needed
-  episode_ids_to_query = []
-  for episode_id, values in episode_update_info_map.iteritems():
-    if 'real_duration' in values:
-      episode_ids_to_query.append(episode_id)
+  episode_ids_to_query = \
+    [k for k, v in episode_update_info_map.items() if 'real_duration' in v]
   episodes = episodes_dao.get_episodes(episode_ids_to_query, user.id)
   for episode in episodes:
     if not episode.real_duration_written:
