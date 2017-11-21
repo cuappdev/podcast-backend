@@ -2,7 +2,6 @@ import unittest
 import os
 import sys
 
-from tests.loading_utils import *
 from tests.test_user import *
 
 class TestCase(unittest.TestCase):
