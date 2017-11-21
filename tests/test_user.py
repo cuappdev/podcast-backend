@@ -54,19 +54,28 @@ class TestUser(object):
       self.uid = response['user']['id']
       self.session_token = response['session']['session_token']
 
-  def post(self, url):
+  def post(self, url, data=None):
     header = {"Authorization": "Bearer {}".format(self.session_token)}
-    response = self.test_client.post(url, headers=header)
+    if data is None:
+      response = self.test_client.post(url, headers=header)
+    else:
+      response = self.test_client.post(url, headers=header, data=data)
     return response
 
-  def get(self, url):
+  def get(self, url, data=None):
     header = {"Authorization": "Bearer {}".format(self.session_token)}
-    response = self.test_client.get(url, headers=header)
+    if data is None:
+      response = self.test_client.get(url, headers=header)
+    else:
+      response = self.test_client.get(url, headers=header, data=data)
     return response
 
-  def delete(self, url):
+  def delete(self, url, data=None):
     header = {"Authorization": "Bearer {}".format(self.session_token)}
-    response = self.test_client.delete(url, headers=header)
+    if data is None:
+      response = self.test_client.delete(url, headers=header)
+    else:
+      response = self.test_client.delete(url, headers=header, data=data)
     return response
 
 def initTestUser():

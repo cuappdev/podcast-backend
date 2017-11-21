@@ -28,15 +28,13 @@ class ListeningHistoryTestCase(TestCase):
     db_session_commit()
 
   def generate_listening_histories(self):
-    user = User.query \
-      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
     episode_title1 = 'Colombians to deliver their verdict on peace accord'
-    episode1 = episodes_dao.get_episode_by_title(episode_title1, user.id)
+    episode1 = episodes_dao.get_episode_by_title(episode_title1, self.user1.uid)
     self.changed_episodes[episode1.id] = episode1.duration
     episode_id1 = episode1.id
 
     episode_title2 = 'Battle of the camera drones'
-    episode2 = episodes_dao.get_episode_by_title(episode_title2, user.id)
+    episode2 = episodes_dao.get_episode_by_title(episode_title2, self.user1.uid)
     self.changed_episodes[episode2.id] = episode2.duration
     episode_id2 = episode2.id
 
@@ -56,16 +54,16 @@ class ListeningHistoryTestCase(TestCase):
         filter(ListeningHistory.episode_id == episode_id1).first()
     self.assertIsNone(listening_history)
 
-    self.app.post('api/v1/history/listening/', data=json.dumps(data))
+    self.user1.post('api/v1/history/listening/', data=json.dumps(data))
 
-    return episode_id1, episode_id2, user
+    return episode_id1, episode_id2, self.user1
 
   def test_create_listening_histories(self):
     episode_id1, episode_id2, user = self.generate_listening_histories()
 
     listening_history1 = ListeningHistory.query.\
         filter(ListeningHistory.episode_id == episode_id1).first()
-    episode1 = episodes_dao.get_episode(episode_id1, user.id)
+    episode1 = episodes_dao.get_episode(episode_id1, user.uid)
     self.assertEquals(listening_history1.episode_id, int(episode_id1))
     self.assertEquals(listening_history1.percentage_listened, 0.5)
     self.assertEquals(listening_history1.current_progress, 0.5)
@@ -75,7 +73,7 @@ class ListeningHistoryTestCase(TestCase):
 
     listening_history2 = ListeningHistory.query.\
         filter(ListeningHistory.episode_id == episode_id2).first()
-    episode2 = episodes_dao.get_episode(episode_id2, user.id)
+    episode2 = episodes_dao.get_episode(episode_id2, user.uid)
     self.assertEquals(listening_history2.episode_id, int(episode_id2))
     self.assertEquals(listening_history2.percentage_listened, 0.9)
     self.assertEquals(listening_history2.current_progress, 0.11)
@@ -88,7 +86,7 @@ class ListeningHistoryTestCase(TestCase):
 
     listening_history1 = ListeningHistory.query.\
         filter(ListeningHistory.episode_id == episode_id1).first()
-    episode1 = episodes_dao.get_episode(episode_id1, user.id)
+    episode1 = episodes_dao.get_episode(episode_id1, user.uid)
     self.assertEquals(listening_history1.episode_id, int(episode_id1))
     self.assertEquals(listening_history1.percentage_listened, 0.5)
     self.assertEquals(listening_history1.current_progress, 0.5)
@@ -103,12 +101,12 @@ class ListeningHistoryTestCase(TestCase):
             'real_duration': "9000:01"
         }
     }
-    self.app.post('api/v1/history/listening/', data=json.dumps(data))
+    self.user1.post('api/v1/history/listening/', data=json.dumps(data))
 
     listening_history1 = ListeningHistory.query.\
         filter(ListeningHistory.episode_id == episode_id1).first()
 
-    episode1 = episodes_dao.get_episode(episode_id1, user.id)
+    episode1 = episodes_dao.get_episode(episode_id1, user.uid)
 
     self.assertEquals(listening_history1.episode_id, int(episode_id1))
     self.assertEquals(listening_history1.percentage_listened, 1.7)
