@@ -19,30 +19,26 @@ class EpisodeTestCase(TestCase):
     db_session_commit()
 
   def test_discover_episodes(self):
-    user = User.query \
-      .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
     episode_title1 = 'Colombians to deliver their verdict on peace accord'
-    episode_id1 = episodes_dao.get_episode_by_title(episode_title1, user.id).id
-    self.app.post('api/v1/recommendations/{}/'.format(episode_id1))
+    episode_id1 = episodes_dao.\
+        get_episode_by_title(episode_title1, self.user1.uid).id
+    self.user1.post('api/v1/recommendations/{}/'.format(episode_id1))
     response = \
-      self.app.get('api/v1/discover/episodes/?offset={}&max={}'.format(0, 2))
+      self.user1.get('api/v1/discover/episodes/?offset={}&max={}'.format(0, 2))
     episode_results = json.loads(response.data)['data']['episodes']
     self.assertEquals(episode_id1, episode_results[0]['id'])
 
   def test_get_episode_by_series(self):
-    test_user_id = users_dao.\
-      get_user_by_google_id(constants.TEST_USER_GOOGLE_ID1).id
-
     no_result_id = '123'
-    search_results = self.app.get(\
+    search_results = self.user1.get(\
         'api/v1/podcasts/episodes/by_series/{}/?offset={}&max={}'\
         .format(no_result_id, 0, 1000))
     no_result_data = json.loads(search_results.data)
     self.assertEquals(0, len(no_result_data['data']['episodes']))
 
     one_result_title = '258109223'
-    one_result_series = series_dao.get_series(one_result_title, test_user_id)
-    search_results = self.app.get('api/v1/podcasts/episodes/by_series/\
+    one_result_series = series_dao.get_series(one_result_title, self.user1.uid)
+    search_results = self.user1.get('api/v1/podcasts/episodes/by_series/\
         {}/?offset={}&max={}'.format(one_result_title, 0, 1000))
     one_result_data = json.loads(search_results.data)
     self.assertEquals(1, len(one_result_data['data']['episodes']))
@@ -64,7 +60,7 @@ class EpisodeTestCase(TestCase):
     )
 
     many_result_title = '78775671'
-    search_results = self.app.get('api/v1/podcasts/episodes/by_series/\
+    search_results = self.user1.get('api/v1/podcasts/episodes/by_series/\
         {}/?offset={}&max={}'.format(many_result_title, 0, 1000))
     many_result_data = json.loads(search_results.data)
     self.assertEquals(10, len(many_result_data['data']['episodes']))
@@ -78,7 +74,7 @@ class EpisodeTestCase(TestCase):
 
     # Test limit
     many_result_title = '78775671'
-    search_results = self.app.get('api/v1/podcasts/episodes/by_series/\
+    search_results = self.user1.get('api/v1/podcasts/episodes/by_series/\
         {}/?offset={}&max={}'.format(many_result_title, 0, 4))
     many_result_data = json.loads(search_results.data)
     self.assertEquals(4, len(many_result_data['data']['episodes']))
@@ -92,9 +88,9 @@ class EpisodeTestCase(TestCase):
 
     # Test offset
     many_result_title = '78775671'
-    offset_results = self.app.get('api/v1/podcasts/episodes/by_series/\
+    offset_results = self.user1.get('api/v1/podcasts/episodes/by_series/\
         {}/?offset={}&max={}'.format(many_result_title, 2, 10))
-    normal_results = self.app.get('api/v1/podcasts/episodes/by_series/\
+    normal_results = self.user1.get('api/v1/podcasts/episodes/by_series/\
         {}/?offset={}&max={}'.format(many_result_title, 0, 10))
     normal_result_data = json.loads(normal_results.data)
     offset_result_data = json.loads(offset_results.data)
