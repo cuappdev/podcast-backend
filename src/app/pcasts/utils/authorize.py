@@ -10,6 +10,9 @@ def authorize(f):
   @wraps(f)
   def authorization_decorator(*args, **kwargs):
     auth_header = request.headers.get('Authorization')
+    if auth_header is None:
+      raise Exception('Authorization header is not included!')
+
     session_token = auth_header.replace('Bearer', '').strip()
     if session_token is None or not session_token:
       raise Exception('Session code not found!')
