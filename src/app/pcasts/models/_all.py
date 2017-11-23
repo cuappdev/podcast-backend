@@ -37,6 +37,7 @@ class EpisodeSchema(ModelSchema):
   is_recommended = fields.Boolean()
   is_bookmarked = fields.Boolean()
   current_progress = fields.Float()
+  percentage_listened = fields.Float()
   series = fields.Nested(
       'SeriesSchema',
       only=['id', 'image_url_lg', 'image_url_sm', 'title'])
