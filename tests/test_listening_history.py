@@ -124,14 +124,25 @@ class ListeningHistoryTestCase(TestCase):
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 2)
 
+    lhs = data['data']['listening_histories']
     self.assertTrue(
-        data['data']['listening_histories'][0]['episode_id'] == episode_id1 or
-        data['data']['listening_histories'][1]['episode_id'] == episode_id1
+        lhs[0]['episode_id'] == episode_id1 or
+        lhs[1]['episode_id'] == episode_id1
     )
 
     self.assertTrue(
-        data['data']['listening_histories'][0]['episode_id'] == episode_id2 or
-        data['data']['listening_histories'][1]['episode_id'] == episode_id2
+        lhs[0]['episode_id'] == episode_id2 or
+        lhs[1]['episode_id'] == episode_id2
+    )
+
+    self.assertTrue(
+        lhs[0]['episode']['current_progress'] == 0.5 or
+        lhs[1]['episode']['current_progress'] == 0.5
+    )
+
+    self.assertTrue(
+        lhs[0]['episode']['current_progress'] == 0.11 or
+        lhs[1]['episode']['current_progress'] == 0.11
     )
 
   def test_delete_listening_history(self):

@@ -25,4 +25,4 @@ class CreateDeleteBookmarkController(AppDevController):
           '(id: %s, username: %s, episode_id: %s) bookmark deleted',
           user.id, user.username, episode_id
       )
-    return {'bookmark': bookmark_schema.dump(bookmark).data}
+    return dict()
