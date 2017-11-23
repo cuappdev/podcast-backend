@@ -3,8 +3,7 @@ from . import *
 def populate_episode(episode, user_id):
   episode.is_recommended = is_recommended_by_user(episode.id, user_id)
   episode.is_bookmarked = is_bookmarked_by_user(episode.id, user_id)
-  episode.current_progress, episode.percentage_listened = \
-   listening_history_for_user(episode.id, user_id)
+  episode.current_progress = current_progress_for_user(episode.id, user_id)
 
 def get_episodes(episode_ids, user_id):
   if not episode_ids:
@@ -60,13 +59,12 @@ def is_recommended_by_user(episode_id, user_id):
     .first()
   return optional_recommendation is not None
 
-def listening_history_for_user(episode_id, user_id):
+def current_progress_for_user(episode_id, user_id):
   lh = ListeningHistory.query \
     .filter(ListeningHistory.episode_id == episode_id,
             ListeningHistory.user_id == user_id) \
     .first()
-  return (None, None) if not lh \
-         else (lh.current_progress, lh.percentage_listened)
+  return None if not lh else lh.current_progress
 
 def search_episode(search_name, offset, max_search, user_id):
   possible_episode_ids = [

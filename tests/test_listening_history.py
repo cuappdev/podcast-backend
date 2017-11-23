@@ -145,16 +145,6 @@ class ListeningHistoryTestCase(TestCase):
         lhs[1]['episode']['current_progress'] == 0.11
     )
 
-    self.assertTrue(
-        lhs[0]['episode']['percentage_listened'] == 0.9 or
-        lhs[1]['episode']['percentage_listened'] == 0.9
-    )
-
-    self.assertTrue(
-        lhs[0]['episode']['percentage_listened'] == 0.5 or
-        lhs[1]['episode']['percentage_listened'] == 0.5
-    )
-
   def test_delete_listening_history(self):
     episode_id1, episode_id2, _ = self.generate_listening_histories()
 
