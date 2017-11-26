@@ -29,6 +29,7 @@ py-podcast==1.0.5
 pyparsing==2.2.0
 python-dateutil==2.6.1
 python-editor==1.0.3
+python-json-logger==0.1.8
 requests==2.18.4
 six==1.10.0
 SQLAlchemy==1.1.13
