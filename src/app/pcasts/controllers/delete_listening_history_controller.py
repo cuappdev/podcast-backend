@@ -14,8 +14,9 @@ class DeleteListeningHistoryController(AppDevController):
     episode_id = request.view_args['episode_id']
     listening_history = listening_histories_dao.\
       delete_listening_history(episode_id, user)
-    app.logger.info(
-        '(id: %s, username: %s, episode_id: %s) listening history deleted',
-        user.id, user.username, episode_id
-    )
+    app.logger.info({
+        'user': user.username,
+        'episode_id': episode_id,
+        'message': 'listening history deleted'
+    })
     return dict()

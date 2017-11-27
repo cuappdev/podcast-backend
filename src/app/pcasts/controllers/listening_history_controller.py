@@ -24,8 +24,9 @@ class ListeningHistoryController(AppDevController):
       episode_info = {long(k): v for k, v in json.loads(request.data).items()}
       listening_histories_dao \
         .create_or_update_listening_histories(episode_info, user)
-      app.logger.info(
-          '(id: %s, username: %s, episode_info: %s) listening history batch ' +
-          'created or updated', user.id, user.username, episode_info
-      )
+      app.logger.info({
+          'user': user.username,
+          'episode_info': episode_info,
+          'message': 'listening history batch created or updated'
+      })
       return dict()

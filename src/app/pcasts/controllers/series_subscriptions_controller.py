@@ -26,18 +26,20 @@ class SeriesSubscriptionsController(AppDevController):
     elif request.method == "POST":
       subscription = \
         subscriptions_dao.create_subscription(user.id, series_id)
-      app.logger.info(
-          '(id: %s, username: %s, series_id: %s) subscription created',
-          user.id, user.username, series_id
-      )
+      app.logger.info({
+          'user': user.username,
+          'series_id': series_id,
+          'message': 'subscription created'
+      })
       return {'subscription': subscription_schema.dump(subscription).data}
 
     elif request.method == "DELETE":
       subscription = \
         subscriptions_dao.delete_subscription(user.id, series_id)
-      app.logger.info(
-          '(id: %s, username: %s, series_id: %s) subscription deleted',
-          user.id, user.username, series_id
-      )
+      app.logger.info({
+          'user': user.username,
+          'series_id': series_id,
+          'message': 'subscription deleted'
+      })
 
       return {'subscription': subscription_schema.dump(subscription).data}

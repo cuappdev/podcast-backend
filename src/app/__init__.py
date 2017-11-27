@@ -23,6 +23,7 @@ app.register_blueprint(pcasts)
 def not_found(error):
   return render_template('404.html'), 404
 
+from app.pcasts_logger import PcastsJsonFormatter
 # Initialize log handler
 if not app.config['TESTING']:
   date_tag = datetime.datetime.now().strftime('%Y-%b-%d')
@@ -33,8 +34,7 @@ if not app.config['TESTING']:
       '{}/info-{}.log'.format(logs_path, date_tag),
       maxBytes=10*1024*1024, backupCount=5
   )
-  formatter = logging.Formatter('%(asctime)s; %(levelname)s; %(message)s',
-                                '%Y-%m-%d %H:%M')
+  formatter = PcastsJsonFormatter('(timestamp) (level) (message)')
   log_handler.setFormatter(formatter)
   log_handler.setLevel(logging.INFO)
   app.logger.addHandler(log_handler)
