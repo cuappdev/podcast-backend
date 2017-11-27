@@ -19,5 +19,4 @@ class DeleteListeningHistoryController(AppDevController):
         'episode_id': episode_id,
         'message': 'listening history deleted'
     })
-    return {'listening_history': \
-      listening_history_schema.dump(listening_history).data}
+    return dict()

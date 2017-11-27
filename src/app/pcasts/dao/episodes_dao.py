@@ -60,12 +60,11 @@ def is_recommended_by_user(episode_id, user_id):
   return optional_recommendation is not None
 
 def current_progress_for_user(episode_id, user_id):
-  optional_listening_history = ListeningHistory.query \
+  lh = ListeningHistory.query \
     .filter(ListeningHistory.episode_id == episode_id,
             ListeningHistory.user_id == user_id) \
     .first()
-  return None if not optional_listening_history \
-         else optional_listening_history.current_progress
+  return None if not lh else lh.current_progress
 
 def search_episode(search_name, offset, max_search, user_id):
   possible_episode_ids = [
