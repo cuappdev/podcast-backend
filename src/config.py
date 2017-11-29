@@ -54,10 +54,6 @@ TEST_PODCAST_DB_URL = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
 # Facebook API information
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
-FACEBOOK_API_PERMISSIONS = 'email,user_friends'
-
-# Test Case Constants
-NUM_TEST_USERS = 3
 
 class Config(object):
   DEBUG = False

@@ -28,28 +28,25 @@ class FeedTestCase(TestCase):
     db_session_commit()
 
   def test_standard_feed(self):
-    user1 = User.query \
-       .filter(User.google_id == constants.TEST_USER_GOOGLE_ID1).first()
-    user2 = User.query \
-       .filter(User.google_id == constants.TEST_USER_GOOGLE_ID2).first()
-
     episode_title1 = 'Colombians to deliver their verdict on peace accord'
-    episode_id1 = episodes_dao.get_episode_by_title(episode_title1, user1.id).id
+    episode_id1 = episodes_dao.\
+        get_episode_by_title(episode_title1, self.user1.uid).id
 
     episode_title2 = 'Battle of the camera drones'
-    episode_id2 = episodes_dao.get_episode_by_title(episode_title2, user1.id).id
+    episode_id2 = episodes_dao.\
+        get_episode_by_title(episode_title2, self.user1.uid).id
 
-    followings_dao.create_following(user1.id, user2.id)
-    recommendations_dao.create_recommendation(episode_id1, user2)
+    followings_dao.create_following(self.user1.uid, self.user2.uid)
+    recommendations_dao.create_recommendation(episode_id1, self.user2.user)
     time.sleep(1)
-    recommendations_dao.create_recommendation(episode_id2, user2)
+    recommendations_dao.create_recommendation(episode_id2, self.user2.user)
     time.sleep(1)
-    subscriptions_dao.create_subscription(user2.id, '1211520413')
-    subscriptions_dao.create_subscription(user1.id, '1211520413')
+    subscriptions_dao.create_subscription(self.user2.uid, '1211520413')
+    subscriptions_dao.create_subscription(self.user1.uid, '1211520413')
 
     maxtime = int(time.time())
-    raw_response = self.app.get('api/v1/feed/?maxtime={}&page_size=5'
-                                .format(maxtime)).data
+    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=5'
+                                  .format(maxtime)).data
     response = json.loads(raw_response)
     self.assertEqual(len(response['data']['feed']), 5)
     self.assertEqual([item['context'] for item in response['data']['feed']],
@@ -64,9 +61,9 @@ class FeedTestCase(TestCase):
 
     # Ensure is_bookmarked is working correctly with new subscribed episodes
     subscribed_ep = episodes_dao.get_episodes_by_series('1211520413', 0, 3)[0]
-    bookmarks_dao.create_bookmark(subscribed_ep.id, user1)
-    raw_response = self.app.get('api/v1/feed/?maxtime={}&page_size=5'
-                                .format(maxtime)).data
+    bookmarks_dao.create_bookmark(subscribed_ep.id, self.user1.user)
+    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=5'
+                                  .format(maxtime)).data
     response = json.loads(raw_response)
 
     self.assertTrue(response['data']['feed'][3]['content']['is_bookmarked'])

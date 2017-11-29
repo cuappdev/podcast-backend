@@ -17,9 +17,9 @@ def create_facebook_user(access_token, username):
     base_uri = 'https://graph.facebook.com/{}/accounts/test-users?' +\
         'installed={}&name={}&permissions={}&method=post&access_token={}'
     uri = base_uri.format(config.FACEBOOK_APP_ID, 'true', username, \
-        config.FACEBOOK_API_PERMISSIONS, access_token)
+        constants.FACEBOOK_API_PERMISSIONS, access_token)
     response = requests.get(uri).json()
     return response['access_token']
 
 def create_google_user():
-  pass
+  raise NotImplementedError
