@@ -8,7 +8,6 @@ pcasts = Blueprint('pcasts', __name__, url_prefix='/api/v1')
 from app.pcasts.models._all import * # pylint: disable=C0413
 
 # Import all controllers
-from app.pcasts.controllers.hello_world_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.google_sign_in_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.get_me_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.series_subscriptions_controller import * # pylint: disable=C0413
