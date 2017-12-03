@@ -33,6 +33,19 @@ If the `migrations` directory is ever deleted, you can regenerate it with the fo
 python manage.py db init --multidb
 ````
 
+## Elasticsearch
+To run Elasticsearch-powered search, on your local machine, there are two options:
+
+1) Download Elasticsearch onto your local machine and configure the `.env` file with the address (default is `localhost:9200`), as shown further down.
+Download Logstash onto your local machine and configure the `.env` file with the path, as shown further down.
+
+2) Refer to the instructions for
+cloning and setting up the virtualenv for the [podcast-devOps](https://github.com/cuappdev/devOps) repository. The address should be `192.168.33.10`
+Download Logstash onto your local machine and configure the `.env` file with the path, as shown further down.
+
+If you do not want to run Elasticsearch, set `ELASTICSEARCH_ENABLED` to `False` in the
+`.env` file as shown below, and it will default to naive search.
+
 ## Environment Variables
 
 I highly recommend [`autoenv`](https://github.com/kennethreitz/autoenv).
@@ -58,6 +71,10 @@ TEST_PODCAST_DB_NAME
 APP_SETTINGS # e.g. config.DevelopmentConfig
 FACEBOOK_APP_ID
 FACEBOOK_APP_SECRET
+ELASTICSEARCH_ENABLED
+ELASTICSEARCH_ADDRESS
+ELASTICSEARCH_INTERVAL
+LOGSTASH_PATH
 ````
 
 FACEBOOK_APP_ID and FACEBOOK_APP_SECRET can be obtained by logging in to
@@ -84,23 +101,28 @@ export TEST_PODCAST_DB_NAME=test_pcasts_podcast_db_dev
 export APP_SETTINGS=config.DevelopmentConfig
 export FACEBOOK_APP_ID=CHANGEME
 export FACEBOOK_APP_SECRET=CHANGEME
+export ELASTICSEARCH_ENABLED=CHANGEME # True or False
+export ELASTICSEARCH_ADDRESS=CHANGEME
+export ELASTICSEARCH_INTERVAL=600 # Interval to sync MySQL data with ES (sec)
+export LOGSTASH_PATH=CHANGEME # ex. /Users/yourname/code/logstash-5.6.3
 ````
 
 
 In the `/tests` directory, create another `.env` file that changes the `APP_SETTINGS`:
 ````bash
 export APP_SETTINGS=config.TestingConfig
+export ELASTICSEARCH_ENABLED=False # Elasticsearch test can take too long
 ````
 ## Loading in Test Data
 From the root directory, run:
-````
+````bash
 python src/scripts/load_data.py dev
 python src/scripts/load_data.py test
 ````
 
 ## Testing
 To run all unit tests, from the `/tests` directory, run:
-````
+````bash
 ./test.sh
 ````
 

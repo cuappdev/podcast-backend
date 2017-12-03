@@ -55,6 +55,11 @@ TEST_PODCAST_DB_URL = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
 
+ELASTICSEARCH_ENABLED = os.environ.get('ELASTICSEARCH_ENABLED') == 'True'
+ELASTICSEARCH_ADDRESS = os.environ.get('ELASTICSEARCH_ADDRESS')
+ELASTICSEARCH_INTERVAL = int(os.environ.get('ELASTICSEARCH_INTERVAL'))
+LOGSTASH_PATH = os.environ.get('LOGSTASH_PATH')
+
 class Config(object):
   DEBUG = False
   TESTING = False

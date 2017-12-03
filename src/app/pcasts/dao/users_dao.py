@@ -1,4 +1,7 @@
+import config
 import datetime
+from app import app
+from app.pcasts.elasticsearch import interface
 from . import *
 
 def get_or_create_user_from_google_creds(google_creds):
@@ -83,13 +86,19 @@ def is_following_user(my_id, their_id):
   return optional_following is not None
 
 def search_users(search_name, offset, max_search, user_id):
-  possible_users = User.query.filter \
-      (User.username.like('%' + search_name + '%') |
-       User.first_name.like('%' + search_name + '%') |
-       User.last_name.like('%' + search_name + '%')) \
-      .offset(offset).limit(max_search).all()
-  for u in possible_users:
-    u.is_following = is_following_user(user_id, u.id)
+  if config.ELASTICSEARCH_ENABLED and not app.config['TESTING']:
+    possible_users = get_users_by_id(
+        user_id, interface.search_users(search_name, offset, max_search)
+    )
+  else:
+    possible_users = User.query.filter \
+        (User.username.like('%' + search_name + '%') |
+         User.first_name.like('%' + search_name + '%') |
+         User.last_name.like('%' + search_name + '%')) \
+        .offset(offset).limit(max_search).all()
+    for u in possible_users:
+      u.is_following = is_following_user(user_id, u.id)
+
   return possible_users
 
 def change_user_name(user_id, new_name):

@@ -6,5 +6,7 @@ src/migrations
 target
 google.json
 vagrant/*
+*.p
+src/app/pcasts/elasticsearch/data
 *.log
 logs/
