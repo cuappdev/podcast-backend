@@ -40,7 +40,6 @@ from app.pcasts.controllers.merge_account_controller import * # pylint: disable=
 from app.pcasts.controllers.search_itunes_controller import * # pylint: disable=C0413
 
 controllers = [
-    HelloWorldController(),
     GoogleSignInController(),
     GetMeController(),
     SeriesSubscriptionsController(),
