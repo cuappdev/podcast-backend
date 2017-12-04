@@ -12,19 +12,11 @@ pip install -r requirements.txt
 
 ## Setting up Database
 
-Ensure you have `mysql` plus command line tools setup:
+Ensure you have `mysql` plus command line tools setup.  Then run the following.  It creates
+databases, migrates them, and loads in necessary `dev` / `test` data:
 
 ````bash
-mysql
-mysql> CREATE DATABASE pcasts_db_dev CHARACTER SET utf8mb4;
-mysql> CREATE DATABASE pcasts_podcast_db_dev CHARACTER SET utf8mb4;
-mysql> CREATE DATABASE test_pcasts_db_dev CHARACTER SET utf8mb4;
-mysql> CREATE DATABASE test_pcasts_podcast_db_dev CHARACTER SET utf8mb4;
-mysql> \q
-cd src/scripts
-
-python setup_db.py dev
-python setup_db.py test
+./setup.sh
 ````
 
 If the `migrations` directory is ever deleted, you can regenerate it with the following:
@@ -90,12 +82,6 @@ export FACEBOOK_APP_SECRET=CHANGEME
 In the `/tests` directory, create another `.env` file that changes the `APP_SETTINGS`:
 ````bash
 export APP_SETTINGS=config.TestingConfig
-````
-## Loading in Test Data
-From the root directory, run:
-````
-python src/scripts/load_data.py dev
-python src/scripts/load_data.py test
 ````
 
 ## Testing
