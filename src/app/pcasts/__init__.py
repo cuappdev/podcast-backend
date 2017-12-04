@@ -39,6 +39,7 @@ from app.pcasts.controllers.discover_episodes_controller import * # pylint: disa
 from app.pcasts.controllers.facebook_sign_in_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.merge_account_controller import * # pylint: disable=C0413
 from app.pcasts.controllers.search_itunes_controller import * # pylint: disable=C0413
+from app.pcasts.controllers.series_for_topic_controller import *
 
 controllers = [
     HelloWorldController(),
@@ -72,6 +73,7 @@ controllers = [
     FacebookSignInController(),
     MergeAccountController(),
     SearchiTunesController(),
+    SeriesForTopicController(),
 ]
 
 # Setup all controllers
