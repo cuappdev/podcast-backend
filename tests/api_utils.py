@@ -3,8 +3,8 @@ import sys
 import json
 import config
 import requests
-from app import app # pylint: disable=C0413
-from app import constants # pylint: disable=C0413
+from app import app
+from app import constants
 
 def get_facebook_app_access_token():
     base_uri = 'https://graph.facebook.com/oauth/access_token?client_id={}' \

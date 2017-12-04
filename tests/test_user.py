@@ -3,8 +3,8 @@ import config
 import requests
 from tests.api_utils import *
 from app import constants
-from app.pcasts.models._all import * # pylint: disable=C0413
-from app.pcasts.utils.db_utils import * # pylint: disable=C0413
+from app.pcasts.models._all import *
+from app.pcasts.utils.db_utils import *
 from app.pcasts.dao.sessions_dao import *
 from app.pcasts.dao.users_dao import *
 
