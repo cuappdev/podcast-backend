@@ -2,7 +2,7 @@ import sys
 from flask import json
 from tests.test_case import *
 from app.pcasts.dao import episodes_dao, users_dao, series_dao
-from app import constants # pylint: disable=C0413
+from app import constants
 
 class SearchTestCase(TestCase):
 

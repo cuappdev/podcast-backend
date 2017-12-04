@@ -1,5 +1,5 @@
-from . import *
 from sqlalchemy.orm import validates
+from . import *
 
 class User(Base):
   __tablename__ = 'users'

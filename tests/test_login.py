@@ -4,7 +4,7 @@ from flask import json
 from tests import api_utils
 from app.pcasts.dao import users_dao
 from tests.test_case import *
-from app import constants # pylint: disable=C0413
+from app import constants
 
 class LoginTestCase(TestCase):
 

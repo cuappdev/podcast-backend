@@ -2,7 +2,7 @@ import sys
 import json
 from tests.test_case import *
 from app.pcasts.dao import series_dao, subscriptions_dao
-from app import constants # pylint: disable=C0413
+from app import constants
 
 class SeriesTestCase(TestCase):
 
