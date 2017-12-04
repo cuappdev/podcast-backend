@@ -4,7 +4,7 @@ from flask import json
 from tests import api_utils
 from app.pcasts.dao import users_dao
 from tests.test_case import *
-from app import constants # pylint: disable=C0413
+from app import constants
 
 class LoginTestCase(TestCase):
 
@@ -24,7 +24,8 @@ class LoginTestCase(TestCase):
     response_data = json.loads(response.data)['data']
     self.assertTrue(response_data['is_new_user'])
     self.assertTrue(response_data['user']['facebook_id'] != "null")
-    self.assertEquals(config.NUM_TEST_USERS + 1, users_dao.get_number_users())
+    self.assertEquals(constants.NUM_TEST_USERS + 1, \
+        users_dao.get_number_users())
 
     # Bad login
     bad_token = 'bad token'
@@ -35,7 +36,8 @@ class LoginTestCase(TestCase):
         data=json.dumps(payload))
     response = json.loads(response.data)
     self.assertFalse(response['success'])
-    self.assertEquals(config.NUM_TEST_USERS + 1, users_dao.get_number_users())
+    self.assertEquals(constants.NUM_TEST_USERS + 1, \
+        users_dao.get_number_users())
 
   def test_google_login(self):
     #Impossible without API key

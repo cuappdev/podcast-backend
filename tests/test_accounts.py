@@ -16,16 +16,18 @@ class AccountsTestCase(TestCase):
     u_access_token = api_utils.create_facebook_user(a_access_token, 'User One')
 
     # Add an account for an invalid platform:
-    response = self.app.post('api/v1/users/merge/?access_token={}&platform={}'\
-        .format(u_access_token, "fauxbook"))
+    response = self.user1.\
+        post('api/v1/users/merge/?access_token={}&platform={}'.\
+        format(u_access_token, "fauxbook"))
     response = json.loads(response.data)
     self.assertFalse(response['success'])
 
     # Add an account for facebook with existing google account
-    response = self.app.post('api/v1/users/merge/?access_token={}&platform={}'\
-        .format(u_access_token, "facebook"))
+    response = self.user1.\
+        post('api/v1/users/merge/?access_token={}&platform={}'.\
+        format(u_access_token, "facebook"))
     response_data = json.loads(response.data)["data"]
-    self.assertEquals(config.NUM_TEST_USERS, users_dao.get_number_users())
+    self.assertEquals(constants.NUM_TEST_USERS, users_dao.get_number_users())
     self.assertTrue(response_data['user']['facebook_id'] != "null")
 
   def tearDown(self):
