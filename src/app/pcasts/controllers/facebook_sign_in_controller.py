@@ -18,6 +18,11 @@ class FacebookSignInController(AppDevController):
     user, is_new_user = \
         users_dao.get_or_create_user_from_facebook_creds(facebook_info)
     session = sessions_dao.get_or_create_session_and_activate(user.id)
+    app.logger.info({
+        'user': user.username,
+        'platform': 'facebook',
+        'message': 'session created successfully'
+    })
 
     return {
         'user': user_schema.dump(user).data,

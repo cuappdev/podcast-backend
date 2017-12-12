@@ -9,9 +9,10 @@ class ListeningHistory(Base):
   )
 
   id = db.Column(db.Integer, primary_key=True)
-  listening_time = db.Column(db.DateTime, nullable=False)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
   episode_id = db.Column(db.Integer, nullable=False)
+  percentage_listened = db.Column(db.Float, nullable=False)
+  current_progress = db.Column(db.Float, nullable=False)
 
   user = db.relationship('User')
 
@@ -19,6 +20,5 @@ class ListeningHistory(Base):
     self.listening_time = datetime.datetime.now()
     self.user_id = kwargs.get('user_id')
     self.episode_id = kwargs.get('episode_id')
-
-  def update_listening_time(self):
-    self.listening_time = datetime.datetime.now()
+    self.percentage_listened = kwargs.get('percentage_listened')
+    self.current_progress = kwargs.get('current_progress')

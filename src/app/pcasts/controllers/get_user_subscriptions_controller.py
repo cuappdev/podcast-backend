@@ -10,8 +10,9 @@ class GetUserSubscriptionsController(AppDevController):
 
   @authorize
   def content(self, **kwargs):
-    user_id = request.view_args['user_id']
-    subscriptions = subscriptions_dao.get_user_subscriptions(user_id)
+    my_id = kwargs.get('user').id
+    their_id = request.view_args['user_id']
+    subscriptions = subscriptions_dao.get_user_subscriptions(their_id, my_id)
 
     return {'subscriptions': \
       [subscription_schema.dump(s).data for s in subscriptions]}

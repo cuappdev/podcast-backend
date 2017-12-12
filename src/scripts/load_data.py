@@ -7,8 +7,8 @@ from script_utils import * # pylint: disable=W0403
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 set_app_settings()
 
-from app.pcasts.models._all import * # pylint: disable=C0413,C0411
-from app.pcasts.utils.db_utils import * # pylint: disable=C0413,C0411
+from app.pcasts.models._all import *
+from app.pcasts.utils.db_utils import *
 
 def get_json_file_names():
   files = []

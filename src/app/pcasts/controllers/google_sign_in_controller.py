@@ -18,6 +18,11 @@ class GoogleSignInController(AppDevController):
     user, is_new_user = \
         users_dao.get_or_create_user_from_google_creds(google_user_info)
     session = sessions_dao.get_or_create_session_and_activate(user.id)
+    app.logger.info({
+        'user': user.username,
+        'platform': 'google',
+        'message': 'session created successfully'
+    })
 
     return {
         'user': user_schema.dump(user).data,

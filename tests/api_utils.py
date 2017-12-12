@@ -3,8 +3,8 @@ import sys
 import json
 import config
 import requests
-from app import app # pylint: disable=C0413
-from app import constants # pylint: disable=C0413
+from app import app
+from app import constants
 
 def get_facebook_app_access_token():
     base_uri = 'https://graph.facebook.com/oauth/access_token?client_id={}' \
@@ -17,9 +17,9 @@ def create_facebook_user(access_token, username):
     base_uri = 'https://graph.facebook.com/{}/accounts/test-users?' +\
         'installed={}&name={}&permissions={}&method=post&access_token={}'
     uri = base_uri.format(config.FACEBOOK_APP_ID, 'true', username, \
-        config.FACEBOOK_API_PERMISSIONS, access_token)
+        constants.FACEBOOK_API_PERMISSIONS, access_token)
     response = requests.get(uri).json()
     return response['access_token']
 
 def create_google_user():
-  pass
+  raise NotImplementedError

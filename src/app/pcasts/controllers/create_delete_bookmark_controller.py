@@ -15,6 +15,16 @@ class CreateDeleteBookmarkController(AppDevController):
     episode_id = request.view_args['episode_id']
     if request.method == 'POST':
       bookmark = bookmarks_dao.create_bookmark(episode_id, user)
+      app.logger.info({
+          'user': user.username,
+          'episode_id': episode_id,
+          'message': 'bookmark created'
+      })
     else:
       bookmark = bookmarks_dao.delete_bookmark(episode_id, user)
-    return {'bookmark': bookmark_schema.dump(bookmark).data}
+      app.logger.info({
+          'user': user.username,
+          'episode_id': episode_id,
+          'message': 'bookmark deleted'
+      })
+    return dict()

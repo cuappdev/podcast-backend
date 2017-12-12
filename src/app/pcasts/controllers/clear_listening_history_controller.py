@@ -12,4 +12,8 @@ class ClearListeningHistoryController(AppDevController):
   def content(self, **kwargs):
     user = kwargs.get('user')
     listening_histories_dao.clear_listening_history(user)
+    app.logger.info({
+        'user': user.username,
+        'message': 'listening history cleared'
+    })
     return dict()

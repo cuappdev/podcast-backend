@@ -61,10 +61,13 @@ def get_following_recommendations(user_id, maxtime, page_size):
     .order_by(Recommendation.created_at.desc()) \
     .limit(page_size) \
     .all()
-  episodes = episodes_dao.get_episodes([r.episode_id for r in recommendations],
-                                       user_id)
-  for r, e in zip(recommendations, episodes):
-    r.episode = e
+  episodes = episodes_dao.\
+    get_episodes([r.episode_id for r in recommendations], user_id)
+
+  episode_id_to_episode = {e.id:e for e in episodes}
+  for r in recommendations:
+    r.episode = episode_id_to_episode[r.episode_id]
+
   return recommendations
 
 def get_following_subscriptions(user_id, maxtime, page_size):
@@ -77,10 +80,13 @@ def get_following_subscriptions(user_id, maxtime, page_size):
     .order_by(Subscription.created_at.desc()) \
     .limit(page_size) \
     .all()
-  series = series_dao.get_multiple_series([s.series_id for s in subscriptions],
-                                          user_id)
-  for sub, ser in zip(subscriptions, series):
-    sub.series = ser
+  series = series_dao.\
+    get_multiple_series([s.series_id for s in subscriptions], user_id)
+
+  series_id_to_series = {s.id:s for s in series}
+  for sub in subscriptions:
+    sub.series = series_id_to_series[sub.series_id]
+
   return subscriptions
 
 def attach_is_following_to_json(my_id, followings_json):

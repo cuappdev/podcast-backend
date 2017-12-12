@@ -1,24 +1,26 @@
 from . import *
 
+def populate_episode(episode, user_id):
+  episode.is_recommended = is_recommended_by_user(episode.id, user_id)
+  episode.is_bookmarked = is_bookmarked_by_user(episode.id, user_id)
+  episode.current_progress = current_progress_for_user(episode.id, user_id)
+
 def get_episodes(episode_ids, user_id):
   if not episode_ids:
     return []
   episodes = Episode.query.filter(Episode.id.in_(episode_ids)).all()
   for e in episodes:
-    e.is_recommended = is_recommended_by_user(e.id, user_id)
-    e.is_bookmarked = is_bookmarked_by_user(e.id, user_id)
+    populate_episode(e, user_id)
   return episodes
 
 def get_episode(episode_id, user_id):
   episode = Episode.query.filter(Episode.id == episode_id).first()
-  episode.is_recommended = is_recommended_by_user(episode_id, user_id)
-  episode.is_bookmarked = is_bookmarked_by_user(episode_id, user_id)
+  populate_episode(episode, user_id)
   return episode
 
 def get_episode_by_title(title, user_id):
   episode = Episode.query.filter(Episode.title == title).first()
-  episode.is_recommended = is_recommended_by_user(episode.id, user_id)
-  episode.is_bookmarked = is_bookmarked_by_user(episode.id, user_id)
+  populate_episode(episode, user_id)
   return episode
 
 def get_episodes_by_series(series_id, offset, max_search):
@@ -35,8 +37,7 @@ def get_episodes_maxtime(user_id, series_ids, maxdatetime, page_size):
     .limit(page_size) \
     .all()
   for e in episodes:
-    e.is_recommended = is_recommended_by_user(e.id, user_id)
-    e.is_bookmarked = is_bookmarked_by_user(e.id, user_id)
+    populate_episode(e, user_id)
   return episodes
 
 def clear_all_recommendations_counts():
@@ -57,6 +58,13 @@ def is_recommended_by_user(episode_id, user_id):
             Recommendation.user_id == user_id) \
     .first()
   return optional_recommendation is not None
+
+def current_progress_for_user(episode_id, user_id):
+  lh = ListeningHistory.query \
+    .filter(ListeningHistory.episode_id == episode_id,
+            ListeningHistory.user_id == user_id) \
+    .first()
+  return None if not lh else lh.current_progress
 
 def search_episode(search_name, offset, max_search, user_id):
   possible_episode_ids = [

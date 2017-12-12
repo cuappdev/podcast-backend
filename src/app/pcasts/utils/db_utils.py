@@ -9,7 +9,10 @@ def commit_models(model_lst):
     db.session.commit()
     return model_lst
   except Exception as e:
-    print e
+    app.logger.info({
+        'message': DB_COMMIT_ERROR_MESSAGE,
+        'error': e
+    })
     db.session.rollback()
     raise Exception(DB_COMMIT_ERROR_MESSAGE)
 
@@ -23,7 +26,10 @@ def delete_models(model_lst):
     db.session.commit()
     return model_lst
   except Exception as e:
-    print e
+    app.logger.info({
+        'message': DB_COMMIT_ERROR_MESSAGE,
+        'error': e
+    })
     db.session.rollback()
     raise Exception(DB_COMMIT_ERROR_MESSAGE)
 
@@ -34,7 +40,10 @@ def db_session_commit():
   try:
     db.session.commit()
   except Exception as e:
-    print e
+    app.logger.info({
+        'message': DB_COMMIT_ERROR_MESSAGE,
+        'error': e
+    })
     db.session.rollback()
     raise Exception(DB_COMMIT_ERROR_MESSAGE)
 
