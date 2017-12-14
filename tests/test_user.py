@@ -52,6 +52,7 @@ class TestUser(object):
           data=json.dumps(payload))
       response = json.loads(response.data)['data']
       self.uid = response['user']['id']
+      self.user = get_user_by_id(self.uid, self.uid)
       self.session_token = response['session']['session_token']
 
   def post(self, url, data=None):

@@ -128,6 +128,8 @@ def add_google_login(user, google_info):
 def get_users_by_facebook_ids(facebook_ids, user_id):
   if not facebook_ids or facebook_ids == []:
    return []
-  users = Users.query.filter(Users.facebook_id.in_(facebook_ids)) \
-     .order_by(Users.name.desc()).all()
+  users = User.query.filter(User.facebook_id.in_(facebook_ids)) \
+     .order_by(User.username.desc()).all()
+  for u in users:
+    u.is_following = is_following_user(user_id, u.id)
   return users
