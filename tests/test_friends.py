@@ -58,7 +58,7 @@ class FriendsTestCase(TestCase):
 
     self.assertTrue(len(data['users']) == 2)
     if data['users'][0]['id'] == fb_user3.uid:
-      data['users'] = data['users'].reverse()
+      data['users'].reverse()
     self.assertEquals(data['users'][0]['id'], fb_user2.uid)
     self.assertEquals(data['users'][0]['is_following'], True)
 
