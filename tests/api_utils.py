@@ -3,6 +3,7 @@ import sys
 import json
 import config
 import requests
+from app.pcasts.dao import users_dao
 from app import app
 from app import constants
 
@@ -23,3 +24,16 @@ def create_facebook_user(access_token, username):
 
 def create_google_user():
   raise NotImplementedError
+
+def create_facebook_friendship(fb_user1, fb_user2):
+  user1 = users_dao.get_user_by_id(fb_user1.uid, fb_user1.uid)
+  user2 = users_dao.get_user_by_id(fb_user2.uid, fb_user2.uid)
+
+  base_uri = 'https://graph.facebook.com/{}/friends/{}?' +\
+      'access_token={}'
+  uri1 = base_uri.format(user1.facebook_id, user2.facebook_id,\
+      fb_user1.tokens[constants.FACEBOOK])
+  uri2 = base_uri.format(user2.facebook_id, user1.facebook_id,\
+      fb_user2.tokens[constants.FACEBOOK])
+  requests.post(uri1)
+  requests.post(uri2)

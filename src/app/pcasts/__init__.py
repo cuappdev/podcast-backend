@@ -38,6 +38,8 @@ from app.pcasts.controllers.discover_episodes_controller import *
 from app.pcasts.controllers.facebook_sign_in_controller import *
 from app.pcasts.controllers.merge_account_controller import *
 from app.pcasts.controllers.search_itunes_controller import *
+from app.pcasts.controllers.get_facebook_friends import *
+
 
 controllers = [
     GoogleSignInController(),
@@ -70,6 +72,7 @@ controllers = [
     FacebookSignInController(),
     MergeAccountController(),
     SearchiTunesController(),
+    GetFacebookFriends(),
 ]
 
 # Setup all controllers
