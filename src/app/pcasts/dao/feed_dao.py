@@ -81,27 +81,27 @@ def merge_sorted_feed_sources(sources, contexts, page_size):
 def attach_fields_to_json(feed_element, feed_element_json, user):
   if feed_element.context == FeedContexts.FOLLOWING_RECOMMENDATION:
     feed_element_json['context_supplier']['is_following'] = users_dao.\
-        is_following_user(
-            user.id,
-            feed_element_json['context_supplier']['id']
-        )
+      is_following_user(
+          user.id,
+          feed_element_json['context_supplier']['id']
+      )
     feed_element_json['content']['series']['is_subscribed'] = series_dao.\
-        is_subscribed_by_user(
-            feed_element_json['content']['series']['id'],
-            user.id
-        )
+      is_subscribed_by_user(
+          feed_element_json['content']['series']['id'],
+          user.id
+      )
   elif feed_element.context == FeedContexts.FOLLOWING_SUBSCRIPTION:
     feed_element_json['context_supplier']['is_following'] = users_dao.\
-        is_following_user(
-            user.id,
-            feed_element_json['context_supplier']['id']
-        )
+      is_following_user(
+          user.id,
+          feed_element_json['context_supplier']['id']
+      )
   elif feed_element.context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
     feed_element_json['content']['series']['is_subscribed'] = series_dao.\
-        is_subscribed_by_user(
-            feed_element_json['content']['series']['id'],
-            user.id
-        )
+      is_subscribed_by_user(
+          feed_element_json['content']['series']['id'],
+          user.id
+      )
 
   return feed_element_json
 
