@@ -8,6 +8,7 @@ class TestCase(unittest.TestCase):
 
   def setUp(self):
     User.query.delete()
+    Session.query.delete()
     self.app = app.test_client()
     initTestUser()
     self.user1 = TestUser(test_client=self.app)
@@ -16,3 +17,4 @@ class TestCase(unittest.TestCase):
 
   def tearDown(self):
     User.query.delete()
+    Session.query.delete()

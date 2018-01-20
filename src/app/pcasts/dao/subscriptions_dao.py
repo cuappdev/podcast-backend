@@ -1,5 +1,5 @@
 import datetime
-from app.pcasts.dao import series_dao, episodes_dao
+from app.pcasts.dao import series_dao
 from . import *
 
 def get_user_subscriptions(their_id, my_id):
@@ -54,14 +54,3 @@ def delete_subscription(user_id, series_id):
     return db_utils.delete_model(maybe_subscription)
   else:
     raise Exception("Specified subscription does not exist")
-
-def get_new_subscribed_episodes(user_id, maxtime, page_size):
-  subscriptions = get_user_subscriptions(user_id, user_id)
-  series_ids = [s.series_id for s in subscriptions]
-  maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
-  return episodes_dao.get_episodes_maxtime(
-      user_id,
-      series_ids,
-      maxdatetime,
-      page_size
-  )
