@@ -3,7 +3,7 @@ from . import *
 class DiscoverEpisodesForTopicController(AppDevController):
 
   def get_path(self):
-    return '/discover/episodes/topic/<topic_id>'
+    return '/discover/episodes/topic/<topic_id>/'
 
   def get_methods(self):
     return ['GET']
