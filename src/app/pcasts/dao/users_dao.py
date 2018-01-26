@@ -36,7 +36,7 @@ def get_or_create_user_from_facebook_creds(facebook_creds):
       facebook_id=facebook_creds['id'],
       first_name=facebook_creds['first_name'],
       last_name=facebook_creds['last_name'],
-      image_url=None, # Permissions too invasive
+      image_url=facebook_creds['picture']['data']['url']
   )
 
   return db_utils.commit_model(user), True
