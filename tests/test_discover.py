@@ -63,3 +63,8 @@ class DiscoverTestCase(TestCase):
     episodes = json.loads(response.data)['data']['episodes']
     ids = [int(ep['id']) for ep in episodes]
     self.assertEquals(episode_ids, ids)
+
+  def test_ml_down(self):
+    response = self.user1.get('api/v1/discover/episodes/user/')
+    data = json.loads(response.data)
+    self.assertFalse(data['success'])
