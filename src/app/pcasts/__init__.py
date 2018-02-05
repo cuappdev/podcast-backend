@@ -39,6 +39,7 @@ from app.pcasts.controllers.facebook_sign_in_controller import *
 from app.pcasts.controllers.merge_account_controller import *
 from app.pcasts.controllers.search_itunes_controller import *
 from app.pcasts.controllers.get_facebook_friends import *
+from app.pcasts.controllers.search_facebook_friends_controller import *
 
 
 controllers = [
@@ -73,6 +74,7 @@ controllers = [
     MergeAccountController(),
     SearchiTunesController(),
     GetFacebookFriends(),
+    SearchFacebookFriends(),
 ]
 
 # Setup all controllers

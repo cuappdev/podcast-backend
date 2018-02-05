@@ -135,11 +135,16 @@ def get_users_by_facebook_ids(facebook_ids, user_id, offset, max_search):
     u.is_following = is_following_user(user_id, u.id)
   return users
 
-def get_users_by_facebook_ids(facebook_ids, user_id):
+def search_facebook_users(facebook_ids, user_id, offset, max_search \
+    , query=None):
   if not facebook_ids or facebook_ids == []:
-   return []
+    return []
+  #TODO: Elasticsearch
   users = User.query.filter(User.facebook_id.in_(facebook_ids)) \
-     .order_by(User.username.desc()).all()
+      .filter(User.username.like('%' + query + '%') |
+              User.first_name.like('%' + query + '%') |
+              User.last_name.like('%' + query + '%')) \
+      .offset(offset).limit(max_search).all()
   for u in users:
     u.is_following = is_following_user(user_id, u.id)
   return users
