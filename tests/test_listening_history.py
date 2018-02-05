@@ -138,7 +138,6 @@ class ListeningHistoryTestCase(TestCase):
 
     response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
-    print data['data']
     self.assertEquals(len(data['data']['listening_histories']), 2)
 
     self.user1.delete('api/v1/history/listening/{}/'.format(episode_id1))
