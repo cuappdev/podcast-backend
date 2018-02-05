@@ -50,6 +50,8 @@ TEST_PODCAST_DB_NAME
 APP_SETTINGS # e.g. config.DevelopmentConfig
 FACEBOOK_APP_ID
 FACEBOOK_APP_SECRET
+PODCAST_ML_API_KEY
+PODCAST_ML_URL
 ````
 
 FACEBOOK_APP_ID and FACEBOOK_APP_SECRET can be obtained by logging in to
@@ -76,6 +78,8 @@ export TEST_PODCAST_DB_NAME=test_pcasts_podcast_db_dev
 export APP_SETTINGS=config.DevelopmentConfig
 export FACEBOOK_APP_ID=CHANGEME
 export FACEBOOK_APP_SECRET=CHANGEME
+export PODCAST_ML_API_KEY=CHANGEME
+export PODCAST_ML_URL=CHANGEME
 ````
 
 

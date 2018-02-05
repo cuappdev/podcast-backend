@@ -10,6 +10,7 @@ from app.pcasts.dao import users_dao, \
   followings_dao, \
   listening_histories_dao, \
   itunes_dao, \
+  discover_dao, \
   feed_dao
 
 from app.pcasts.utils.authorize import *
