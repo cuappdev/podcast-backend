@@ -44,6 +44,7 @@ from app.pcasts.controllers.discover_series_for_user_controller import *
 from app.pcasts.controllers.discover_episodes_for_topic_controller import *
 from app.pcasts.controllers.discover_episodes_for_user_controller import *
 from app.pcasts.controllers.search_facebook_friends_controller import *
+from app.pcasts.controllers.get_topics_controller import *
 
 controllers = [
     GoogleSignInController(),
@@ -82,6 +83,7 @@ controllers = [
     DiscoverEpisodesForTopicController(),
     DiscoverEpisodesForUserController(),
     SearchFacebookFriends(),
+    GetTopicsController(),
 ]
 
 # Setup all controllers
