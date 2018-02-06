@@ -1,21 +1,10 @@
 import sys
 from flask import json
 from tests.test_case import *
-from tests import api_utils
 from app.pcasts.dao import episodes_dao, users_dao, series_dao
 from app import constants
 
-
 class SearchTestCase(TestCase):
-  def setUp(self):
-    super(SearchTestCase, self).setUp()
-    Following.query.delete()
-    db_session_commit()
-
-  def tearDown(self):
-    super(SearchTestCase, self).tearDown()
-    Following.query.delete()
-    db_session_commit()
 
   def test_search_all(self):
     no_result_title = 'ABCDEFGHIJKL'
@@ -227,66 +216,3 @@ class SearchTestCase(TestCase):
     offset_result_data = json.loads(offset_results.data)
     self.assertEquals(offset_result_data['data']['users'][0]['username'], \
         normal_result_data['data']['users'][1]['username'])
-
-  def test_search_facebook_friends(self):
-    fb_app_token = api_utils.get_facebook_app_access_token()
-
-    fb_user1 = TestUser(test_client=self.app, platform=constants.FACEBOOK,\
-        app_access_token=fb_app_token, name='FB One')
-    fb_user2 = TestUser(test_client=self.app, platform=constants.FACEBOOK,\
-        app_access_token=fb_app_token, name='FB Two')
-    fb_user3 = TestUser(test_client=self.app, platform=constants.FACEBOOK,\
-        app_access_token=fb_app_token, name='FB Twthree')
-    fb_user4 = TestUser(test_client=self.app, platform=constants.FACEBOOK,\
-        app_access_token=fb_app_token, name='FB Four')
-
-    # No friends
-    payload_1 = {
-        'access_token': fb_user1.tokens[constants.FACEBOOK]
-    }
-    p1_data = json.dumps(payload_1)
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("FB", 0, 10), data=p1_data)
-    data = json.loads(response.data)['data']
-
-    self.assertEquals(data['users'], [])
-
-    # 4 Friends (Search one)
-    api_utils.create_facebook_friendship(fb_user1, fb_user2)
-    api_utils.create_facebook_friendship(fb_user1, fb_user3)
-    api_utils.create_facebook_friendship(fb_user1, fb_user4)
-    fb_user1.post('api/v1/followings/{}/'.format(fb_user2.uid))
-    fb_user2.post('api/v1/followings/{}/'.format(fb_user3.uid))
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("Two", 0, 10), data=p1_data)
-    data = json.loads(response.data)['data']
-
-    self.assertEquals(len(data['users']), 1)
-    self.assertEquals(data['users'][0]['id'], fb_user2.uid)
-
-
-    # 4 Friends (Search two)
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("tw", 0, 10), data=p1_data)
-    data = json.loads(response.data)['data']
-
-    self.assertEquals(data['users'][0]['id'], fb_user2.uid)
-    self.assertEquals(data['users'][0]['is_following'], True)
-    self.assertEquals(data['users'][1]['id'], fb_user3.uid)
-    self.assertEquals(data['users'][1]['is_following'], False)
-
-    # Limit. Assumes linear search of the db since there is no ordering on search
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("B", 0, 1), data=p1_data)
-    data = json.loads(response.data)['data']
-
-    self.assertEquals(len(data['users']), 1)
-    self.assertEquals(data['users'][0]['id'], fb_user2.uid)
-
-    # Offset. Assumes linear search of the db since there is no ordering on search
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("t", 1, 1), data=p1_data)
-    data = json.loads(response.data)['data']
-
-    self.assertEquals(len(data['users']), 1)
-    self.assertEquals(data['users'][0]['id'], fb_user3.uid)

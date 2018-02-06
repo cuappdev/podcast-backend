@@ -43,7 +43,6 @@ from app.pcasts.controllers.discover_series_for_topic_controller import *
 from app.pcasts.controllers.discover_series_for_user_controller import *
 from app.pcasts.controllers.discover_episodes_for_topic_controller import *
 from app.pcasts.controllers.discover_episodes_for_user_controller import *
-from app.pcasts.controllers.search_facebook_friends_controller import *
 
 controllers = [
     GoogleSignInController(),
@@ -77,14 +76,10 @@ controllers = [
     MergeAccountController(),
     SearchiTunesController(),
     GetFacebookFriends(),
-<<<<<<< 4b4953c95f6e2e1ee3b99a410a980c895264aac3
     DiscoverSeriesForTopicController(),
     DiscoverSeriesForUserController(),
     DiscoverEpisodesForTopicController(),
     DiscoverEpisodesForUserController(),
-=======
-    SearchFacebookFriends(),
->>>>>>> Facebook friends search feature and tests
 ]
 
 # Setup all controllers
