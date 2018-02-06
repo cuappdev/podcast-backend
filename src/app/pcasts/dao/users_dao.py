@@ -124,12 +124,13 @@ def add_google_login(user, google_info):
   updated_user.google_id = google_info['id']
   return db_utils.commit_model(updated_user)
 
-
-def get_users_by_facebook_ids(facebook_ids, user_id):
+# Enforces an ordering on followers_count
+def get_users_by_facebook_ids(facebook_ids, user_id, offset, max_search):
   if not facebook_ids or facebook_ids == []:
-   return []
+    return []
   users = User.query.filter(User.facebook_id.in_(facebook_ids)) \
-     .order_by(User.username.desc()).all()
+      .order_by(User.followers_count.desc()) \
+      .offset(offset).limit(max_search).all()
   for u in users:
     u.is_following = is_following_user(user_id, u.id)
   return users

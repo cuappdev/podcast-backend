@@ -38,7 +38,7 @@ class SeriesTestCase(TestCase):
     series_id = '1211520413'
     response = self.user1.get('api/v1/series/{}/'.format(series_id))
     result = json.loads(response.data)['data']['series']
-    self.assertEqual(result['last_updated'], '2017-03-06T19:09:31+00:00')
+    self.assertEqual(result['last_updated'], u'2017-03-06T19:09:31+00:00')
 
     # Multiple
     search_endpoint = \
@@ -47,4 +47,4 @@ class SeriesTestCase(TestCase):
     result = json.loads(response.data)['data']['series']
     self.assertEqual(1, len(result))
     single_result = result[0]
-    self.assertEqual(single_result['last_updated'], '2017-03-06T19:09:31+00:00')
+    self.assertEqual(single_result['last_updated'], u'2017-03-06T19:09:31+00:00')
