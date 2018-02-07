@@ -16,4 +16,4 @@ class GetTopicsController(AppDevController):
     json_data = open(constants.TOPIC_FILE)
     data = json.load(json_data)
 
-    return {'topics' : data['topics']}
+    return data
