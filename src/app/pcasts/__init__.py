@@ -82,7 +82,10 @@ controllers = [
     DiscoverSeriesForUserController(),
     DiscoverEpisodesForTopicController(),
     DiscoverEpisodesForUserController(),
+<<<<<<< HEAD
     SearchFacebookFriends(),
+=======
+>>>>>>> 5b7d464ce9619986439fc01d0cf58bdcda971415
     GetTopicsController(),
 ]
 
