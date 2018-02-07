@@ -275,18 +275,18 @@ class SearchTestCase(TestCase):
     self.assertEquals(data['users'][1]['id'], fb_user3.uid)
     self.assertEquals(data['users'][1]['is_following'], False)
 
-    # Limit. Assumes linear search of the db since there is no ordering on search
+    # Limit
     response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("B", 0, 1), data=p1_data)
+        '{}/?offset={}&max={}'.format("t", 0, 1), data=p1_data)
     data = json.loads(response.data)['data']
 
     self.assertEquals(len(data['users']), 1)
-    self.assertEquals(data['users'][0]['id'], fb_user2.uid)
+    uid = data['users'][0]['id']
 
-    # Offset. Assumes linear search of the db since there is no ordering on search
+    # Offset
     response = fb_user1.post('api/v1/search/facebook/friends/' \
         '{}/?offset={}&max={}'.format("t", 1, 1), data=p1_data)
     data = json.loads(response.data)['data']
 
     self.assertEquals(len(data['users']), 1)
-    self.assertEquals(data['users'][0]['id'], fb_user3.uid)
+    self.assertTrue(data['users'][0]['id'] != uid)
