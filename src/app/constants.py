@@ -16,4 +16,3 @@ TEST_APP_SETTING = 'config.TestingConfig'
 #Static Files
 STATIC_FOLDER = config.basedir + '/app/pcasts/static/'
 TOPIC_FILE = STATIC_FOLDER + 'topics.json'
-SUBTOPIC_FILE = STATIC_FOLDER + 'subtopics.json'
