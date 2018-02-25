@@ -38,28 +38,28 @@ class DiscoverTestCase(TestCase):
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_series_for_topic(self, mock_get):
-    response = self.user1.get('api/v1/discover/series/topic/1/')
+    response = self.user1.get('api/v1/discover/series/topic/1/?offset=0&max=1')
     series = json.loads(response.data)['data']['series']
     ids = [int(ser['id']) for ser in series]
     self.assertEquals(series_ids, ids)
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_series_for_user(self, mock_get):
-    response = self.user1.get('api/v1/discover/series/user/')
+    response = self.user1.get('api/v1/discover/series/user/?offset=0&max=1')
     series = json.loads(response.data)['data']['series']
     ids = [int(ser['id']) for ser in series]
     self.assertEquals(series_ids, ids)
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_episodes_for_topic(self, mock_get):
-    response = self.user1.get('api/v1/discover/episodes/topic/3/')
+    response = self.user1.get('api/v1/discover/episodes/topic/3/?offset=0&max=1')
     episodes = json.loads(response.data)['data']['episodes']
     ids = [int(ep['id']) for ep in episodes]
     self.assertEquals(episode_ids, ids)
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_episodes_for_user(self, mock_get):
-    response = self.user1.get('api/v1/discover/episodes/user/')
+    response = self.user1.get('api/v1/discover/episodes/user/?offset=0&max=1')
     episodes = json.loads(response.data)['data']['episodes']
     ids = [int(ep['id']) for ep in episodes]
     self.assertEquals(episode_ids, ids)
