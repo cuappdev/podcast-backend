@@ -1,3 +1,4 @@
+import json
 from app.pcasts.utils import facebook_utils, google_utils
 from . import *
 
@@ -11,15 +12,17 @@ class MergeAccountController(AppDevController):
 
   @authorize
   def content(self, **kwargs):
+    body = request.data
+    body_json = json.loads(body)
     user = kwargs.get('user')
-    token = request.args['access_token']
     new_platform = request.args['platform']
+    access_token = body_json['access_token']
 
     if new_platform == "facebook":
-      facebook_info = facebook_utils.get_me(token)
+      facebook_info = facebook_utils.get_me(access_token)
       user = users_dao.add_facebook_login(user, facebook_info)
     elif new_platform == "google":
-      google_info = google_utils.get_me(token)
+      google_info = google_utils.get_me(access_token)
       user = users_dao.add_google_login(user, google_info)
     else:
       raise Exception('Platform {} not supported yet'.format(new_platform))
