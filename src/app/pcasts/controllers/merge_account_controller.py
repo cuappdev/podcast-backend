@@ -12,11 +12,9 @@ class MergeAccountController(AppDevController):
 
   @authorize
   def content(self, **kwargs):
-    body = request.data
-    body_json = json.loads(body)
+    access_token = request.headers.get('access_token')
     user = kwargs.get('user')
     new_platform = request.args['platform']
-    access_token = body_json['access_token']
 
     if new_platform == "facebook":
       facebook_info = facebook_utils.get_me(access_token)
