@@ -11,5 +11,7 @@ class DiscoverEpisodesForUserController(AppDevController):
   @authorize
   def content(self, **kwargs):
     user_id = kwargs.get('user').id
-    episodes = discover_dao.get_episodes_for_user(user_id)
+    offset = request.args['offset']
+    max_num = request.args['max']
+    episodes = discover_dao.get_episodes_for_user(user_id, offset, max_num)
     return {'episodes': [episode_schema.dump(e).data for e in episodes]}
