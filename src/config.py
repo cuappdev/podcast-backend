@@ -55,6 +55,9 @@ TEST_PODCAST_DB_URL = 'mysql://{}:{}@{}/{}?charset=utf8mb4'.format(
 FACEBOOK_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 FACEBOOK_APP_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
 
+# Discover
+ML_ENABLED = False
+
 class Config(object):
   DEBUG = False
   TESTING = False
