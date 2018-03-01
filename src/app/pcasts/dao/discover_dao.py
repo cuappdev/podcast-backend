@@ -29,7 +29,7 @@ def get_series_for_topic(topic_id, user_id, offset, max_search):
           offset(offset).\
           limit(max_search).\
           all()
-    if topic_id in topic_utils.subtopic_id_offset:
+    elif topic_id in topic_utils.subtopic_id_offset:
       subtopic_id = topic_utils.translate_subtopic_id(topic_id)
       series = Series.query.\
           filter((Series.subtopic_id.op('&')(subtopic_id)) == subtopic_id).\
@@ -37,6 +37,8 @@ def get_series_for_topic(topic_id, user_id, offset, max_search):
           offset(offset).\
           limit(max_search).\
           all()
+    else:
+      raise Exception("Invalid topic id " + str(topic_id))
     return series
 
 
@@ -56,7 +58,7 @@ def get_episodes_for_topic(topic_id, user_id, offset, max_search):
           offset(offset).\
           limit(max_search).\
           all()
-    if topic_id in topic_utils.subtopic_id_offset:
+    elif topic_id in topic_utils.subtopic_id_offset:
       subtopic_id = topic_utils.translate_subtopic_id(topic_id)
       episodes = Episode.query.join(Series). \
           filter((Series.subtopic_id.op('&')(subtopic_id)) == subtopic_id).\
@@ -65,6 +67,8 @@ def get_episodes_for_topic(topic_id, user_id, offset, max_search):
           offset(offset).\
           limit(max_search).\
           all()
+    else:
+      raise Exception("Invalid topic id " + str(topic_id))
     return episodes
 
 def get_series_for_user(user_id):

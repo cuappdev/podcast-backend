@@ -2,7 +2,7 @@ from flask import json
 from tests.test_case import *
 from app.pcasts.utils import topic_utils
 
-class UsersTestCase(TestCase):
+class TestUtilsTestCase(TestCase):
 
   def test_create_topic_id(self):
     topics = ["Arts", "Business", "Junk", "TV & Film", "Technology"]
