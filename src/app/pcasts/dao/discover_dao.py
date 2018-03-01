@@ -15,9 +15,9 @@ def request_podcast_ml(url):
 
 def get_series_for_topic(topic_id, user_id, offset, max_search):
   if config.ML_ENABLED:
-    response = request_podcast_ml('/api/v1/series/topic/{}'.format(topic_id))
-    return series_dao.get_multiple_series(response['data']['series_ids'], \
-        user_id)
+    response = request_podcast_ml('/api/v1/series/topic/{}/?offset={}&max={}'
+                                  .format(topic_id, offset, max_search))
+    return series_dao.get_multiple_series(response['data']['series_ids'], user_id)
   else:
     topic_id = int(topic_id)
     series = []
@@ -44,7 +44,8 @@ def get_series_for_topic(topic_id, user_id, offset, max_search):
 
 def get_episodes_for_topic(topic_id, user_id, offset, max_search):
   if config.ML_ENABLED:
-    response = request_podcast_ml('/api/v1/episodes/topic/{}'.format(topic_id))
+    response = request_podcast_ml('/api/v1/episodes/topic/{}/?offset={}&max={}'
+                                  .format(topic_id, offset, max_search))
     return episodes_dao.get_episodes(response['data']['episode_ids'], user_id)
   else:
     episodes = []
@@ -71,10 +72,12 @@ def get_episodes_for_topic(topic_id, user_id, offset, max_search):
       raise Exception("Invalid topic id " + str(topic_id))
     return episodes
 
-def get_series_for_user(user_id):
-  response = request_podcast_ml('/api/v1/series/user/')
+def get_series_for_user(user_id, offset, max_num):
+  response = request_podcast_ml('/api/v1/series/user/?offset={}&max={}'
+                                .format(offset, max_num))
   return series_dao.get_multiple_series(response['data']['series_ids'], user_id)
 
-def get_episodes_for_user(user_id):
-  response = request_podcast_ml('/api/v1/episodes/user/')
+def get_episodes_for_user(user_id, offset, max_num):
+  response = request_podcast_ml('/api/v1/episodes/user/?offset={}&max={}'
+                                .format(offset, max_num))
   return episodes_dao.get_episodes(response['data']['episode_ids'], user_id)

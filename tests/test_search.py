@@ -241,12 +241,8 @@ class SearchTestCase(TestCase):
         app_access_token=fb_app_token, name='FB Four')
 
     # No friends
-    payload_1 = {
-        'access_token': fb_user1.tokens[constants.FACEBOOK]
-    }
-    p1_data = json.dumps(payload_1)
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("FB", 0, 10), data=p1_data)
+    response = fb_user1.get('api/v1/search/facebook/friends/' \
+        '{}/?offset={}&max={}'.format("FB", 0, 10))
     data = json.loads(response.data)['data']
 
     self.assertEquals(data['users'], [])
@@ -257,8 +253,8 @@ class SearchTestCase(TestCase):
     api_utils.create_facebook_friendship(fb_user1, fb_user4)
     fb_user1.post('api/v1/followings/{}/'.format(fb_user2.uid))
     fb_user2.post('api/v1/followings/{}/'.format(fb_user3.uid))
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("Two", 0, 10), data=p1_data)
+    response = fb_user1.get('api/v1/search/facebook/friends/' \
+        '{}/?offset={}&max={}'.format("Two", 0, 10))
     data = json.loads(response.data)['data']
 
     self.assertEquals(len(data['users']), 1)
@@ -266,8 +262,8 @@ class SearchTestCase(TestCase):
 
 
     # 4 Friends (Search two)
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("tw", 0, 10), data=p1_data)
+    response = fb_user1.get('api/v1/search/facebook/friends/' \
+        '{}/?offset={}&max={}'.format("tw", 0, 10))
     data = json.loads(response.data)['data']
 
     self.assertEquals(data['users'][0]['id'], fb_user2.uid)
@@ -276,16 +272,16 @@ class SearchTestCase(TestCase):
     self.assertEquals(data['users'][1]['is_following'], False)
 
     # Limit
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("t", 0, 1), data=p1_data)
+    response = fb_user1.get('api/v1/search/facebook/friends/' \
+        '{}/?offset={}&max={}'.format("t", 0, 1))
     data = json.loads(response.data)['data']
 
     self.assertEquals(len(data['users']), 1)
     uid = data['users'][0]['id']
 
     # Offset
-    response = fb_user1.post('api/v1/search/facebook/friends/' \
-        '{}/?offset={}&max={}'.format("t", 1, 1), data=p1_data)
+    response = fb_user1.get('api/v1/search/facebook/friends/' \
+        '{}/?offset={}&max={}'.format("t", 1, 1))
     data = json.loads(response.data)['data']
 
     self.assertEquals(len(data['users']), 1)

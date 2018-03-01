@@ -8,13 +8,11 @@ class GetFacebookFriends(AppDevController):
     return '/users/facebook/friends/'
 
   def get_methods(self):
-    return ['POST']
+    return ['GET']
 
   @authorize
   def content(self, **kwargs):
-    body = request.data
-    body_json = json.loads(body)
-    access_token = body_json['access_token']
+    access_token = request.headers.get('access_token')
     offset = request.args['offset']
     max_search = request.args['max']
     user = kwargs.get('user')

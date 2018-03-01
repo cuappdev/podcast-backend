@@ -56,7 +56,7 @@ class TestUser(object):
       self.session_token = response['session']['session_token']
 
   def post(self, url, data=None):
-    header = {"Authorization": "Bearer {}".format(self.session_token)}
+    header = self.init_header()
     if data is None:
       response = self.test_client.post(url, headers=header)
     else:
@@ -64,7 +64,7 @@ class TestUser(object):
     return response
 
   def get(self, url, data=None):
-    header = {"Authorization": "Bearer {}".format(self.session_token)}
+    header = self.init_header()
     if data is None:
       response = self.test_client.get(url, headers=header)
     else:
@@ -72,12 +72,19 @@ class TestUser(object):
     return response
 
   def delete(self, url, data=None):
-    header = {"Authorization": "Bearer {}".format(self.session_token)}
+    header = self.init_header()
     if data is None:
       response = self.test_client.delete(url, headers=header)
     else:
       response = self.test_client.delete(url, headers=header, data=data)
     return response
+
+  def init_header(self):
+    if constants.FACEBOOK in self.tokens:
+      return {"Authorization": "Bearer {}".format(self.session_token),
+              "access_token" : self.tokens[constants.FACEBOOK]}
+    else:
+      return {"Authorization": "Bearer {}".format(self.session_token)}
 
 def initTestUser():
   TestUser.goog_user_count = 0
