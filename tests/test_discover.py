@@ -60,21 +60,15 @@ class DiscoverTestCase(TestCase):
     self.assertFalse(data['success'])
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
-<<<<<<< HEAD
   def test_series_for_user(self, mock_get):
-    response = self.user1.get('api/v1/discover/series/user/')
-=======
-  def test_series_for_topic(self, mock_get):
-    response = self.user1.get('api/v1/discover/series/topic/1/?offset=0&max=1')
->>>>>>> master
+    response = self.user1.get('api/v1/discover/series/user/?offset=0&max=1')
     series = json.loads(response.data)['data']['series']
-    ids = [int(ser['id']) for ser in series]
+    ids = [int(show['id']) for show in series]
     self.assertEquals(series_ids, ids)
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
-<<<<<<< HEAD
   def test_episodes_for_user(self, mock_get):
-    response = self.user1.get('api/v1/discover/episodes/user/')
+    response = self.user1.get('api/v1/discover/episodes/user/?offset=0&max=1')
     episodes = json.loads(response.data)['data']['episodes']
     ids = [int(ep['id']) for ep in episodes]
     self.assertEquals(episode_ids, ids)
@@ -84,10 +78,6 @@ class DiscoverTestCase(TestCase):
     config.ML_ENABLED = True
     response = self.user1.get('api/v1/discover/series/topic/1323/' +
                               '?offset=0&max=0')
-=======
-  def test_series_for_user(self, mock_get):
-    response = self.user1.get('api/v1/discover/series/user/?offset=0&max=1')
->>>>>>> master
     series = json.loads(response.data)['data']['series']
     ids = [int(show['id']) for show in series]
     self.assertEquals(series_ids, ids)
@@ -103,27 +93,18 @@ class DiscoverTestCase(TestCase):
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_episodes_for_topic(self, mock_get):
-<<<<<<< HEAD
     config.ML_ENABLED = True
     response = self.user1.get('api/v1/discover/episodes/topic/1323/' +
                               '?offset=0&max=10')
-=======
-    response = self.user1.get('api/v1/discover/episodes/topic/3/?offset=0&max=1')
->>>>>>> master
     episodes = json.loads(response.data)['data']['episodes']
     ids = [int(ep['id']) for ep in episodes]
     self.assertEquals(episode_ids, ids)
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
-<<<<<<< HEAD
   def test_episodes_for_subtopic(self, mock_get):
     config.ML_ENABLED = True
     response = self.user1.get('api/v1/discover/episodes/topic/1443/' +
                               '?offset=0&max=10')
-=======
-  def test_episodes_for_user(self, mock_get):
-    response = self.user1.get('api/v1/discover/episodes/user/?offset=0&max=1')
->>>>>>> master
     episodes = json.loads(response.data)['data']['episodes']
     ids = [int(ep['id']) for ep in episodes]
     self.assertEquals(episode_ids, ids)
