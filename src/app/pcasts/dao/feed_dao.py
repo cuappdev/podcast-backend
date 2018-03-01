@@ -1,6 +1,6 @@
 import heapq
 import time
-from app.pcasts.dao import users_dao, episodes_dao, series_dao
+from app.pcasts.dao import users_dao, episodes_dao, series_dao, shares_dao
 from . import *
 
 class Enum(set):
@@ -11,7 +11,8 @@ class Enum(set):
 
 FeedContexts = Enum(['FOLLOWING_RECOMMENDATION',
                      'FOLLOWING_SUBSCRIPTION',
-                     'NEW_SUBSCRIBED_EPISODE'])
+                     'NEW_SUBSCRIBED_EPISODE',
+                     'SHARED_EPISODE'])
 
 def get_feed(user, maxtime, page_size):
   following_recommendations = \
@@ -20,23 +21,27 @@ def get_feed(user, maxtime, page_size):
     get_following_subscriptions(user.id, maxtime, page_size)
   new_subscribed_episodes = \
     get_new_subscribed_episodes(user.id, maxtime, page_size)
+  shared_episodes = \
+    get_shared_episodes(user.id, maxtime, page_size)
 
   # TODO - huge hack, fix later
   augmented_episodes = []
   for e in new_subscribed_episodes:
-    e.created_at = e.pub_date
+    e.updated_at = e.pub_date
     augmented_episodes.append(e)
 
   feed = merge_sorted_feed_sources(
       [
           following_recommendations,
           following_subscriptions,
-          augmented_episodes
+          augmented_episodes,
+          shared_episodes
       ],
       [
           FeedContexts.FOLLOWING_RECOMMENDATION,
           FeedContexts.FOLLOWING_SUBSCRIPTION,
-          FeedContexts.NEW_SUBSCRIBED_EPISODE
+          FeedContexts.NEW_SUBSCRIBED_EPISODE,
+          FeedContexts.SHARED_EPISODE
       ],
       page_size)
 
@@ -66,14 +71,14 @@ def merge_sorted_feed_sources(sources, contexts, page_size):
   for source_idx, s in enumerate(sources):
     if s:
       item = s.pop()
-      heapq.heappush(heap, (-time.mktime(item.created_at.timetuple()),
+      heapq.heappush(heap, (-time.mktime(item.updated_at.timetuple()),
                             item, source_idx))
   while len(heap) > 0 and count < page_size:  #pylint: disable=C1801
     _, item, source_idx = heapq.heappop(heap)
     result.append(FeedElement(item, contexts[source_idx]))
     if sources[source_idx]:
       raw_content = sources[source_idx].pop()
-      heapq.heappush(heap, (-time.mktime(raw_content.created_at.timetuple()),
+      heapq.heappush(heap, (-time.mktime(raw_content.updated_at.timetuple()),
                             raw_content, source_idx))
     count += 1
   return result
@@ -102,6 +107,17 @@ def attach_fields_to_json(feed_element, feed_element_json, user):
           feed_element_json['content']['series']['id'],
           user.id
       )
+  elif feed_element.context == FeedContexts.SHARED_EPISODE:
+    feed_element_json['context_supplier']['is_following'] = users_dao.\
+      is_following_user(
+          user.id,
+          feed_element_json['context_supplier']['id']
+      )
+    feed_element_json['content']['series']['is_subscribed'] = series_dao.\
+      is_subscribed_by_user(
+          feed_element_json['content']['series']['id'],
+          user.id
+      )
 
   return feed_element_json
 
@@ -111,8 +127,8 @@ def get_following_subscriptions(user_id, maxtime, page_size):
   maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
   subscriptions = Subscription.query \
     .filter(Subscription.user_id.in_(following_ids),
-            Subscription.created_at <= maxdatetime) \
-    .order_by(Subscription.created_at.desc()) \
+            Subscription.updated_at <= maxdatetime) \
+    .order_by(Subscription.updated_at.desc()) \
     .limit(page_size) \
     .all()
   series = series_dao.\
@@ -130,8 +146,8 @@ def get_following_recommendations(user_id, maxtime, page_size):
   maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
   recommendations = Recommendation.query \
     .filter(Recommendation.user_id.in_(following_ids),
-            Recommendation.created_at <= maxdatetime) \
-    .order_by(Recommendation.created_at.desc()) \
+            Recommendation.updated_at <= maxdatetime) \
+    .order_by(Recommendation.updated_at.desc()) \
     .limit(page_size) \
     .all()
   episodes = episodes_dao.\
@@ -154,11 +170,25 @@ def get_new_subscribed_episodes(user_id, maxtime, page_size):
       page_size
   )
 
+def get_shared_episodes(user_id, maxtime, page_size):
+  maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
+  shares = Share.query.filter(Share.sharee_id == user_id,
+                              Share.updated_at <= maxdatetime) \
+           .order_by(Share.updated_at.desc()) \
+           .limit(page_size) \
+           .all()
+  episodes = episodes_dao.\
+    get_episodes([s.episode_id for s in shares], user_id)
+  episode_id_to_episode = {e.id:e for e in episodes}
+  for s in shares:
+    s.episode = episode_id_to_episode[s.episode_id]
+  return shares
+
 class FeedElement(object):
 
   def __init__(self, raw_content, context):
     self.context = context
-    self.time = int(time.mktime(raw_content.created_at.timetuple()))
+    self.time = int(time.mktime(raw_content.updated_at.timetuple()))
     if context == FeedContexts.FOLLOWING_RECOMMENDATION:
       self.context_supplier = raw_content.user
       self.content = raw_content.episode
@@ -168,3 +198,6 @@ class FeedElement(object):
     elif context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
       self.context_supplier = raw_content.series
       self.content = raw_content
+    elif context == FeedContexts.SHARED_EPISODE:
+      self.context_supplier = raw_content.sharer
+      self.content = raw_content.episode

@@ -154,6 +154,7 @@ class DiscoverTestCase(TestCase):
     request = self.user1.get('api/v1/discover/series/topic/1323/' +
                              '?offset=0&max=25')
     data = json.loads(request.data)['data']
+    print data
     self.assertTrue(int(data['series'][0]['id']) == int(series_id1))
     self.assertTrue(int(data['series'][1]['id']) == int(series_id2))
 

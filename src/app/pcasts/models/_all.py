@@ -9,6 +9,7 @@ from app.pcasts.models.bookmark import *
 from app.pcasts.models.recommendation import *
 from app.pcasts.models.following import *
 from app.pcasts.models.listening_history import *
+from app.pcasts.models.share import *
 
 class UserSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
@@ -64,3 +65,10 @@ class ListeningHistorySchema(ModelSchema):
     model = ListeningHistory
   episode = fields.Nested('EpisodeSchema', many=False)
   user = fields.Nested('UserSchema', many=False)
+
+class ShareSchema(ModelSchema):
+  class Meta(ModelSchema.Meta):
+    model = Share
+  sharer = fields.Nested('UserSchema', many=False)
+  sharee = fields.Nested('UserSchema', many=False)
+  episode = fields.Nested('EpisodeSchema', many=False)

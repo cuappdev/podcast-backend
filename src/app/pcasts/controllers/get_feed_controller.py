@@ -27,6 +27,7 @@ class GetFeedController(AppDevController):
         FeedContexts.FOLLOWING_RECOMMENDATION: (user_schema, episode_schema),
         FeedContexts.FOLLOWING_SUBSCRIPTION: (user_schema, series_schema),
         FeedContexts.NEW_SUBSCRIBED_EPISODE: (series_schema, episode_schema),
+        FeedContexts.SHARED_EPISODE: (user_schema, episode_schema)
     }
     supplier_schema, content_schema = context_to_schemas[feed_element.context]
     return {

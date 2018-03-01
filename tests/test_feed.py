@@ -2,7 +2,7 @@ import time
 import json
 from tests.test_case import *
 from app.pcasts.dao import subscriptions_dao, series_dao, recommendations_dao, \
-  followings_dao, episodes_dao, bookmarks_dao
+  followings_dao, episodes_dao, bookmarks_dao, shares_dao
 from app.pcasts.dao.feed_dao import FeedContexts
 
 class FeedTestCase(TestCase):
@@ -15,6 +15,7 @@ class FeedTestCase(TestCase):
     Recommendation.query.delete()
     episodes_dao.clear_all_recommendations_counts()
     Bookmark.query.delete()
+    Share.query.delete()
     db_session_commit()
 
   def tearDown(self):
@@ -25,6 +26,7 @@ class FeedTestCase(TestCase):
     Recommendation.query.delete()
     episodes_dao.clear_all_recommendations_counts()
     Bookmark.query.delete()
+    Share.query.delete()
     db_session_commit()
 
   def test_standard_feed(self):
@@ -43,14 +45,16 @@ class FeedTestCase(TestCase):
     time.sleep(1)
     subscriptions_dao.create_subscription(self.user2.uid, '1211520413')
     subscriptions_dao.create_subscription(self.user1.uid, '1211520413')
+    shares_dao.create_share(self.user2.uid, self.user1.uid, episode1.id)
 
     maxtime = int(time.time())
-    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=5'
+    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=6'
                                   .format(maxtime)).data
     response = json.loads(raw_response)
-    self.assertEqual(len(response['data']['feed']), 5)
+    self.assertEqual(len(response['data']['feed']), 6)
     self.assertEqual([item['context'] for item in response['data']['feed']],
-                     [FeedContexts.FOLLOWING_SUBSCRIPTION,
+                     [FeedContexts.SHARED_EPISODE,
+                      FeedContexts.FOLLOWING_SUBSCRIPTION,
                       FeedContexts.FOLLOWING_RECOMMENDATION,
                       FeedContexts.FOLLOWING_RECOMMENDATION,
                       FeedContexts.NEW_SUBSCRIBED_EPISODE,
@@ -65,11 +69,13 @@ class FeedTestCase(TestCase):
         self.assertFalse(item['content']['series']['is_subscribed'])
       elif item['context'] == FeedContexts.NEW_SUBSCRIBED_EPISODE:
         self.assertTrue(item['content']['series']['is_subscribed'])
+      elif item['context'] == FeedContexts.SHARED_EPISODE:
+        self.assertTrue(item['context_supplier']['is_following'])
 
     # Ensure that is_subscribed updates
     subscriptions_dao.create_subscription(self.user1.uid, episode1.series_id)
 
-    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=5'
+    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=6'
                                   .format(maxtime)).data
     response = json.loads(raw_response)
     for item in response['data']['feed']:
@@ -82,13 +88,15 @@ class FeedTestCase(TestCase):
         self.assertTrue(item['content']['series']['is_subscribed'])
       elif item['context'] == FeedContexts.NEW_SUBSCRIBED_EPISODE:
         self.assertTrue(item['content']['series']['is_subscribed'])
+      elif item['context'] == FeedContexts.SHARED_EPISODE:
+        self.assertTrue(item['context_supplier']['is_following'])
 
     # Ensure is_bookmarked is working correctly with new subscribed episodes
     subscribed_ep = episodes_dao.get_episodes_by_series('1211520413', 0, 3)[0]
     bookmarks_dao.create_bookmark(subscribed_ep.id, self.user1.user)
-    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=5'
+    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=6'
                                   .format(maxtime)).data
     response = json.loads(raw_response)
 
-    self.assertTrue(response['data']['feed'][3]['content']['is_bookmarked'])
-    self.assertFalse(response['data']['feed'][4]['content']['is_bookmarked'])
+    self.assertTrue(response['data']['feed'][4]['content']['is_bookmarked'])
+    self.assertFalse(response['data']['feed'][5]['content']['is_bookmarked'])

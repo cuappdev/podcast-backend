@@ -45,6 +45,8 @@ from app.pcasts.controllers.discover_episodes_for_topic_controller import *
 from app.pcasts.controllers.discover_episodes_for_user_controller import *
 from app.pcasts.controllers.search_facebook_friends_controller import *
 from app.pcasts.controllers.get_topics_controller import *
+from app.pcasts.controllers.get_shares_controller import *
+from app.pcasts.controllers.create_delete_share_controller import *
 
 controllers = [
     GoogleSignInController(),
@@ -84,6 +86,8 @@ controllers = [
     DiscoverEpisodesForUserController(),
     SearchFacebookFriends(),
     GetTopicsController(),
+    GetSharesController(),
+    CreateDeleteShareController()
 ]
 
 # Setup all controllers
