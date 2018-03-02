@@ -25,14 +25,6 @@ class SeriesTestCase(TestCase):
     expected_series = series_dao.get_series(series_id, self.user1.uid)
     self.assertEqual(result['id'], expected_series.id)
 
-  def test_discover_series(self):
-    series_id1 = '1211520413'
-    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
-    response = \
-      self.user1.get('api/v1/discover/series/?offset={}&max={}'.format(0, 2))
-    series_results = json.loads(response.data)['data']['series']
-    self.assertEquals(int(series_id1), series_results[0]['id'])
-
   def test_last_updated(self):
     # Single
     series_id = '1211520413'
@@ -48,3 +40,21 @@ class SeriesTestCase(TestCase):
     self.assertEqual(1, len(result))
     single_result = result[0]
     self.assertEqual(single_result['last_updated'], u'2017-03-06T19:09:31+00:00')
+
+  def test_series_refresh(self):
+    # Null out topic ids
+    series = Series.query.filter().all()
+    for show in series:
+      show.topic_id = None
+      show.subtopic_id = None
+    db_utils.db_session_commit()
+    series = Series.query.filter().all()
+    for show in series:
+      self.assertTrue(show.topic_id is None)
+      self.assertTrue(show.subtopic_id is None)
+    series_dao.refresh_series()
+    # Check that topic ids are back
+    series = Series.query.filter().all()
+    for show in series:
+      self.assertTrue(show.topic_id is not None)
+      self.assertTrue(show.subtopic_id is not None)

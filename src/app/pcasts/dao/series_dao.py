@@ -98,3 +98,12 @@ def get_top_series_by_subscribers(offset, max_search, user_id):
   ]
   found_series = get_multiple_series(found_series_ids, user_id)
   return order_by_ids(found_series_ids, found_series)
+
+#XXX: Temporary fix until we can get cleaner devops
+def refresh_series():
+  series = Series.query.filter(Series.topic_id is not None).all()
+  if len(series) != 0:
+    for show in series:
+      show.topic_id, show.subtopic_id = \
+          topic_utils.get_topic_ids(show.genres.split(";"))
+    db_utils.db_session_commit()
