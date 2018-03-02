@@ -45,6 +45,7 @@ from app.pcasts.controllers.discover_episodes_for_topic_controller import *
 from app.pcasts.controllers.discover_episodes_for_user_controller import *
 from app.pcasts.controllers.search_facebook_friends_controller import *
 from app.pcasts.controllers.get_topics_controller import *
+from app.pcasts.dao.series_dao import refresh_series
 
 controllers = [
     GoogleSignInController(),
@@ -94,3 +95,6 @@ for controller in controllers:
       controller.response,
       methods=controller.get_methods()
   )
+
+# Refresh series for temporary fix
+refresh_series()
