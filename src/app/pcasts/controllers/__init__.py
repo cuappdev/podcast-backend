@@ -11,7 +11,8 @@ from app.pcasts.dao import users_dao, \
   listening_histories_dao, \
   itunes_dao, \
   discover_dao, \
-  feed_dao
+  feed_dao, \
+  shares_dao
 
 from app.pcasts.utils.authorize import *
 from app.pcasts.models._all import *
@@ -26,3 +27,4 @@ series_schema = SeriesSchema()
 recommendation_schema = RecommendationSchema()
 following_schema = FollowingSchema()
 listening_history_schema = ListeningHistorySchema()
+share_schema = ShareSchema()
