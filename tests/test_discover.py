@@ -109,7 +109,7 @@ class DiscoverTestCase(TestCase):
     ids = [int(ep['id']) for ep in episodes]
     self.assertEquals(episode_ids, ids)
 
-# No ML endpoints
+  # No ML endpoints
   def test_episodes_for_topic_no_ml(self):
     # Testing topic: Games and Hobbies
     episode_title1 = '749 Filter Therapy'
@@ -125,7 +125,13 @@ class DiscoverTestCase(TestCase):
                              '?offset=0&max=25')
     data = json.loads(request.data)['data']
     self.assertTrue(data['episodes'][0]['id'] == episode_id1)
+    self.assertTrue(data['episodes'][0]['is_recommended'])
+    self.assertFalse(data['episodes'][0]['is_bookmarked'])
+    self.assertTrue(data['episodes'][0]['current_progress'] is None )
     self.assertTrue(data['episodes'][1]['id'] == episode_id2)
+    self.assertFalse(data['episodes'][2]['is_recommended'])
+    self.assertFalse(data['episodes'][2]['is_bookmarked'])
+    self.assertTrue(data['episodes'][2]['current_progress'] is None)
 
   def test_episodes_for_subtopic_no_ml(self):
     # Testing subtopics(Philosophy)
@@ -141,13 +147,24 @@ class DiscoverTestCase(TestCase):
     request = self.user1.get('api/v1/discover/episodes/topic/1443/'+
                              '?offset=0&max=25')
     data = json.loads(request.data)['data']
+
     self.assertTrue(data['episodes'][0]['id'] == episode_id1)
+    self.assertTrue(data['episodes'][0]['is_recommended'])
+    self.assertFalse(data['episodes'][0]['is_bookmarked'])
+    self.assertTrue(data['episodes'][0]['current_progress'] is None )
     self.assertTrue(data['episodes'][1]['id'] == episode_id2)
+    self.assertFalse(data['episodes'][2]['is_recommended'])
+    self.assertFalse(data['episodes'][2]['is_bookmarked'])
+    self.assertTrue(data['episodes'][2]['current_progress'] is None)
 
   def test_series_for_topic_no_ml(self):
     #Topic: Games and Hobbies
-    series_id1 = '73329429'
-    series_id2 = '75092679'
+    series_1 = 'PHOTOGRAPHY TIPS FROM THE TOP FLOOR'
+    series_2 = 'Basic Brewing Radio'
+    series_id1 = int(Series.query.with_entities(Series.id). \
+                 filter(Series.title == series_1).all()[0][0])
+    series_id2 = int(Series.query.with_entities(Series.id). \
+                 filter(Series.title == series_2).all()[0][0])
     self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
     self.user2.post('api/v1/subscriptions/{}/'.format(series_id1))
     self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
@@ -155,20 +172,31 @@ class DiscoverTestCase(TestCase):
                              '?offset=0&max=25')
     data = json.loads(request.data)['data']
     self.assertTrue(int(data['series'][0]['id']) == int(series_id1))
+    self.assertTrue(data['series'][0]['is_subscribed'])
     self.assertTrue(int(data['series'][1]['id']) == int(series_id2))
+    self.assertTrue(data['series'][1]['is_subscribed'])
+    self.assertFalse(data['series'][2]['is_subscribed'])
 
   def test_series_for_subtopic_no_ml(self):
     # Testing subtopics(Philosophy)
-    series_id1 = '532661418'
-    series_id2 = '896417058'
+    series_1 = 'Fat Man on Batman'
+    series_2 = 'WEALTHSTEADING Wealth Building Principles with John Pugliano'
+    series_id1 = int(Series.query.with_entities(Series.id). \
+                 filter(Series.title == series_1).all()[0][0])
+    series_id2 = int(Series.query.with_entities(Series.id). \
+                 filter(Series.title == series_2).all()[0][0])
     self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
     self.user2.post('api/v1/subscriptions/{}/'.format(series_id1))
     self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
     request = self.user1.get('api/v1/discover/series/topic/1443/' +
                              '?offset=0&max=25')
     data = json.loads(request.data)['data']
+
     self.assertTrue(int(data['series'][0]['id']) == int(series_id1))
+    self.assertTrue(data['series'][0]['is_subscribed'])
     self.assertTrue(int(data['series'][1]['id']) == int(series_id2))
+    self.assertTrue(data['series'][1]['is_subscribed'])
+    self.assertFalse(data['series'][2]['is_subscribed'])
 
   def test_series_for_topic_invalid(self):
     request = self.user1.get('api/v1/discover/series/topic/-1/' +
