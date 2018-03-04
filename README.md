@@ -55,7 +55,7 @@ PODCAST_ML_URL
 ````
 
 FACEBOOK_APP_ID and FACEBOOK_APP_SECRET can be obtained by logging in to
-facebook developers page(https://developers.facebook.com/apps) and creating an
+[facebook developers page](https://developers.facebook.com/apps) and creating an
 app or from the project lead.
 If using `autoenv` for local development, create a `.env` file, like the sample below:
 ````bash
