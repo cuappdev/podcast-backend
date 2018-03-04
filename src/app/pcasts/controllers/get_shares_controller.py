@@ -13,5 +13,4 @@ class GetSharesController(AppDevController):
   def content(self, **kwargs):
     user = kwargs.get('user')
     shares = shares_dao.get_shared_with_user(user.id)
-    print shares
     return {'shares': [share_schema.dump(s).data for s in shares]}

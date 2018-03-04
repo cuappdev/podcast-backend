@@ -17,9 +17,6 @@ class SharesTestCase(TestCase):
     Share.query.delete()
     db_session_commit()
 
-  # delete_share
-  # get_shares
-
   def test_create_bookmark(self):
     episode_title1 = 'Colombians to deliver their verdict on peace accord'
     episode_id1 = episodes_dao.\
@@ -49,7 +46,6 @@ class SharesTestCase(TestCase):
     self.assertEqual(len(Share.query.all()), 1)
     self.assertNotEqual(old_time, share.updated_at)
 
-    print 1
     # test multiple sharees
     self.user2.post('api/v1/shares/{}/?sharee_ids={}'
                     .format(episode_id2,
@@ -106,4 +102,14 @@ class SharesTestCase(TestCase):
     self.assertTrue(
         data['data']['shares'][0]['episode']['id'] == int(episode_id2) or
         data['data']['shares'][1]['episode']['id'] == int(episode_id2)
+    )
+    self.assertEquals(data['data']['shares'][0]['sharee']['id'], self.user1.uid)
+    self.assertEquals(data['data']['shares'][0]['sharee']['id'], self.user1.uid)
+    self.assertTrue(
+        data['data']['shares'][0]['sharer']['id'] == self.user2.uid or
+        data['data']['shares'][1]['sharer']['id'] == self.user2.uid
+    )
+    self.assertTrue(
+        data['data']['shares'][0]['sharer']['id'] == self.user3.uid or
+        data['data']['shares'][1]['sharer']['id'] == self.user3.uid
     )
