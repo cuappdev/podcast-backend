@@ -39,6 +39,8 @@ def get_series_for_topic(topic_id, user_id, offset, max_search):
           all()
     else:
       raise Exception("Invalid topic id " + str(topic_id))
+    for s in series:
+      s.is_subscribed = series_dao.is_subscribed_by_user(s.id, user_id)
     return series
 
 
@@ -70,6 +72,8 @@ def get_episodes_for_topic(topic_id, user_id, offset, max_search):
           all()
     else:
       raise Exception("Invalid topic id " + str(topic_id))
+    for episode in episodes:
+      episodes_dao.populate_episode(episode, user_id)
     return episodes
 
 def get_series_for_user(user_id, offset, max_num):
