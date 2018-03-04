@@ -17,7 +17,7 @@ class SharesTestCase(TestCase):
     Share.query.delete()
     db_session_commit()
 
-  def test_create_bookmark(self):
+  def test_create_share(self):
     episode_title1 = 'Colombians to deliver their verdict on peace accord'
     episode_id1 = episodes_dao.\
         get_episode_by_title(episode_title1, self.user1.uid).id
@@ -81,7 +81,7 @@ class SharesTestCase(TestCase):
     episode_id2 = episodes_dao.\
         get_episode_by_title(episode_title2, self.user1.uid).id
 
-    response = self.user1.get('api/v1/shares/')
+    response = self.user1.get('api/v1/shares/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['shares']), 0)
 
@@ -92,7 +92,7 @@ class SharesTestCase(TestCase):
                             ','.join([str(self.user2.uid),
                                       str(self.user1.uid)])))
 
-    response = self.user1.get('api/v1/shares/')
+    response = self.user1.get('api/v1/shares/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['shares']), 2)
     self.assertTrue(
@@ -104,7 +104,7 @@ class SharesTestCase(TestCase):
         data['data']['shares'][1]['episode']['id'] == int(episode_id2)
     )
     self.assertEquals(data['data']['shares'][0]['sharee']['id'], self.user1.uid)
-    self.assertEquals(data['data']['shares'][0]['sharee']['id'], self.user1.uid)
+    self.assertEquals(data['data']['shares'][1]['sharee']['id'], self.user1.uid)
     self.assertTrue(
         data['data']['shares'][0]['sharer']['id'] == self.user2.uid or
         data['data']['shares'][1]['sharer']['id'] == self.user2.uid

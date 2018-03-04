@@ -22,8 +22,6 @@ class CreateDeleteShareController(AppDevController):
             'episode': episode_id,
             'message': 'share created'
         })
-      return {'share': share_schema.dump(share).data}
-
     elif request.method == 'DELETE':
       share_id = request.view_args['id']
       share = shares_dao.delete_share(share_id)
@@ -34,4 +32,4 @@ class CreateDeleteShareController(AppDevController):
           'message': 'share deleted'
       })
 
-      return dict()
+    return dict()

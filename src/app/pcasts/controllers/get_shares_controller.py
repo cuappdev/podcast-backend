@@ -12,5 +12,7 @@ class GetSharesController(AppDevController):
   @authorize
   def content(self, **kwargs):
     user = kwargs.get('user')
-    shares = shares_dao.get_shared_with_user(user.id)
+    offset = request.args['offset']
+    max_shares = request.args['max']
+    shares = shares_dao.get_shared_with_user(user.id, max_shares, offset)
     return {'shares': [share_schema.dump(s).data for s in shares]}

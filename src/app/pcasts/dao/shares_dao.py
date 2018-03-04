@@ -25,8 +25,11 @@ def delete_share(share_id):
   else:
     raise Exception('Specified share does not exist')
 
-def get_shared_with_user(user_id):
-  shares = Share.query.filter(Share.sharee_id == user_id).all()
+def get_shared_with_user(user_id, max_shares, offset):
+  shares = Share.query.filter(Share.sharee_id == user_id) \
+            .limit(max_shares) \
+            .offset(offset) \
+            .all()
   episodes = episodes_dao.get_episodes([s.episode_id for s in shares],
                                        user_id)
   for s, e in zip(shares, episodes):
