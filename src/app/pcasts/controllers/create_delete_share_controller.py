@@ -26,9 +26,7 @@ class CreateDeleteShareController(AppDevController):
       share_id = request.view_args['id']
       share = shares_dao.delete_share(share_id)
       app.logger.info({
-          'sharer': share.sharer.username,
-          'sharee': share.sharee.username,
-          'episode': share.episode_id,
+          'share_id': share_id,
           'message': 'share deleted'
       })
 
