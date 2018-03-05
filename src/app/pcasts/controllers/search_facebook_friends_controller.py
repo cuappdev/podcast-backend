@@ -12,7 +12,7 @@ class SearchFacebookFriends(AppDevController):
 
   @authorize
   def content(self, **kwargs):
-    access_token = request.headers.get('access_token')
+    access_token = request.headers.get('AccessToken')
     offset = request.args['offset']
     max_search = request.args['max']
     query = request.view_args['query']
