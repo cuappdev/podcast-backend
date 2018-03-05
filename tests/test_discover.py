@@ -61,6 +61,7 @@ class DiscoverTestCase(TestCase):
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_series_for_user(self, mock_get):
+    config.ML_ENABLED = True
     response = self.user1.get('api/v1/discover/series/user/?offset=0&max=1')
     series = json.loads(response.data)['data']['series']
     ids = [int(show['id']) for show in series]
@@ -68,6 +69,7 @@ class DiscoverTestCase(TestCase):
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_episodes_for_user(self, mock_get):
+    config.ML_ENABLED = True
     response = self.user1.get('api/v1/discover/episodes/user/?offset=0&max=1')
     episodes = json.loads(response.data)['data']['episodes']
     ids = [int(ep['id']) for ep in episodes]
@@ -110,7 +112,56 @@ class DiscoverTestCase(TestCase):
     self.assertEquals(episode_ids, ids)
 
   # No ML endpoints
+  def test_series_for_user_no_ml(self):
+    config.ML_ENABLED = False
+    series_1 = 'PHOTOGRAPHY TIPS FROM THE TOP FLOOR'
+    series_2 = 'Basic Brewing Radio'
+    series_id1 = int(Series.query.with_entities(Series.id). \
+                 filter(Series.title == series_1).all()[0][0])
+    series_id2 = int(Series.query.with_entities(Series.id). \
+                 filter(Series.title == series_2).all()[0][0])
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
+    self.user2.post('api/v1/subscriptions/{}/'.format(series_id1))
+    self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
+
+    response1 = self.user2.get('api/v1/discover/series/user/?offset=0&max=1')
+    response2 = self.user2.get('api/v1/discover/series/user/?offset=1&max=1')
+    series1 = json.loads(response1.data)['data']['series'][0]
+    series2 = json.loads(response2.data)['data']['series'][0]
+
+    self.assertTrue(int(series1['id']) == int(series_id1))
+    self.assertTrue(int(series2['id']) == int(series_id2))
+    self.assertTrue(series1['subscribers_count'] >= \
+        series2['subscribers_count'])
+    self.assertTrue(series1['is_subscribed'])
+    self.assertFalse(series2['is_subscribed'])
+
+  def test_episodes_for_user_no_ml(self):
+    config.ML_ENABLED = False
+    episode_title1 = '749 Filter Therapy'
+    episode_id1 = episodes_dao.\
+        get_episode_by_title(episode_title1, self.user1.uid).id
+    episode_title2 = '05-12-11 Brett Beer'
+    episode_id2 = episodes_dao.\
+        get_episode_by_title(episode_title2, self.user1.uid).id
+    self.user1.post('api/v1/recommendations/{}/'.format(episode_id1))
+    self.user2.post('api/v1/recommendations/{}/'.format(episode_id1))
+    self.user1.post('api/v1/recommendations/{}/'.format(episode_id2))
+
+    response1 = self.user2.get('api/v1/discover/episodes/user/?offset=0&max=1')
+    response2 = self.user2.get('api/v1/discover/episodes/user/?offset=1&max=1')
+    episode1 = json.loads(response1.data)['data']['episodes'][0]
+    episode2 = json.loads(response2.data)['data']['episodes'][0]
+
+    self.assertTrue(int(episode1['id']) == int(episode_id1))
+    self.assertTrue(int(episode2['id']) == int(episode_id2))
+    self.assertTrue(episode1['recommendations_count'] >= \
+        episode2['recommendations_count'])
+    self.assertTrue(episode1['is_recommended'])
+    self.assertFalse(episode2['is_recommended'])
+
   def test_episodes_for_topic_no_ml(self):
+    config.ML_ENABLED = False
     # Testing topic: Games and Hobbies
     episode_title1 = '749 Filter Therapy'
     episode_id1 = episodes_dao.\
@@ -127,13 +178,14 @@ class DiscoverTestCase(TestCase):
     self.assertTrue(data['episodes'][0]['id'] == episode_id1)
     self.assertTrue(data['episodes'][0]['is_recommended'])
     self.assertFalse(data['episodes'][0]['is_bookmarked'])
-    self.assertTrue(data['episodes'][0]['current_progress'] is None )
+    self.assertTrue(data['episodes'][0]['current_progress'] is None)
     self.assertTrue(data['episodes'][1]['id'] == episode_id2)
     self.assertFalse(data['episodes'][2]['is_recommended'])
     self.assertFalse(data['episodes'][2]['is_bookmarked'])
     self.assertTrue(data['episodes'][2]['current_progress'] is None)
 
   def test_episodes_for_subtopic_no_ml(self):
+    config.ML_ENABLED = False
     # Testing subtopics(Philosophy)
     episode_title1 = '#1: Paul Dini'
     episode_id1 = episodes_dao.\
@@ -151,13 +203,14 @@ class DiscoverTestCase(TestCase):
     self.assertTrue(data['episodes'][0]['id'] == episode_id1)
     self.assertTrue(data['episodes'][0]['is_recommended'])
     self.assertFalse(data['episodes'][0]['is_bookmarked'])
-    self.assertTrue(data['episodes'][0]['current_progress'] is None )
+    self.assertTrue(data['episodes'][0]['current_progress'] is None)
     self.assertTrue(data['episodes'][1]['id'] == episode_id2)
     self.assertFalse(data['episodes'][2]['is_recommended'])
     self.assertFalse(data['episodes'][2]['is_bookmarked'])
     self.assertTrue(data['episodes'][2]['current_progress'] is None)
 
   def test_series_for_topic_no_ml(self):
+    config.ML_ENABLED = False
     #Topic: Games and Hobbies
     series_1 = 'PHOTOGRAPHY TIPS FROM THE TOP FLOOR'
     series_2 = 'Basic Brewing Radio'
@@ -178,6 +231,7 @@ class DiscoverTestCase(TestCase):
     self.assertFalse(data['series'][2]['is_subscribed'])
 
   def test_series_for_subtopic_no_ml(self):
+    config.ML_ENABLED = False
     # Testing subtopics(Philosophy)
     series_1 = 'Fat Man on Batman'
     series_2 = 'WEALTHSTEADING Wealth Building Principles with John Pugliano'
@@ -199,6 +253,7 @@ class DiscoverTestCase(TestCase):
     self.assertFalse(data['series'][2]['is_subscribed'])
 
   def test_series_for_topic_invalid(self):
+    config.ML_ENABLED = False
     request = self.user1.get('api/v1/discover/series/topic/-1/' +
                              '?offset=0&max=25')
     data = json.loads(request.data)
@@ -206,6 +261,7 @@ class DiscoverTestCase(TestCase):
     self.assertEquals(str(data['data']['errors'][0]), "Invalid topic id -1")
 
   def test_episodes_for_topic_invalid(self):
+    config.ML_ENABLED = False
     request = self.user1.get('api/v1/discover/series/topic/-1/' +
                              '?offset=0&max=25')
     data = json.loads(request.data)

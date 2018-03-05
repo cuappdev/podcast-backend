@@ -77,11 +77,17 @@ def get_episodes_for_topic(topic_id, user_id, offset, max_search):
     return episodes
 
 def get_series_for_user(user_id, offset, max_num):
-  response = request_podcast_ml('/api/v1/series/user/?offset={}&max={}'
-                                .format(offset, max_num))
-  return series_dao.get_multiple_series(response['data']['series_ids'], user_id)
+  if config.ML_ENABLED:
+    response = request_podcast_ml('/api/v1/series/user/?offset={}&max={}'
+                                  .format(offset, max_num))
+    return series_dao.get_multiple_series(response['data']['series_ids'], user_id)
+  else:
+    return series_dao.get_top_series_by_subscribers(offset, max_num, user_id)
 
 def get_episodes_for_user(user_id, offset, max_num):
-  response = request_podcast_ml('/api/v1/episodes/user/?offset={}&max={}'
-                                .format(offset, max_num))
-  return episodes_dao.get_episodes(response['data']['episode_ids'], user_id)
+  if config.ML_ENABLED:
+    response = request_podcast_ml('/api/v1/episodes/user/?offset={}&max={}'
+                                  .format(offset, max_num))
+    return episodes_dao.get_episodes(response['data']['episode_ids'], user_id)
+  else:
+    return episodes_dao.get_top_episodes_by_recommenders(offset, max_num, user_id)
