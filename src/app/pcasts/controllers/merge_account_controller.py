@@ -12,7 +12,7 @@ class MergeAccountController(AppDevController):
 
   @authorize
   def content(self, **kwargs):
-    access_token = request.headers.get('access_token')
+    access_token = request.headers.get('AccessToken')
     user = kwargs.get('user')
     new_platform = request.args['platform']
 

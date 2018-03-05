@@ -82,7 +82,7 @@ class TestUser(object):
   def init_header(self):
     if constants.FACEBOOK in self.tokens:
       return {"Authorization": "Bearer {}".format(self.session_token),
-              "access_token" : self.tokens[constants.FACEBOOK]}
+              "AccessToken" : self.tokens[constants.FACEBOOK]}
     else:
       return {"Authorization": "Bearer {}".format(self.session_token)}
 
