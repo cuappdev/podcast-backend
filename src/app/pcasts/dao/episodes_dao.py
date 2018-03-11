@@ -23,10 +23,12 @@ def get_episode_by_title(title, user_id):
   populate_episode(episode, user_id)
   return episode
 
-def get_episodes_by_series(series_id, offset, max_search):
+def get_episodes_by_series(series_id, offset, max_search, user_id):
   episodes = Episode.query.filter(Episode.series_id == \
       series_id).order_by(Episode.pub_date.desc())\
       .offset(offset).limit(max_search).all()
+  for e in episodes:
+    populate_episode(e, user_id)
   return episodes
 
 def get_episodes_maxtime(user_id, series_ids, maxdatetime, page_size):

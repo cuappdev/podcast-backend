@@ -92,7 +92,8 @@ class FeedTestCase(TestCase):
         self.assertTrue(item['context_supplier']['is_following'])
 
     # Ensure is_bookmarked is working correctly with new subscribed episodes
-    subscribed_ep = episodes_dao.get_episodes_by_series('1211520413', 0, 3)[0]
+    subscribed_ep = episodes_dao.get_episodes_by_series('1211520413', \
+        0, 3, self.user1.uid)[0]
     bookmarks_dao.create_bookmark(subscribed_ep.id, self.user1.user)
     raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=6'
                                   .format(maxtime)).data
