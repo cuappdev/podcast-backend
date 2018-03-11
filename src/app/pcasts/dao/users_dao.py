@@ -82,11 +82,13 @@ def is_following_user(my_id, their_id):
     .first()
   return optional_following is not None
 
+# A user cannot search for themselves
 def search_users(search_name, offset, max_search, user_id):
   possible_users = User.query.filter \
       (User.username.like('%' + search_name + '%') |
        User.first_name.like('%' + search_name + '%') |
        User.last_name.like('%' + search_name + '%')) \
+      .filter(User.id != user_id) \
       .offset(offset).limit(max_search).all()
   for u in possible_users:
     u.is_following = is_following_user(user_id, u.id)

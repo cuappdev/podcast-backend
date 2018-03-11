@@ -31,7 +31,7 @@ class SearchTestCase(TestCase):
     search_results = self.user1.get('api/v1/search/all/{}/?offset={}&max={}'\
         .format(some_result_title, 0, 1000))
     some_result_data = json.loads(search_results.data)
-    self.assertEquals(3, len(some_result_data['data']['users']))
+    self.assertEquals(2, len(some_result_data['data']['users']))
     self.assertFalse(some_result_data['data']['users'][0]['is_following'])
     self.assertEquals(1000, len(some_result_data['data']['episodes']))
     self.assertEquals(125, len(some_result_data['data']['series']))
@@ -40,7 +40,7 @@ class SearchTestCase(TestCase):
     search_results = self.user1.get('api/v1/search/all/{}/?offset={}&max={}'\
         .format(some_result_title, 0, 1000))
     some_result_data = json.loads(search_results.data)
-    self.assertEquals(3, len(some_result_data['data']['users']))
+    self.assertEquals(2, len(some_result_data['data']['users']))
     self.assertFalse(some_result_data['data']['users'][0]['is_following'])
     self.assertEquals(1000, len(some_result_data['data']['episodes']))
     self.assertEquals(84, len(some_result_data['data']['series']))
@@ -62,7 +62,7 @@ class SearchTestCase(TestCase):
         .format(some_result_title, 0, 1000))
     offset_result_data = json.loads(offset_results.data)
     normal_result_data = json.loads(normal_results.data)
-    self.assertEquals(2, len(offset_result_data['data']['users']))
+    self.assertTrue(len(offset_result_data['data']['users']) <= 2)
     self.assertEquals(2, len(offset_result_data['data']['episodes']))
     self.assertEquals(2, len(offset_result_data['data']['series']))
     self.assertEquals(normal_result_data['data']['users'][1]['username'], \
@@ -77,7 +77,7 @@ class SearchTestCase(TestCase):
     search_results = self.user1.get('api/v1/search/all/{}/?offset={}&max={}'\
         .format(some_result_title, 0, 3))
     limited_result_data = json.loads(search_results.data)
-    self.assertEquals(3, len(limited_result_data['data']['users']))
+    self.assertEquals(2, len(limited_result_data['data']['users']))
     self.assertEquals(3, len(limited_result_data['data']['episodes']))
     self.assertEquals(3, len(limited_result_data['data']['series']))
 
@@ -180,26 +180,26 @@ class SearchTestCase(TestCase):
     self.assertEquals(1, len(one_result_data['data']['users']))
     self.assertFalse(one_result_data['data']['users'][0]['is_following'])
 
+    # A user cannot search for themselves
+    search_results = self.user1.get('api/v1/search/users/{}/?offset={}&max={}'\
+         .format(self.user1.name.split(" ")[0], 0, 1000))
+    single_result_data = json.loads(search_results.data)
+    self.assertEquals(0, len(single_result_data['data']['users']))
+
     many_result_username = 'temp-google-default_google_id'
     search_results = self.user1.get('api/v1/search/users/{}/?offset={}&max={}'\
          .format(many_result_username, 0, 1000))
     many_result_data = json.loads(search_results.data)
-    self.assertEquals(3, len(many_result_data['data']['users']))
-
-    first_name = 'default_first_name1'
-    search_results = self.user1.get('api/v1/search/users/{}/?offset={}&max={}'\
-         .format(first_name, 0, 1000))
-    single_result_data = json.loads(search_results.data)
-    self.assertEquals(1, len(single_result_data['data']['users']))
+    self.assertEquals(2, len(many_result_data['data']['users']))
 
     first_name = 'default_first_name'
     search_results = self.user1.get('api/v1/search/users/{}/?offset={}&max={}'\
          .format(first_name, 0, 1000))
     many_result_data = json.loads(search_results.data)
-    self.assertEquals(3, len(many_result_data['data']['users']))
+    self.assertEquals(2, len(many_result_data['data']['users']))
 
     last_name = 'default_last_name1'
-    search_results = self.user1.get('api/v1/search/users/{}/?offset={}&max={}'\
+    search_results = self.user2.get('api/v1/search/users/{}/?offset={}&max={}'\
          .format(last_name, 0, 1000))
     single_result_data = json.loads(search_results.data)
     self.assertEquals(1, len(single_result_data['data']['users']))
@@ -208,7 +208,7 @@ class SearchTestCase(TestCase):
     search_results = self.user1.get('api/v1/search/users/{}/?offset={}&max={}'\
          .format(last_name, 0, 1000))
     many_result_data = json.loads(search_results.data)
-    self.assertEquals(3, len(many_result_data['data']['users']))
+    self.assertEquals(2, len(many_result_data['data']['users']))
 
     # Test limit
     two_result_username = 'temp-google-default_google_id'
