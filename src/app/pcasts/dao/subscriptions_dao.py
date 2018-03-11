@@ -45,7 +45,8 @@ def create_subscription(user_id, series_id):
 
 def delete_subscription(user_id, series_id):
   maybe_subscription = \
-    Subscription.query.filter(Subscription.series_id == series_id).first()
+    Subscription.query.filter(Subscription.series_id == series_id,
+                              Subscription.user_id == user_id).first()
 
   if maybe_subscription:
     maybe_subscription.series = \
