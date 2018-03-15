@@ -21,11 +21,13 @@ def get_series_for_topic(topic_id, user_id, offset, max_search):
   else:
     topic_id = int(topic_id)
     series = []
+    # Second ordering by id to resolve ties showing up at different offsets
     if topic_id in topic_utils.topic_id_offset:
       topic_id = topic_utils.translate_topic_id(topic_id)
       series = Series.query.\
           filter(((Series.topic_id.op('&')(topic_id))) == topic_id).\
           order_by(Series.subscribers_count.desc()).\
+          order_by(Series.id).\
           offset(offset).\
           limit(max_search).\
           all()
@@ -34,6 +36,7 @@ def get_series_for_topic(topic_id, user_id, offset, max_search):
       series = Series.query.\
           filter((Series.subtopic_id.op('&')(subtopic_id)) == subtopic_id).\
           order_by(Series.subscribers_count.desc()).\
+          order_by(Series.id).\
           offset(offset).\
           limit(max_search).\
           all()
@@ -52,12 +55,14 @@ def get_episodes_for_topic(topic_id, user_id, offset, max_search):
   else:
     episodes = []
     topic_id = int(topic_id)
+    # Second ordering by id to resolve ties showing up at different offsets
     if topic_id in topic_utils.topic_id_offset:
       topic_id = topic_utils.translate_topic_id(topic_id)
       episodes = Episode.query.join(Series). \
           filter((Series.topic_id.op('&')(topic_id)) == topic_id).\
           filter(Episode.series_id == Series.id).\
           order_by(Episode.recommendations_count.desc()).\
+          order_by(Episode.id).\
           offset(offset).\
           limit(max_search).\
           all()
@@ -67,6 +72,7 @@ def get_episodes_for_topic(topic_id, user_id, offset, max_search):
           filter((Series.subtopic_id.op('&')(subtopic_id)) == subtopic_id).\
           filter(Episode.series_id == Series.id).\
           order_by(Episode.recommendations_count.desc()).\
+          order_by(Episode.id).\
           offset(offset).\
           limit(max_search).\
           all()
