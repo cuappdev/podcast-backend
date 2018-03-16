@@ -86,12 +86,14 @@ def search_series(search_name, offset, max_search, user_id):
 
   return get_multiple_series(possible_series_ids, user_id)
 
+# Second ordering by id to resolve ties showing up at different offsets
 def get_top_series_by_subscribers(offset, max_search, user_id):
   found_series_ids = [
       tup[0] for tup in
       Series.query.\
       with_entities(Series.id, Series.subscribers_count).\
       order_by(Series.subscribers_count.desc()).\
+      order_by(Series.id).\
       offset(offset).\
       limit(max_search).\
       all()

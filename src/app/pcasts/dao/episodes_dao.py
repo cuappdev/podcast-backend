@@ -81,12 +81,14 @@ def search_episode(search_name, offset, max_search, user_id):
 
   return get_episodes(possible_episode_ids, user_id)
 
+# Second ordering by id to resolve ties showing up at different offsets
 def get_top_episodes_by_recommenders(offset, max_search, user_id):
   found_episode_ids = [
       tup[0] for tup in
       Episode.query.\
       with_entities(Episode.id, Episode.recommendations_count).\
       order_by(Episode.recommendations_count.desc()).\
+      order_by(Episode.id).\
       offset(offset).\
       limit(max_search).\
       all()
