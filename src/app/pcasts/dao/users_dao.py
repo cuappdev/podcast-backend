@@ -127,16 +127,26 @@ def add_google_login(user, google_info):
   return db_utils.commit_model(updated_user)
 
 # Enforces an ordering on followers_count
-def get_users_by_facebook_ids(facebook_ids, user_id, offset, max_search):
+def get_users_by_facebook_ids(facebook_ids, user_id, offset, max_search, \
+    return_following):
   if not facebook_ids or facebook_ids == []:
     return []
-  users = User.query.filter(User.facebook_id.in_(facebook_ids)) \
-      .order_by(User.followers_count.desc()) \
-      .offset(offset).limit(max_search).all()
-  for u in users:
-    u.is_following = is_following_user(user_id, u.id)
+  user_id = int(user_id)
+  if return_following:
+    users = User.query.filter(User.facebook_id.in_(facebook_ids)) \
+        .order_by(User.followers_count.desc()) \
+        .offset(offset).limit(max_search).all()
+    for u in users:
+      u.is_following = is_following_user(user_id, u.id)
+  else: # Facebook friends you don't follow
+    users = User.query.filter(User.facebook_id.in_(facebook_ids)).\
+        filter(~Following.query.filter(Following.follower_id == user_id, \
+                Following.followed_id == User.id).exists())\
+        .order_by(User.followers_count.desc()) \
+        .offset(offset).limit(max_search).all()
+    for u in users:
+      u.is_following = False
   return users
-
 
 def search_facebook_users(facebook_ids, user_id, offset, max_search \
     , query=None):
