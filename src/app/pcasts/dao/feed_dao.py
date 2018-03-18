@@ -102,11 +102,7 @@ def attach_fields_to_json(feed_element, feed_element_json, user):
           feed_element_json['context_supplier']['id']
       )
   elif feed_element.context == FeedContexts.NEW_SUBSCRIBED_EPISODE:
-    feed_element_json['content']['series']['is_subscribed'] = series_dao.\
-      is_subscribed_by_user(
-          feed_element_json['content']['series']['id'],
-          user.id
-      )
+    pass
   elif feed_element.context == FeedContexts.SHARED_EPISODE:
     feed_element_json['context_supplier']['is_following'] = users_dao.\
       is_following_user(
@@ -163,12 +159,19 @@ def get_new_subscribed_episodes(user_id, maxtime, page_size):
   subscriptions = subscriptions_dao.get_user_subscriptions(user_id, user_id)
   series_ids = [s.series_id for s in subscriptions]
   maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
-  return episodes_dao.get_episodes_maxtime(
+  episodes = episodes_dao.get_episodes_maxtime(
       user_id,
       series_ids,
       maxdatetime,
       page_size
   )
+
+  # Populate series data
+  series = series_dao.get_multiple_series(series_ids, user_id)
+  series_map = {s.id: s for s in series}
+  for e in episodes:
+    e.series = series_map[e.series_id]
+  return episodes
 
 def get_shared_episodes(user_id, maxtime, page_size):
   maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
