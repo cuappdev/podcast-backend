@@ -47,6 +47,20 @@ class UsersTestCase(TestCase):
     self.assertEquals(len(db_before_query), len(db_after_query))
     self.assertEquals(db_before_query, db_after_query)
 
+    # Test no spaces allowed in username
+    db_before_query = users_dao.get_all_users()
+    old_name = 'bob'
+    new_name = 'sean spicer'
+
+    response = self.user1.post('api/v1/users/change_username/?username={}' \
+        .format(new_name))
+    response_data = json.loads(response.data)['data']
+    error_string = "Usernames cannot contain spaces."
+    self.assertEquals(error_string, response_data['errors'][0])
+
+    db_after_query = users_dao.get_all_users()
+    self.assertEquals(db_before_query, db_after_query)
+
     # Test changing to username already in use
     db_before_query = users_dao.get_all_users()
     # Want to use users after the rollback due to failure
