@@ -15,7 +15,7 @@ class GetFacebookFriends(AppDevController):
     access_token = request.headers.get('AccessToken')
     offset = request.args['offset']
     max_search = request.args['max']
-    return_following = request.args['return_following']
+    return_following = request.args.get('return_following', default="true")
     user = kwargs.get('user')
     return_following = True if return_following == 'true' else False
     fb_friend_ids = facebook_utils.get_friend_ids(user.facebook_id, \

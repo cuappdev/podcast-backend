@@ -76,6 +76,18 @@ class FriendsTestCase(TestCase):
     self.assertEquals(data['users'][1]['id'], fb_user4.uid)
     self.assertEquals(data['users'][1]['is_following'], False)
 
+    # test default value of return_following (true)
+    response = fb_user1.get('api/v1/users/facebook/friends/' + \
+            '?offset={}&max={}'.format(0, 10))
+    data = json.loads(response.data)['data']
+    self.assertTrue(len(data['users']) == 3)
+    self.assertEquals(data['users'][0]['id'], fb_user3.uid)
+    self.assertEquals(data['users'][0]['is_following'], False)
+    self.assertEquals(data['users'][1]['id'], fb_user2.uid)
+    self.assertEquals(data['users'][1]['is_following'], True)
+    self.assertEquals(data['users'][2]['id'], fb_user4.uid)
+    self.assertEquals(data['users'][2]['is_following'], False)
+
     # Test limit and offset
     response = fb_user1.get('api/v1/users/facebook/friends/' + \
             '?offset={}&max={}&return_following={}'.format(0, 1, 'true'))
