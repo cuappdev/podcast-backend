@@ -13,6 +13,7 @@ class TestUser(object):
 
   goog_user_count = 0
   default_users = []
+  fb_users = []
 
   # Creates fb_user(graph api) or binds itself to test goog account
   def __init__(self, **kwargs):
@@ -29,7 +30,8 @@ class TestUser(object):
       TestUser.goog_user_count += 1
     else:
       self.app_tokens[constants.FACEBOOK] = app_access_token
-      access_token = create_facebook_user(app_access_token, self.name)
+      access_token, fb_id = create_facebook_user(app_access_token, self.name)
+      self.fb_id = fb_id
       self.tokens[constants.FACEBOOK] = access_token
 
     if kwargs.get('login', True):
@@ -54,6 +56,7 @@ class TestUser(object):
       self.uid = response['user']['id']
       self.user = get_user_by_id(self.uid, self.uid)
       self.session_token = response['session']['session_token']
+      TestUser.fb_users.append(self)
 
   def post(self, url, data=None):
     header = self.init_header()
@@ -117,3 +120,8 @@ def initTestUser():
           followings_count=0,
       )
   ]
+
+def remove_test_users():
+  for user in TestUser.fb_users:
+    delete_facebook_user(user.fb_id, user.app_tokens[constants.FACEBOOK])
+  TestUser.fb_users = []
