@@ -69,7 +69,8 @@ def get_listening_history(user, max_hs, offset):
     episodes_dao.get_episodes([h.episode_id for h in listening_histories],
                               user.id)
 
-  for h, e in zip(listening_histories, episodes):
-    h.episode = e
+  episode_id_to_episode = {e.id:e for e in episodes}
+  for lh in listening_histories:
+    lh.episode = episode_id_to_episode[lh.episode_id]
 
   return listening_histories

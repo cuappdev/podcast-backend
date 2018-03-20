@@ -24,6 +24,7 @@ def get_user_bookmarks(user):
   bookmarks = Bookmark.query.filter(Bookmark.user_id == user.id).all()
   episodes = episodes_dao.get_episodes([b.episode_id for b in bookmarks],
                                        user.id)
-  for b, e in zip(bookmarks, episodes):
-    b.episode = e
+  episode_id_to_episode = {e.id:e for e in episodes}
+  for b in bookmarks:
+    b.episode = episode_id_to_episode[b.episode_id]
   return bookmarks
