@@ -68,7 +68,8 @@ class FeedTestCase(TestCase):
         self.assertTrue(item['context_supplier']['is_following'])
         self.assertFalse(item['content']['series']['is_subscribed'])
       elif item['context'] == FeedContexts.NEW_SUBSCRIBED_EPISODE:
-        self.assertTrue(item['content']['series']['is_subscribed'])
+        self.assertTrue(item['context_supplier']['is_subscribed'])
+        self.assertTrue('last_updated' in item['context_supplier'])
       elif item['context'] == FeedContexts.SHARED_EPISODE:
         self.assertTrue(item['context_supplier']['is_following'])
 
@@ -87,7 +88,8 @@ class FeedTestCase(TestCase):
         self.assertTrue(item['context_supplier']['is_following'])
         self.assertTrue(item['content']['series']['is_subscribed'])
       elif item['context'] == FeedContexts.NEW_SUBSCRIBED_EPISODE:
-        self.assertTrue(item['content']['series']['is_subscribed'])
+        self.assertTrue(item['context_supplier']['is_subscribed'])
+        self.assertTrue('last_updated' in item['context_supplier'])
       elif item['context'] == FeedContexts.SHARED_EPISODE:
         self.assertTrue(item['context_supplier']['is_following'])
 

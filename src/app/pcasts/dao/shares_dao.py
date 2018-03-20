@@ -32,6 +32,10 @@ def get_shared_with_user(user_id, max_shares, offset):
             .all()
   episodes = episodes_dao.get_episodes([s.episode_id for s in shares],
                                        user_id)
-  for s, e in zip(shares, episodes):
-    s.episode = e
+
+  # Ensure episodes match up
+  episode_map = {e.id: e for e in episodes}
+  for s in shares:
+    s.episode = episode_map[s.episode_id]
+
   return shares

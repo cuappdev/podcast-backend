@@ -95,6 +95,8 @@ def search_users(search_name, offset, max_search, user_id):
   return possible_users
 
 def change_user_name(user_id, new_name):
+  if ' ' in new_name:
+    raise Exception('Usernames cannot contain spaces.')
   user = User.query.filter(User.id == user_id).first()
   if user:
     user.username = new_name
