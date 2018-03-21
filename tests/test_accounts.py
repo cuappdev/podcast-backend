@@ -13,8 +13,8 @@ class AccountsTestCase(TestCase):
 
   def test_merge_accounts(self):
     a_access_token = api_utils.get_facebook_app_access_token()
-    u_access_token = api_utils.create_facebook_user(a_access_token, 'User One')
-    self.user1.tokens[constants.FACEBOOK] = u_access_token
+    u_info = api_utils.create_facebook_user(a_access_token, 'User One')
+    self.user1.tokens[constants.FACEBOOK] = u_info[0]
     # Add an account for an invalid platform:
     response = self.user1.post('api/v1/users/merge/?platform={}' \
         .format("fauxbook"))

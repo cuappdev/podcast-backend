@@ -18,3 +18,4 @@ class TestCase(unittest.TestCase):
   def tearDown(self):
     User.query.delete()
     Session.query.delete()
+    remove_test_users()

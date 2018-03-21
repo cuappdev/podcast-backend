@@ -8,19 +8,24 @@ from app import app
 from app import constants
 
 def get_facebook_app_access_token():
-    base_uri = 'https://graph.facebook.com/oauth/access_token?client_id={}' \
-        +'&client_secret={}&grant_type=client_credentials'
-    uri = base_uri.format(config.FACEBOOK_APP_ID, config.FACEBOOK_APP_SECRET)
-    response = requests.get(uri).json()
-    return response['access_token']
+  base_uri = 'https://graph.facebook.com/oauth/access_token?client_id={}' \
+      +'&client_secret={}&grant_type=client_credentials'
+  uri = base_uri.format(config.FACEBOOK_APP_ID, config.FACEBOOK_APP_SECRET)
+  response = requests.get(uri).json()
+  return response['access_token']
 
 def create_facebook_user(access_token, username):
-    base_uri = 'https://graph.facebook.com/{}/accounts/test-users?' +\
-        'installed={}&name={}&permissions={}&method=post&access_token={}'
-    uri = base_uri.format(config.FACEBOOK_APP_ID, 'true', username, \
-        constants.FACEBOOK_API_PERMISSIONS, access_token)
-    response = requests.get(uri).json()
-    return response['access_token']
+  base_uri = 'https://graph.facebook.com/{}/accounts/test-users?' +\
+      'installed={}&name={}&permissions={}&method=post&access_token={}'
+  uri = base_uri.format(config.FACEBOOK_APP_ID, 'true', username, \
+      constants.FACEBOOK_API_PERMISSIONS, access_token)
+  response = requests.get(uri).json()
+  return response['access_token'], response['id']
+
+def delete_facebook_user(fb_id, access_token):
+  base_uri = 'https://graph.facebook.com/{}?method=delete&access_token={}'
+  uri = base_uri.format(fb_id, access_token)
+  response = requests.delete(uri).json()
 
 def create_google_user():
   raise NotImplementedError

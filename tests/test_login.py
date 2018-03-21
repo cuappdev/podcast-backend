@@ -15,9 +15,9 @@ class LoginTestCase(TestCase):
 
   def test_facebook_login(self):
     a_access_token = api_utils.get_facebook_app_access_token()
-    u_access_token = api_utils.create_facebook_user(a_access_token, 'User One')
+    u_info = api_utils.create_facebook_user(a_access_token, 'User One')
     payload = {
-        'access_token': u_access_token
+        'access_token': u_info[0]
     }
     response = self.app.post('api/v1/users/facebook_sign_in/', \
         data=json.dumps(payload))
