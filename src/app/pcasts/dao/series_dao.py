@@ -59,7 +59,10 @@ def get_multiple_series(series_ids, user_id):
   last_updated_map = {sid: lu for (sid, lu) in last_updated_result}
   for s in series:
     s.is_subscribed = is_subscribed_by_user(s.id, user_id)
-    s.last_updated = last_updated_map[s.id]
+    if s.id in last_updated_map:
+      s.last_updated = last_updated_map[s.id]
+    else:
+      s.last_updated = None
   return series
 
 def clear_all_subscriber_counts():
