@@ -8,8 +8,9 @@ def get_user_subscriptions(their_id, my_id):
   series = \
     series_dao.get_multiple_series([s.series_id for s in subscriptions],
                                    my_id)
-  for sub, ser in zip(subscriptions, series):
-    sub.series = ser
+  series_id_to_series = {s.id:s for s in series}
+  for sub in subscriptions:
+    sub.series = series_id_to_series[sub.series_id]
 
   return subscriptions
 
@@ -24,8 +25,9 @@ def get_series_subscriptions(series_id, user_id, max_subs, offset):
   series = \
     series_dao.get_multiple_series([s.series_id for s in subscriptions],
                                    user_id)
-  for sub, ser in zip(subscriptions, series):
-    sub.series = ser
+  series_id_to_series = {s.id:s for s in series}
+  for sub in subscriptions:
+    sub.series = series_id_to_series[sub.series_id]
 
   return subscriptions
 

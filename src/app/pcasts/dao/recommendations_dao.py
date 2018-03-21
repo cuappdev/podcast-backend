@@ -32,8 +32,9 @@ def get_user_recommendations(caller_user_id, requested_user_id):
   )
   episodes = episodes_dao.get_episodes([r.episode_id for r in recommendations],
                                        caller_user_id)
-  for r, e in zip(recommendations, episodes):
-    r.episode = e
+  episode_id_to_episode = {e.id:e for e in episodes}
+  for r in recommendations:
+    r.episode = episode_id_to_episode[r.episode_id]
   return recommendations
 
 def get_episode_recommendations(episode_id, user_id, max_recs, offset):
@@ -45,6 +46,7 @@ def get_episode_recommendations(episode_id, user_id, max_recs, offset):
   )
   episodes = episodes_dao.get_episodes([r.episode_id for r in recommendations],
                                        user_id)
-  for r, e in zip(recommendations, episodes):
-    r.episode = e
+  episode_id_to_episode = {e.id:e for e in episodes}
+  for r in recommendations:
+    r.episode = episode_id_to_episode[r.episode_id]
   return recommendations

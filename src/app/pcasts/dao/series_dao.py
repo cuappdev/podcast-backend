@@ -55,9 +55,11 @@ def get_multiple_series(series_ids, user_id):
     .filter(Episode.series_id.in_(series_ids)) \
     .group_by(Episode.series_id) \
     .order_by(Episode.series_id.asc()).all()
-  for s, (_, last_updated) in zip(series, last_updated_result):
+
+  last_updated_map = {sid: lu for (sid, lu) in last_updated_result}
+  for s in series:
     s.is_subscribed = is_subscribed_by_user(s.id, user_id)
-    s.last_updated = last_updated
+    s.last_updated = last_updated_map[s.id]
   return series
 
 def clear_all_subscriber_counts():
