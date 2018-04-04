@@ -163,3 +163,21 @@ def search_facebook_users(facebook_ids, user_id, offset, max_search \
   for u in users:
     u.is_following = is_following_user(user_id, u.id)
   return users
+
+def add_ignored_friend(to_ignore_id, user_id):
+  ignored_ids = IgnoredUsers.query.filter(IgnoredUsers.user_id == user_id).first()
+  if ignored_ids is None:
+    ignored_ids = IgnoredUsers(user_id=user_id, ignored_fb_ids=to_ignore_id)
+  else:
+    ignored_ids.ignored_fb_ids = ignored_ids.ignored_fb_ids + \
+        ",{}".format(to_ignore_id)
+  db_utils.commit_model(ignored_ids)
+  return True
+
+def remove_ignored_ids(fb_friend_ids, user_id):
+  ignored_ids = IgnoredUsers.query.filter(IgnoredUsers.user_id == user_id).first()
+  if ignored_ids is None:
+    return fb_friend_ids
+  else:
+    ignored_ids = [id for id in ignored_ids.ignored_fb_ids.split(',')]
+    return list(set(fb_friend_ids) - set(ignored_ids))

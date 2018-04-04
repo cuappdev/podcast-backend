@@ -10,6 +10,7 @@ from app.pcasts.models.recommendation import *
 from app.pcasts.models.following import *
 from app.pcasts.models.listening_history import *
 from app.pcasts.models.share import *
+from app.pcasts.models.ignored_users import *
 
 class UserSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
