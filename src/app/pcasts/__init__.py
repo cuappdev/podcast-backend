@@ -47,6 +47,7 @@ from app.pcasts.controllers.search_facebook_friends_controller import *
 from app.pcasts.controllers.get_topics_controller import *
 from app.pcasts.controllers.get_shares_controller import *
 from app.pcasts.controllers.create_delete_share_controller import *
+from app.pcasts.controllers.listening_history_dismiss_controller import *
 
 controllers = [
     GoogleSignInController(),
@@ -87,7 +88,8 @@ controllers = [
     SearchFacebookFriends(),
     GetTopicsController(),
     GetSharesController(),
-    CreateDeleteShareController()
+    CreateDeleteShareController(),
+    ListeningHistoryDismissController()
 ]
 
 # Setup all controllers

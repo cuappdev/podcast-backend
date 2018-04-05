@@ -13,6 +13,7 @@ class ListeningHistory(Base):
   episode_id = db.Column(db.Integer, nullable=False)
   percentage_listened = db.Column(db.Float, nullable=False)
   current_progress = db.Column(db.Float, nullable=False)
+  dismissed = db.Column(db.Boolean, nullable=False, default=False)
 
   user = db.relationship('User')
 
@@ -22,3 +23,4 @@ class ListeningHistory(Base):
     self.episode_id = kwargs.get('episode_id')
     self.percentage_listened = kwargs.get('percentage_listened')
     self.current_progress = kwargs.get('current_progress')
+    self.dismissed = kwargs.get('dismissed', False)

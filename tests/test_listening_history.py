@@ -162,3 +162,69 @@ class ListeningHistoryTestCase(TestCase):
     response = self.user1.get('api/v1/history/listening/?offset=0&max=5')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 0)
+
+  def test_dismissed_filter(self):
+    self.generate_listening_histories()
+
+    # Nothing is dismissed
+    response = \
+      self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=true')
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['listening_histories']), 0)
+
+    response = \
+      self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=false')
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['listening_histories']), 2)
+
+    # Dismiss episode
+    episode_id = int(data['data']['listening_histories'][0]['episode_id'])
+    self.user1.post('api/v1/history/listening/dismiss/{}/'.format(episode_id))
+    # Correctly filtered
+    response = \
+      self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=false')
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['listening_histories']), 1)
+    self.assertNotEquals(
+        data['data']['listening_histories'][0]['episode_id'], episode_id)
+    response = \
+      self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=true')
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['listening_histories']), 1)
+    self.assertEquals(
+        data['data']['listening_histories'][0]['episode_id'], episode_id)
+
+    # Optional dismiss endpoint argument
+    episode_id = int(data['data']['listening_histories'][0]['episode_id'])
+    self.user1.post('api/v1/history/listening/dismiss/{}/?dismissed=false'
+                    .format(episode_id))
+    response = \
+      self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=true')
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['listening_histories']), 0)
+    response = \
+      self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=false')
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['listening_histories']), 2)
+
+  def test_automatic_undismiss_on_update(self):
+    episode_id, _, _ = self.generate_listening_histories()
+
+    # Dismiss episode
+    self.user1.post('api/v1/history/listening/dismiss/{}/'.format(episode_id))
+
+    # Update episode
+    data = {
+        episode_id: {
+            'percentage_listened': 1.2,
+            'current_progress': 0.75,
+            'real_duration': "9000:01"
+        }
+    }
+    self.user1.post('api/v1/history/listening/', data=json.dumps(data))
+
+    # Ensure undismissed
+    response = \
+      self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=false')
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['listening_histories']), 2)
