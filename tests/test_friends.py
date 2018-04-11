@@ -10,11 +10,13 @@ class FriendsTestCase(TestCase):
   def setUp(self):
     super(FriendsTestCase, self).setUp()
     Following.query.delete()
+    IgnoredUsers.query.delete()
     db_session_commit()
 
   def tearDown(self):
     super(FriendsTestCase, self).tearDown()
     Following.query.delete()
+    IgnoredUsers.query.delete()
     db_session_commit()
 
   def test_get_friends(self):
@@ -106,3 +108,42 @@ class FriendsTestCase(TestCase):
     data = json.loads(response.data)['data']
     self.assertTrue(len(data['users']) == 1)
     self.assertEquals(data['users'][0]['id'], fb_user4.uid)
+
+  def test_ignored_friends(self):
+    fb_app_token = api_utils.get_facebook_app_access_token()
+
+    fb_user1 = TestUser(test_client=self.app, platform=constants.FACEBOOK,\
+        app_access_token=fb_app_token, name='FB One')
+    fb_user2 = TestUser(test_client=self.app, platform=constants.FACEBOOK,\
+        app_access_token=fb_app_token, name='FB Two')
+    fb_user3 = TestUser(test_client=self.app, platform=constants.FACEBOOK,\
+        app_access_token=fb_app_token, name='FB Three')
+
+    api_utils.create_facebook_friendship(fb_user1, fb_user2)
+    api_utils.create_facebook_friendship(fb_user1, fb_user3)
+
+    # No ignored tested by regular get friends
+    # First ignored user
+    response = fb_user1.post('api/v1/users/facebook/friends/ignore/' + \
+        '{}/'.format(fb_user2.fb_id))
+    data = json.loads(response.data)
+    self.assertTrue(data['success'])
+
+    # Get friends with 1 ignored
+    response = fb_user1.get('api/v1/users/facebook/friends/' + \
+            '?offset={}&max={}'.format(0, 10))
+    data = json.loads(response.data)['data']
+    self.assertTrue(len(data['users']) == 1)
+    self.assertEquals(data['users'][0]['id'], fb_user3.uid)
+
+    # Second ignored user
+    response = fb_user1.post('api/v1/users/facebook/friends/ignore/' + \
+        '{}/'.format(fb_user3.fb_id))
+    data = json.loads(response.data)
+    self.assertTrue(data['success'])
+
+    # Get friends with 2 ignored
+    response = fb_user1.get('api/v1/users/facebook/friends/' + \
+            '?offset={}&max={}'.format(0, 10))
+    data = json.loads(response.data)['data']
+    self.assertTrue(len(data['users']) == 0)

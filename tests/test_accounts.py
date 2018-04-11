@@ -28,6 +28,9 @@ class AccountsTestCase(TestCase):
     self.assertEquals(constants.NUM_TEST_USERS, users_dao.get_number_users())
     self.assertTrue(response_data['user']['facebook_id'] != "null")
 
+    # Delete created user where index 1 is the facebook id
+    api_utils.delete_facebook_user(u_info[1] ,a_access_token)
+
   def tearDown(self):
     super(AccountsTestCase, self).tearDown()
     User.query.delete()

@@ -20,6 +20,7 @@ class GetFacebookFriends(AppDevController):
     return_following = True if return_following == 'true' else False
     fb_friend_ids = facebook_utils.get_friend_ids(user.facebook_id, \
         access_token)
+    fb_friend_ids = users_dao.remove_ignored_ids(fb_friend_ids, user.id)
     users = users_dao.get_users_by_facebook_ids(fb_friend_ids, user.id, \
         offset, max_search, return_following)
 
