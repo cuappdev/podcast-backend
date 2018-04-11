@@ -14,4 +14,4 @@ class IgnoreFacebookFriendsController(AppDevController):
     user = kwargs.get('user')
     ignored_fb_id = request.view_args['ignored_fb_id']
     success = users_dao.add_ignored_friend(ignored_fb_id, user.id)
-    return { 'success': success }
+    return {}

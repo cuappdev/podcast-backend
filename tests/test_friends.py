@@ -126,7 +126,7 @@ class FriendsTestCase(TestCase):
     # First ignored user
     response = fb_user1.post('api/v1/users/facebook/friends/ignore/' + \
         '{}/'.format(fb_user2.fb_id))
-    data = json.loads(response.data)['data']
+    data = json.loads(response.data)
     self.assertTrue(data['success'])
 
     # Get friends with 1 ignored
@@ -139,7 +139,7 @@ class FriendsTestCase(TestCase):
     # Second ignored user
     response = fb_user1.post('api/v1/users/facebook/friends/ignore/' + \
         '{}/'.format(fb_user3.fb_id))
-    data = json.loads(response.data)['data']
+    data = json.loads(response.data)
     self.assertTrue(data['success'])
 
     # Get friends with 2 ignored

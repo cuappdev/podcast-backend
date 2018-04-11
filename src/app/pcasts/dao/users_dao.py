@@ -172,12 +172,11 @@ def add_ignored_friend(to_ignore_id, user_id):
     ignored_ids.ignored_fb_ids = ignored_ids.ignored_fb_ids + \
         ",{}".format(to_ignore_id)
   db_utils.commit_model(ignored_ids)
-  return True
 
 def remove_ignored_ids(fb_friend_ids, user_id):
   ignored_ids = IgnoredUsers.query.filter(IgnoredUsers.user_id == user_id).first()
   if ignored_ids is None:
     return fb_friend_ids
   else:
-    ignored_ids = [id for id in ignored_ids.ignored_fb_ids.split(',')]
-    return list(set(fb_friend_ids) - set(ignored_ids))
+    ignored_set = set([id for id in ignored_ids.ignored_fb_ids.split(',')])
+    return [id for id in fb_friend_ids if id not in ignored_set]
