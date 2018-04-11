@@ -4,6 +4,7 @@ from . import *
 from app import constants
 from app import config
 from app.pcasts.utils import topic_utils
+from app.pcasts.dao import series_for_topic_dao
 
 def request_podcast_ml(url):
   try:
@@ -15,9 +16,8 @@ def request_podcast_ml(url):
 
 def get_series_for_topic(topic_id, user_id, offset, max_search):
   if config.ML_ENABLED:
-    response = request_podcast_ml('/api/v1/series/topic/{}/?offset={}&max={}'
-                                  .format(topic_id, offset, max_search))
-    return series_dao.get_multiple_series(response['data']['series_ids'], user_id)
+    series_list = series_for_topic_dao.get_series_list_for_topic(topic_id)
+    return series_dao.get_multiple_series(series_list, user_id)
   else:
     topic_id = int(topic_id)
     series = []

@@ -43,6 +43,7 @@ class DiscoverTestCase(TestCase):
     episodes_dao.clear_all_recommendations_counts()
     Subscription.query.delete()
     series_dao.clear_all_subscriber_counts()
+    SeriesForTopic.query.delete()
     db_session_commit()
 
   def tearDown(self):
@@ -78,20 +79,22 @@ class DiscoverTestCase(TestCase):
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_series_for_topic(self, mock_get):
     config.ML_ENABLED = True
+    sft1 = SeriesForTopic(topic_id=1323, series_list='1,2,3,4,5,6,7,8,9,10')
+    sft2 = SeriesForTopic(topic_id=1,
+                          series_list='11,12,13,14,15,16,17,18,19,20')
+    db_utils.commit_models([sft1, sft2])
     response = self.user1.get('api/v1/discover/series/topic/1323/' +
-                              '?offset=0&max=0')
-    series = json.loads(response.data)['data']['series']
-    ids = [int(show['id']) for show in series]
-    self.assertEquals(series_ids, ids)
-
-  @mock.patch('requests.get', side_effect=mocked_requests_get)
-  def test_series_for_subtopic(self, mock_get):
-    config.ML_ENABLED = True
-    response = self.user1.get('api/v1/discover/series/topic/1443/' +
                               '?offset=0&max=10')
     series = json.loads(response.data)['data']['series']
-    ids = [int(show['id']) for show in series]
-    self.assertEquals(series_ids, ids)
+    for show in series:
+      self.assertIsNotNone(show['id'])
+      self.assertIsNotNone(show['is_subscribed'])
+    response = self.user1.get('api/v1/discover/series/topic/all/' +
+                              '?offset=0&max=10')
+    series = json.loads(response.data)['data']['series']
+    for show in series:
+      self.assertIsNotNone(show['id'])
+      self.assertIsNotNone(show['is_subscribed'])
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_episodes_for_topic(self, mock_get):

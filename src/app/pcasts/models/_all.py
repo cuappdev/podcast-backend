@@ -11,6 +11,7 @@ from app.pcasts.models.following import *
 from app.pcasts.models.listening_history import *
 from app.pcasts.models.share import *
 from app.pcasts.models.ignored_users import *
+from app.pcasts.models.series_for_topic import *
 
 class UserSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
