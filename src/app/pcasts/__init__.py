@@ -47,6 +47,7 @@ from app.pcasts.controllers.search_facebook_friends_controller import *
 from app.pcasts.controllers.get_topics_controller import *
 from app.pcasts.controllers.get_shares_controller import *
 from app.pcasts.controllers.create_delete_share_controller import *
+from app.pcasts.controllers.listening_history_dismiss_controller import *
 from app.pcasts.controllers.ignore_facebook_friends_controller import *
 
 controllers = [
@@ -89,7 +90,11 @@ controllers = [
     GetTopicsController(),
     GetSharesController(),
     CreateDeleteShareController(),
+<<<<<<< HEAD
+    ListeningHistoryDismissController()
+=======
     IgnoreFacebookFriendsController(),
+>>>>>>> master
 ]
 
 # Setup all controllers

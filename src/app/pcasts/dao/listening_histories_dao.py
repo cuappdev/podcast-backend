@@ -22,6 +22,7 @@ def create_or_update_listening_histories(episode_update_info_map, user):
       lh = listening_histories_by_episode[episode_id]
       lh.current_progress = current_progress
       lh.percentage_listened = lh.percentage_listened + percentage_listened
+      lh.dismissed = False
     else:
       lh = \
         ListeningHistory(episode_id=episode_id, user_id=user.id,
@@ -56,14 +57,24 @@ def clear_listening_history(user):
     ListeningHistory.query.filter(ListeningHistory.user_id == user.id).all()
   db_utils.delete_models(listening_histories)
 
-def get_listening_history(user, max_hs, offset):
-  listening_histories = ListeningHistory.\
-    query.\
-    filter(ListeningHistory.user_id == user.id).\
-    order_by(ListeningHistory.updated_at.desc()).\
-    limit(max_hs).\
-    offset(offset).\
-    all()
+def get_listening_history(user, max_hs, offset, dismissed=None):
+  if dismissed is None:
+    listening_histories = ListeningHistory.\
+      query.\
+      filter(ListeningHistory.user_id == user.id).\
+      order_by(ListeningHistory.updated_at.desc()).\
+      limit(max_hs).\
+      offset(offset).\
+      all()
+  else:
+    listening_histories = ListeningHistory.\
+      query.\
+      filter(ListeningHistory.user_id == user.id,
+             ListeningHistory.dismissed == dismissed).\
+      order_by(ListeningHistory.updated_at.desc()).\
+      limit(max_hs).\
+      offset(offset).\
+      all()
 
   episodes = \
     episodes_dao.get_episodes([h.episode_id for h in listening_histories],
@@ -74,3 +85,16 @@ def get_listening_history(user, max_hs, offset):
     lh.episode = episode_id_to_episode[lh.episode_id]
 
   return listening_histories
+
+def update_listening_history_dismissed(episode_id, user_id, value):
+  assert value is True or value is False, "Non-boolean dismiss update value provided"
+  optional_listening_history = ListeningHistory.query.\
+    filter(
+        ListeningHistory.user_id == user_id,
+        ListeningHistory.episode_id == episode_id
+    ).first()
+  if optional_listening_history:
+    optional_listening_history.dismissed = value
+    return db_utils.commit_model(optional_listening_history)
+  else:
+    raise Exception('Specified history does not exist')
