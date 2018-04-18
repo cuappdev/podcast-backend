@@ -61,7 +61,7 @@ def get_series_for_user(user_id, offset, max_num):
                                   .format(offset, max_num))
     return series_dao.get_multiple_series(response['data']['series_ids'], user_id)
   else:
-    return series_dao.get_top_series_by_subscribers(offset, max_num, user_id)
+    return get_series_for_topic('all', user_id, offset, max_num)
 
 def get_episodes_for_user(user_id, offset, max_num):
   if config.ML_ENABLED:

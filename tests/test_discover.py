@@ -130,28 +130,16 @@ class DiscoverTestCase(TestCase):
 
   # No ML endpoints
   def test_series_for_user_no_ml(self):
-    config.ML_ENABLED = False
-    series_1 = 'PHOTOGRAPHY TIPS FROM THE TOP FLOOR'
-    series_2 = 'Basic Brewing Radio'
-    series_id1 = int(Series.query.with_entities(Series.id). \
-                 filter(Series.title == series_1).all()[0][0])
-    series_id2 = int(Series.query.with_entities(Series.id). \
-                 filter(Series.title == series_2).all()[0][0])
-    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.user2.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
-
-    response1 = self.user2.get('api/v1/discover/series/user/?offset=0&max=1')
-    response2 = self.user2.get('api/v1/discover/series/user/?offset=1&max=1')
-    series1 = json.loads(response1.data)['data']['series'][0]
-    series2 = json.loads(response2.data)['data']['series'][0]
-
-    self.assertTrue(int(series1['id']) == int(series_id1))
-    self.assertTrue(int(series2['id']) == int(series_id2))
-    self.assertTrue(series1['subscribers_count'] >= \
-        series2['subscribers_count'])
-    self.assertTrue(series1['is_subscribed'])
-    self.assertFalse(series2['is_subscribed'])
+    sids = ','.join([str(sid) for sid in series_ids])
+    sft1 = SeriesForTopic(topic_id=1323, series_list=sids)
+    sft2 = SeriesForTopic(topic_id=1, series_list=sids)
+    db_utils.commit_models([sft1, sft2])
+    response = self.user1.get('api/v1/discover/series/user/' +
+                              '?offset=0&max=10')
+    series = json.loads(response.data)['data']['series']
+    for show in series:
+      self.assertIsNotNone(show['id'])
+      self.assertIsNotNone(show['is_subscribed'])
 
   def test_episodes_for_user_no_ml(self):
     config.ML_ENABLED = False
