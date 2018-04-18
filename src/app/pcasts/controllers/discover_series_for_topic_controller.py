@@ -12,8 +12,8 @@ class DiscoverSeriesForTopicController(AppDevController):
   def content(self, **kwargs):
     user_id = kwargs.get('user').id
     topic_id = request.view_args['topic_id']
-    offset = request.args['offset']
-    max_search = request.args['max']
+    offset = int(request.args['offset'])
+    max_search = int(request.args['max'])
     series = discover_dao.get_series_for_topic(topic_id, user_id, offset, \
         max_search)
     return {'series': [series_schema.dump(s).data for s in series]}

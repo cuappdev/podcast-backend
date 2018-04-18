@@ -87,7 +87,7 @@ def get_listening_history(user, max_hs, offset, dismissed=None):
   return listening_histories
 
 def update_listening_history_dismissed(episode_id, user_id, value):
-  assert value is True or value is False
+  assert value is True or value is False, "Non-boolean dismiss update value provided"
   optional_listening_history = ListeningHistory.query.\
     filter(
         ListeningHistory.user_id == user_id,

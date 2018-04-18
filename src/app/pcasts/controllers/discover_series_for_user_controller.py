@@ -11,7 +11,7 @@ class DiscoverSeriesForUserController(AppDevController):
   @authorize
   def content(self, **kwargs):
     user_id = kwargs.get('user').id
-    offset = request.args['offset']
-    max_num = request.args['max']
+    offset = int(request.args['offset'])
+    max_num = int(request.args['max'])
     series = discover_dao.get_series_for_user(user_id, offset, max_num)
     return {'series': [series_schema.dump(s).data for s in series]}

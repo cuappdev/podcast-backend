@@ -43,6 +43,7 @@ class DiscoverTestCase(TestCase):
     episodes_dao.clear_all_recommendations_counts()
     Subscription.query.delete()
     series_dao.clear_all_subscriber_counts()
+    SeriesForTopic.query.delete()
     db_session_commit()
 
   def tearDown(self):
@@ -75,23 +76,39 @@ class DiscoverTestCase(TestCase):
     ids = [int(ep['id']) for ep in episodes]
     self.assertEquals(episode_ids, ids)
 
-  @mock.patch('requests.get', side_effect=mocked_requests_get)
-  def test_series_for_topic(self, mock_get):
-    config.ML_ENABLED = True
+  def test_series_for_topic(self):
+    sids = ','.join([str(sid) for sid in series_ids])
+    sft1 = SeriesForTopic(topic_id=1323, series_list=sids)
+    sft2 = SeriesForTopic(topic_id=1, series_list=sids)
+    db_utils.commit_models([sft1, sft2])
     response = self.user1.get('api/v1/discover/series/topic/1323/' +
-                              '?offset=0&max=0')
-    series = json.loads(response.data)['data']['series']
-    ids = [int(show['id']) for show in series]
-    self.assertEquals(series_ids, ids)
-
-  @mock.patch('requests.get', side_effect=mocked_requests_get)
-  def test_series_for_subtopic(self, mock_get):
-    config.ML_ENABLED = True
-    response = self.user1.get('api/v1/discover/series/topic/1443/' +
                               '?offset=0&max=10')
     series = json.loads(response.data)['data']['series']
-    ids = [int(show['id']) for show in series]
-    self.assertEquals(series_ids, ids)
+    for show in series:
+      self.assertIsNotNone(show['id'])
+      self.assertIsNotNone(show['is_subscribed'])
+    response = self.user1.get('api/v1/discover/series/topic/all/' +
+                              '?offset=0&max=10')
+    series = json.loads(response.data)['data']['series']
+    for show in series:
+      self.assertIsNotNone(show['id'])
+      self.assertIsNotNone(show['is_subscribed'])
+
+    response = self.user1.get('api/v1/discover/series/topic/all/' +
+                              '?offset=2&max=5')
+    series = json.loads(response.data)['data']['series']
+    self.assertEquals(len(series), 5)
+
+    response = self.user1.get('api/v1/discover/series/topic/all/' +
+                              '?offset=0&max=50')
+    series = json.loads(response.data)['data']['series']
+    self.assertEquals(len(series), 10)
+
+    response = self.user1.get('api/v1/discover/series/topic/all/' +
+                              '?offset=12&max=10')
+    series = json.loads(response.data)['data']['series']
+    self.assertEquals(len(series), 0)
+
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_episodes_for_topic(self, mock_get):
@@ -113,28 +130,16 @@ class DiscoverTestCase(TestCase):
 
   # No ML endpoints
   def test_series_for_user_no_ml(self):
-    config.ML_ENABLED = False
-    series_1 = 'PHOTOGRAPHY TIPS FROM THE TOP FLOOR'
-    series_2 = 'Basic Brewing Radio'
-    series_id1 = int(Series.query.with_entities(Series.id). \
-                 filter(Series.title == series_1).all()[0][0])
-    series_id2 = int(Series.query.with_entities(Series.id). \
-                 filter(Series.title == series_2).all()[0][0])
-    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.user2.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
-
-    response1 = self.user2.get('api/v1/discover/series/user/?offset=0&max=1')
-    response2 = self.user2.get('api/v1/discover/series/user/?offset=1&max=1')
-    series1 = json.loads(response1.data)['data']['series'][0]
-    series2 = json.loads(response2.data)['data']['series'][0]
-
-    self.assertTrue(int(series1['id']) == int(series_id1))
-    self.assertTrue(int(series2['id']) == int(series_id2))
-    self.assertTrue(series1['subscribers_count'] >= \
-        series2['subscribers_count'])
-    self.assertTrue(series1['is_subscribed'])
-    self.assertFalse(series2['is_subscribed'])
+    sids = ','.join([str(sid) for sid in series_ids])
+    sft1 = SeriesForTopic(topic_id=1323, series_list=sids)
+    sft2 = SeriesForTopic(topic_id=1, series_list=sids)
+    db_utils.commit_models([sft1, sft2])
+    response = self.user1.get('api/v1/discover/series/user/' +
+                              '?offset=0&max=10')
+    series = json.loads(response.data)['data']['series']
+    for show in series:
+      self.assertIsNotNone(show['id'])
+      self.assertIsNotNone(show['is_subscribed'])
 
   def test_episodes_for_user_no_ml(self):
     config.ML_ENABLED = False
@@ -209,60 +214,17 @@ class DiscoverTestCase(TestCase):
     self.assertFalse(data['episodes'][2]['is_bookmarked'])
     self.assertTrue(data['episodes'][2]['current_progress'] is None)
 
-  def test_series_for_topic_no_ml(self):
-    config.ML_ENABLED = False
-    #Topic: Games and Hobbies
-    series_1 = 'PHOTOGRAPHY TIPS FROM THE TOP FLOOR'
-    series_2 = 'Basic Brewing Radio'
-    series_id1 = int(Series.query.with_entities(Series.id). \
-                 filter(Series.title == series_1).all()[0][0])
-    series_id2 = int(Series.query.with_entities(Series.id). \
-                 filter(Series.title == series_2).all()[0][0])
-    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.user2.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
-    request = self.user1.get('api/v1/discover/series/topic/1323/' +
-                             '?offset=0&max=25')
-    data = json.loads(request.data)['data']
-    self.assertTrue(int(data['series'][0]['id']) == int(series_id1))
-    self.assertTrue(data['series'][0]['is_subscribed'])
-    self.assertTrue(int(data['series'][1]['id']) == int(series_id2))
-    self.assertTrue(data['series'][1]['is_subscribed'])
-    self.assertFalse(data['series'][2]['is_subscribed'])
-
-  def test_series_for_subtopic_no_ml(self):
-    config.ML_ENABLED = False
-    # Testing subtopics(Philosophy)
-    series_1 = 'Fat Man on Batman'
-    series_2 = 'WEALTHSTEADING Wealth Building Principles with John Pugliano'
-    series_id1 = int(Series.query.with_entities(Series.id). \
-                 filter(Series.title == series_1).all()[0][0])
-    series_id2 = int(Series.query.with_entities(Series.id). \
-                 filter(Series.title == series_2).all()[0][0])
-    self.user1.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.user2.post('api/v1/subscriptions/{}/'.format(series_id1))
-    self.user1.post('api/v1/subscriptions/{}/'.format(series_id2))
-    request = self.user1.get('api/v1/discover/series/topic/1443/' +
-                             '?offset=0&max=25')
-    data = json.loads(request.data)['data']
-
-    self.assertTrue(int(data['series'][0]['id']) == int(series_id1))
-    self.assertTrue(data['series'][0]['is_subscribed'])
-    self.assertTrue(int(data['series'][1]['id']) == int(series_id2))
-    self.assertTrue(data['series'][1]['is_subscribed'])
-    self.assertFalse(data['series'][2]['is_subscribed'])
-
   def test_series_for_topic_invalid(self):
     config.ML_ENABLED = False
     request = self.user1.get('api/v1/discover/series/topic/-1/' +
                              '?offset=0&max=25')
     data = json.loads(request.data)
     self.assertFalse(data['success'])
-    self.assertEquals(str(data['data']['errors'][0]), "Invalid topic id -1")
+    self.assertEquals(str(data['data']['errors'][0]), "No topic id -1 exists")
 
   def test_episodes_for_topic_invalid(self):
     config.ML_ENABLED = False
-    request = self.user1.get('api/v1/discover/series/topic/-1/' +
+    request = self.user1.get('api/v1/discover/episodes/topic/-1/' +
                              '?offset=0&max=25')
     data = json.loads(request.data)
     self.assertFalse(data['success'])
