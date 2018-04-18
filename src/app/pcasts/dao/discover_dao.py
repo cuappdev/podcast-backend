@@ -15,36 +15,9 @@ def request_podcast_ml(url):
     raise Exception('Could not connect to podcast-ml')
 
 def get_series_for_topic(topic_id, user_id, offset, max_search):
-  if config.ML_ENABLED:
-    series_list = series_for_topic_dao.get_series_list_for_topic(topic_id)
-    return series_dao.get_multiple_series(series_list, user_id)
-  else:
-    topic_id = int(topic_id)
-    series = []
-    # Second ordering by id to resolve ties showing up at different offsets
-    if topic_id in topic_utils.topic_id_offset:
-      topic_id = topic_utils.translate_topic_id(topic_id)
-      series = Series.query.\
-          filter(((Series.topic_id.op('&')(topic_id))) == topic_id).\
-          order_by(Series.subscribers_count.desc()).\
-          order_by(Series.id).\
-          offset(offset).\
-          limit(max_search).\
-          all()
-    elif topic_id in topic_utils.subtopic_id_offset:
-      subtopic_id = topic_utils.translate_subtopic_id(topic_id)
-      series = Series.query.\
-          filter((Series.subtopic_id.op('&')(subtopic_id)) == subtopic_id).\
-          order_by(Series.subscribers_count.desc()).\
-          order_by(Series.id).\
-          offset(offset).\
-          limit(max_search).\
-          all()
-    else:
-      raise Exception("Invalid topic id " + str(topic_id))
-    for s in series:
-      s.is_subscribed = series_dao.is_subscribed_by_user(s.id, user_id)
-    return series
+  series_list = series_for_topic_dao \
+    .get_series_list_for_topic(topic_id, offset, max_search)
+  return series_dao.get_multiple_series(series_list, user_id)
 
 
 def get_episodes_for_topic(topic_id, user_id, offset, max_search):
