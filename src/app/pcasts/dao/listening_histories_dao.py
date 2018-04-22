@@ -70,7 +70,9 @@ def get_listening_history(user, max_hs, offset, dismissed=None):
     listening_histories = ListeningHistory.\
       query.\
       filter(ListeningHistory.user_id == user.id,
-             ListeningHistory.dismissed == dismissed).\
+             ListeningHistory.dismissed == dismissed,
+             ListeningHistory.current_progress > 0.01,
+             ListeningHistory.current_progress < 0.99).\
       order_by(ListeningHistory.updated_at.desc()).\
       limit(max_hs).\
       offset(offset).\
