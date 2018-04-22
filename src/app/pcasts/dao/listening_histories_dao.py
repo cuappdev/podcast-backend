@@ -35,9 +35,9 @@ def create_or_update_listening_histories(episode_update_info_map, user):
     [k for k, v in episode_update_info_map.items() if 'real_duration' in v]
   episodes = episodes_dao.get_episodes(episode_ids_to_query, user.id)
   for episode in episodes:
-    if not episode.real_duration_written:
-      episode.duration = episode_update_info_map[episode.id]['real_duration']
-      episode.real_duration_written = True
+    # if not episode.real_duration_written: DISABLED FOR NOW TO FIX BAD VALUES
+    episode.duration = episode_update_info_map[episode.id]['real_duration']
+    episode.real_duration_written = True
   db_utils.db_session_commit()
   return result
 
@@ -70,7 +70,9 @@ def get_listening_history(user, max_hs, offset, dismissed=None):
     listening_histories = ListeningHistory.\
       query.\
       filter(ListeningHistory.user_id == user.id,
-             ListeningHistory.dismissed == dismissed).\
+             ListeningHistory.dismissed == dismissed,
+             ListeningHistory.current_progress > 0.01,
+             ListeningHistory.current_progress < 0.99).\
       order_by(ListeningHistory.updated_at.desc()).\
       limit(max_hs).\
       offset(offset).\

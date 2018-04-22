@@ -164,7 +164,7 @@ class ListeningHistoryTestCase(TestCase):
     self.assertEquals(len(data['data']['listening_histories']), 0)
 
   def test_dismissed_filter(self):
-    self.generate_listening_histories()
+    episode1_id, episode2_id, _ = self.generate_listening_histories()
 
     # Nothing is dismissed
     response = \
@@ -206,6 +206,27 @@ class ListeningHistoryTestCase(TestCase):
       self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=false')
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['listening_histories']), 2)
+
+    # Test 0.01 < current_progress < 0.99 filter
+    data = {
+        episode1_id: {
+            'percentage_listened': 0.5,
+            'current_progress': 0.01,
+        },
+        episode2_id: {
+            'percentage_listened': 0.4,
+            'current_progress': 0.99,
+        },
+    }
+    self.user1.post('api/v1/history/listening/', data=json.dumps(data))
+    response = \
+      self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=true')
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['listening_histories']), 0)
+    response = \
+      self.user1.get('api/v1/history/listening/?offset=0&max=5&dismissed=false')
+    data = json.loads(response.data)
+    self.assertEquals(len(data['data']['listening_histories']), 0)
 
   def test_automatic_undismiss_on_update(self):
     episode_id, _, _ = self.generate_listening_histories()
