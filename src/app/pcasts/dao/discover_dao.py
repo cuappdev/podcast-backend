@@ -17,7 +17,13 @@ def request_podcast_ml(url):
 def get_series_for_topic(topic_id, user_id, offset, max_search):
   series_list = series_for_topic_dao \
     .get_series_list_for_topic(topic_id, offset, max_search)
-  return series_dao.get_multiple_series(series_list, user_id)
+  full_series = series_dao.get_multiple_series(series_list, user_id)
+
+  series_map = {s.id: s for s in full_series}
+  result = []
+  for sid in series_list:
+    result.append(series_map[sid])
+  return result
 
 
 def get_episodes_for_topic(topic_id, user_id, offset, max_search):

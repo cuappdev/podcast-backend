@@ -90,11 +90,8 @@ controllers = [
     GetTopicsController(),
     GetSharesController(),
     CreateDeleteShareController(),
-<<<<<<< HEAD
-    ListeningHistoryDismissController()
-=======
+    ListeningHistoryDismissController(),
     IgnoreFacebookFriendsController(),
->>>>>>> master
 ]
 
 # Setup all controllers
