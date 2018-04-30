@@ -109,6 +109,11 @@ class DiscoverTestCase(TestCase):
     series = json.loads(response.data)['data']['series']
     self.assertEquals(len(series), 0)
 
+    response = self.user1.get('api/v1/discover/series/topic/all/' +
+                              '?offset=8&max=40')
+    series = [s['id'] for s in json.loads(response.data)['data']['series']]
+    self.assertEquals(series_ids[8:], series)
+
 
   @mock.patch('requests.get', side_effect=mocked_requests_get)
   def test_episodes_for_topic(self, mock_get):
