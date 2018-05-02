@@ -12,6 +12,7 @@ from app.pcasts.models.listening_history import *
 from app.pcasts.models.share import *
 from app.pcasts.models.ignored_users import *
 from app.pcasts.models.series_for_topic import *
+from app.pcasts.models.read_new_episode_notification import *
 
 class UserSchema(ModelSchema):
   class Meta(ModelSchema.Meta):
@@ -40,6 +41,7 @@ class EpisodeSchema(ModelSchema):
   is_recommended = fields.Boolean()
   is_bookmarked = fields.Boolean()
   current_progress = fields.Float()
+  unread_notifcation = fields.Boolean()
   series = fields.Nested(
       'SeriesSchema',
       only=['id', 'image_url_lg', 'image_url_sm', 'title'])

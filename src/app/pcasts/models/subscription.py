@@ -11,6 +11,7 @@ class Subscription(Base):
   user_id = \
     db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
   series_id = db.Column(db.Integer, nullable=False)
+  subscribed_new_episodes = db.Column(db.Boolean, default=True)
 
   user = db.relationship('User')
 
@@ -18,3 +19,4 @@ class Subscription(Base):
     self.user_id = kwargs.get('user_id')
     self.series_id = kwargs.get('series_id')
     self.series = kwargs.get('series', None)
+    self.series = kwargs.get('subscribed_new_episodes', None)
