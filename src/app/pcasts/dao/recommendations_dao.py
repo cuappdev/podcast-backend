@@ -1,12 +1,19 @@
 from app.pcasts.dao import episodes_dao
 from . import *
 
-def create_recommendation(episode_id, user):
+def create_or_update_recommendation(episode_id, user, blurb=None):
   optional_episode = episodes_dao.get_episode(episode_id, user.id)
   if optional_episode:
-    recommendation = Recommendation(episode_id=episode_id, user_id=user.id)
-    recommendation.episode = optional_episode
-    optional_episode.recommendations_count += 1
+    recommendation = Recommendation.query\
+      .filter(Recommendation.episode_id == episode_id,
+              Recommendation.user_id == user.id).first()
+    if recommendation:
+      recommendation.blurb = blurb
+    else:
+      recommendation = \
+        Recommendation(episode_id=episode_id, user_id=user.id, blurb=blurb)
+      recommendation.episode = optional_episode
+      optional_episode.recommendations_count += 1
     return db_utils.commit_model(recommendation)
   else:
     raise Exception("Invalid episode_id provided")

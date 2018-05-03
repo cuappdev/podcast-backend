@@ -23,12 +23,17 @@ class GetCreateDeleteRecommendationController(AppDevController):
         [recommendation_schema.dump(r).data for r in recommendations]}
 
     elif request.method == "POST":
-      recommendation = \
-        recommendations_dao.create_recommendation(episode_id, user)
+      blurb = None
+      if 'blurb' in request.args and request.args['blurb'].lower() != 'none' \
+          and request.args['blurb'].lower() != 'null':
+        blurb = request.args['blurb']
+      recommendation = recommendations_dao\
+        .create_or_update_recommendation(episode_id, user, blurb=blurb)
       app.logger.info({
           'user': user.username,
           'episode_id': episode_id,
-          'message': 'created recommendation'
+          'message': 'created or updated recommendation with blurb {}'
+                     .format(blurb)
       })
 
       return {'recommendation': recommendation_schema.dump(recommendation).data}
