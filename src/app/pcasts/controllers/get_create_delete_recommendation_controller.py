@@ -1,3 +1,4 @@
+import json
 from . import *
 
 class GetCreateDeleteRecommendationController(AppDevController):
@@ -24,9 +25,12 @@ class GetCreateDeleteRecommendationController(AppDevController):
 
     elif request.method == "POST":
       blurb = None
-      if 'blurb' in request.args and request.args['blurb'].lower() != 'none' \
-          and request.args['blurb'].lower() != 'null':
-        blurb = request.args['blurb']
+      try:
+        body = request.data
+        body_json = json.loads(body)
+        blurb = body_json['blurb']
+      except (ValueError, KeyError):
+        pass
       recommendation = recommendations_dao\
         .create_or_update_recommendation(episode_id, user, blurb=blurb)
       app.logger.info({
