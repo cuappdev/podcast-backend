@@ -26,10 +26,11 @@ class User(Base):
     self.image_url = kwargs.get('image_url')
     self.followers_count = kwargs.get('followers_count', 0)
     self.followings_count = kwargs.get('followings_count', 0)
-    non_empty_id, id_source = (self.facebook_id, 'facebook') if self.google_id \
-        is None else (self.google_id, 'google')
-    self.username = kwargs.get('username', 'temp-{}-{}'. \
-        format(id_source, non_empty_id[0:20]))
+    available_id = self.facebook_id if self.facebook_id is not None \
+        else self.google_id
+    self.username = kwargs.get('username', '{}-temp-{}-{}'. \
+        format(self.first_name, self.last_name, available_id[4:10]))
+    print self.username
 
   def __eq__(self, other_user):
     return self.google_id == other_user.google_id and \
