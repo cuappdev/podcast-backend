@@ -92,7 +92,6 @@ class NotificationsTestCase(TestCase):
     response = self.user1.get('api/v1/notifications/episodes/' + \
         '?offset={}&max={}'.format(0,10))
     data = json.loads(response.data)['data']
-    print response.data
     prev_date = convert_to_datetime(data['episodes'][0]['pub_date'])
     self.assertTrue(len(data['episodes']) <= 10 and len(data['episodes']) > 0)
     for episode in data['episodes']:

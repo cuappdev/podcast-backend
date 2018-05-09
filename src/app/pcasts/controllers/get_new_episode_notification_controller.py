@@ -12,7 +12,7 @@ class GetNewEpisodeNotificationController(AppDevController):
   def content(self, **kwargs):
     user = kwargs.get('user')
     max_episodes = request.args['max']
-    offset = int(request.args['offset'])
+    offset = request.args['offset']
     episode_notifications = notifications_dao. \
         new_episode_notifications(user.id, max_episodes, offset)
     return {'episodes': \
