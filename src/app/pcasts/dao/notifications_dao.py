@@ -53,3 +53,14 @@ def create_new_episode_notification(user_id, series_id):
     raise Exception("You are not subscribed to this series")
   maybe_subscription.subscribed_new_episodes = True
   db_utils.commit_model(maybe_subscription)
+
+def delete_new_episode_notification(user_id, series_id):
+  maybe_subscription = Subscription.query. \
+      filter(Subscription.series_id == series_id).first()
+  if maybe_subscription is None:
+    raise Exception("You are not subscribed to this series")
+  print maybe_subscription.subscribed_new_episodes 
+  if maybe_subscription.subscribed_new_episodes == False:
+    raise Exception("You were never subscribed to new episodes for this series")
+  maybe_subscription.subscribed_new_episodes = False
+  db_utils.commit_model(maybe_subscription)
