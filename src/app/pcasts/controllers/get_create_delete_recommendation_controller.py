@@ -1,3 +1,4 @@
+import json
 from . import *
 
 class GetCreateDeleteRecommendationController(AppDevController):
@@ -23,12 +24,20 @@ class GetCreateDeleteRecommendationController(AppDevController):
         [recommendation_schema.dump(r).data for r in recommendations]}
 
     elif request.method == "POST":
-      recommendation = \
-        recommendations_dao.create_recommendation(episode_id, user)
+      blurb = None
+      try:
+        body = request.data
+        body_json = json.loads(body)
+        blurb = body_json['blurb']
+      except (ValueError, KeyError):
+        pass
+      recommendation = recommendations_dao\
+        .create_or_update_recommendation(episode_id, user, blurb=blurb)
       app.logger.info({
           'user': user.username,
           'episode_id': episode_id,
-          'message': 'created recommendation'
+          'message': 'created or updated recommendation with blurb {}'
+                     .format(blurb)
       })
 
       return {'recommendation': recommendation_schema.dump(recommendation).data}

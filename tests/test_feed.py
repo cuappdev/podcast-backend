@@ -39,9 +39,11 @@ class FeedTestCase(TestCase):
         get_episode_by_title(episode_title2, self.user1.uid)
 
     followings_dao.create_following(self.user1.uid, self.user2.uid)
-    recommendations_dao.create_recommendation(episode1.id, self.user2.user)
+    recommendations_dao\
+      .create_or_update_recommendation(episode1.id, self.user2.user)
     time.sleep(1)
-    recommendations_dao.create_recommendation(episode2.id, self.user2.user)
+    recommendations_dao.\
+      create_or_update_recommendation(episode2.id, self.user2.user)
     time.sleep(1)
     subscriptions_dao.create_subscription(self.user2.uid, '1211520413')
     subscriptions_dao.create_subscription(self.user1.uid, '1211520413')

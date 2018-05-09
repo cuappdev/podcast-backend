@@ -35,16 +35,36 @@ class RecommendationsTestCase(TestCase):
     recommended = Recommendation.query.\
         filter(Recommendation.episode_id == episode_id1).first()
     self.assertEquals(recommended.episode_id, int(episode_id1))
+    self.assertIsNone(recommended.blurb)
 
-    self.assertRaises(
-        Exception,
-        self.user1.post('api/v1/recommendations/{}/'.format(episode_id1))
-    )
+    bdata = json.dumps({'blurb': 'update'})
+    self.user1.post('api/v1/recommendations/{}/'
+                    .format(episode_id1), data=bdata)
+    recommended = Recommendation.query.\
+        filter(Recommendation.episode_id == episode_id1).first()
+    self.assertEquals(recommended.blurb, "update")
 
-    self.user1.post('api/v1/recommendations/{}/'.format(episode_id2))
+    bdata = json.dumps({'blurb': None})
+    self.user1.post('api/v1/recommendations/{}/'
+                    .format(episode_id1), data=bdata)
+    recommended = Recommendation.query.\
+        filter(Recommendation.episode_id == episode_id1).first()
+    self.assertIsNone(recommended.blurb)
+
+    bdata = json.dumps({'blurb': 'test blurb'})
+    self.user1.post('api/v1/recommendations/{}/'
+                    .format(episode_id2), data=bdata)
     recommended = Recommendation.query.\
         filter(Recommendation.episode_id == episode_id2).first()
     self.assertEquals(recommended.episode_id, int(episode_id2))
+    self.assertEquals(recommended.blurb, "test blurb")
+
+    self.user1.post('api/v1/recommendations/{}/'
+                    .format(episode_id2))
+    recommended = Recommendation.query.\
+        filter(Recommendation.episode_id == episode_id2).first()
+    self.assertEquals(recommended.episode_id, int(episode_id2))
+    self.assertIsNone(recommended.blurb)
 
     recommendations = Recommendation.query.all()
     self.assertEquals(len(recommendations), 2)
@@ -66,13 +86,16 @@ class RecommendationsTestCase(TestCase):
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['recommendations']), 0)
 
+    bdata = json.dumps({'blurb': 'test'})
     self.user1.post('api/v1/recommendations/{}/'.format(episode_id1))
-    self.user1.post('api/v1/recommendations/{}/'.format(episode_id2))
+    self.user1.post('api/v1/recommendations/{}/'
+                    .format(episode_id2), data=bdata)
 
     response = self.user1.get('api/v1/recommendations/users/{}/'
                               .format(test_user_id))
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['recommendations']), 2)
+    self.assertEquals(data['data']['recommendations'][1]['blurb'], 'test')
 
     self.assertEquals(len(data['data']['recommendations']), 2)
     self.assertTrue(
@@ -99,9 +122,9 @@ class RecommendationsTestCase(TestCase):
     episode_id2 = episodes_dao.\
         get_episode_by_title(episode_title2, self.user1.uid).id
 
-    recommendations_dao.create_recommendation(episode_id1, user_2)
-    recommendations_dao.create_recommendation(episode_id2, user_2)
-    recommendations_dao.create_recommendation(episode_id1, user)
+    recommendations_dao.create_or_update_recommendation(episode_id1, user_2)
+    recommendations_dao.create_or_update_recommendation(episode_id2, user_2)
+    recommendations_dao.create_or_update_recommendation(episode_id1, user)
     response = self.user1.get('api/v1/recommendations/users/{}/'
                               .format(user_2.id))
     data = json.loads(response.data)
