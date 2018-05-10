@@ -49,6 +49,10 @@ from app.pcasts.controllers.get_shares_controller import *
 from app.pcasts.controllers.create_delete_share_controller import *
 from app.pcasts.controllers.listening_history_dismiss_controller import *
 from app.pcasts.controllers.ignore_facebook_friends_controller import *
+from app.pcasts.controllers.subscribe_new_episode_controller import *
+from app.pcasts.controllers.get_new_episode_notification_controller import *
+from app.pcasts.controllers.update_new_episode_has_read_controller import *
+
 
 controllers = [
     GoogleSignInController(),
@@ -92,6 +96,9 @@ controllers = [
     CreateDeleteShareController(),
     ListeningHistoryDismissController(),
     IgnoreFacebookFriendsController(),
+    SubscribeNewEpisodeController(),
+    GetNewEpisodeNotificationController(),
+    UpdateNewEpisodeHasReadController(),
 ]
 
 # Setup all controllers

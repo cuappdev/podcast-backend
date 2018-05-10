@@ -24,8 +24,17 @@ def get_episode_by_title(title, user_id):
   return episode
 
 def get_episodes_by_series(series_id, offset, max_search, user_id):
-  episodes = Episode.query.filter(Episode.series_id == \
-      series_id).order_by(Episode.pub_date.desc())\
+  episodes = Episode.query.filter(Episode.series_id == series_id)\
+      .order_by(Episode.pub_date.desc())\
+      .offset(offset).limit(max_search).all()
+  for e in episodes:
+    populate_episode(e, user_id)
+  return episodes
+
+def get_episodes_by_many_series(user_id, series_ids, offset, max_search):
+  episodes = Episode.query.filter(Episode.series_id.in_(series_ids)) \
+      .order_by(Episode.pub_date.desc()) \
+      .order_by(Episode.id) \
       .offset(offset).limit(max_search).all()
   for e in episodes:
     populate_episode(e, user_id)
@@ -95,3 +104,8 @@ def get_top_episodes_by_recommenders(offset, max_search, user_id):
   ]
   found_episodes = get_episodes(found_episode_ids, user_id)
   return order_by_ids(found_episode_ids, found_episodes)
+
+def get_series_ids_from_episodes(episode_ids):
+  episodes = Episode.query.with_entities(Episode.series_id)\
+      .filter(Episode.id.in_(episode_ids)).distinct().all()
+  return [episode[0] for episode in episodes]
