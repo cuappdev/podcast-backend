@@ -29,6 +29,7 @@ class NotificationsTestCase(TestCase):
     self.assertFalse(data['success'])
 
     # Test subscribed
+    self.user2.post('api/v1/subscriptions/{}/'.format(series_ids[0]))
     self.user1.post('api/v1/subscriptions/{}/'.format(series_ids[0]))
     response = self.user1.post('api/v1/notifications/episodes/{}/'.\
         format(series_ids[0]))
@@ -45,20 +46,22 @@ class NotificationsTestCase(TestCase):
     self.assertFalse(data['success'])
 
     # Subscribed but unregistered
+    self.user2.post('api/v1/subscriptions/{}/'.format(series_ids[0]))
     self.user1.post('api/v1/subscriptions/{}/'.format(series_ids[0]))
     response = self.user1.delete('api/v1/notifications/episodes/{}/'\
         .format(series_ids[0]))
     data = json.loads(response.data)
-    print data
     self.assertFalse(data['success'])
 
     # Subscribed and registered
+    self.user2.post('api/v1/notifications/episodes/{}/'.format(series_ids[0]))
     self.user1.post('api/v1/notifications/episodes/{}/'.format(series_ids[0]))
     response = self.user1.delete('api/v1/notifications/episodes/{}/'\
         .format(series_ids[0]))
     data = json.loads(response.data)
-    print data
     self.assertTrue(data['success'])
+    sub = Subscription.query.filter(Subscription.user_id == self.user2.uid).first()
+    self.assertTrue(sub.subscribed_new_episodes)
 
 
   def test_get_new_episdoes(self):
@@ -124,8 +127,6 @@ class NotificationsTestCase(TestCase):
       self.assertFalse(episode['unread_notifcation'])
       self.assertTrue(convert_to_datetime(episode['pub_date']) <= prev_date)
       prev_date = convert_to_datetime(episode['pub_date'])
-
-
 
 
 #ISO 8601 offset is not supported by python 2.7. Turns a string into datetime
