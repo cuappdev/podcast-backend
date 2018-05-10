@@ -95,6 +95,7 @@ def attach_fields_to_json(feed_element, feed_element_json, user):
           feed_element_json['content']['series']['id'],
           user.id
       )
+    feed_element_json['blurb'] = feed_element.blurb
   elif feed_element.context == FeedContexts.FOLLOWING_SUBSCRIPTION:
     feed_element_json['context_supplier']['is_following'] = users_dao.\
       is_following_user(
@@ -195,6 +196,7 @@ class FeedElement(object):
     if context == FeedContexts.FOLLOWING_RECOMMENDATION:
       self.context_supplier = raw_content.user
       self.content = raw_content.episode
+      self.blurb = raw_content.blurb
     elif context == FeedContexts.FOLLOWING_SUBSCRIPTION:
       self.context_supplier = raw_content.user
       self.content = raw_content.series
