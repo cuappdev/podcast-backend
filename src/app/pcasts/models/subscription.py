@@ -11,7 +11,7 @@ class Subscription(Base):
   user_id = \
     db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
   series_id = db.Column(db.Integer, nullable=False)
-  subscribed_new_episodes = db.Column(db.Boolean, default=True)
+  subscribed_new_episodes = db.Column(db.Boolean, default=False)
 
   user = db.relationship('User')
 
