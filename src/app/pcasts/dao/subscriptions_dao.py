@@ -57,3 +57,7 @@ def delete_subscription(user_id, series_id):
     return db_utils.delete_model(maybe_subscription)
   else:
     raise Exception("Specified subscription does not exist")
+
+def get_user_subscriptions_for_series(user_id, series_ids):
+  return Subscription.query.filter(Subscription.user_id == user_id,\
+    Subscription.series_id.in_(series_ids)).all()
