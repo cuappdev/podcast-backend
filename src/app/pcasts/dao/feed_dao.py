@@ -121,6 +121,7 @@ def attach_fields_to_json(feed_element, feed_element_json, user):
 def get_following_subscriptions(user_id, maxtime, page_size):
   followings = followings_dao.get_followings(user_id)
   following_ids = [f.followed_id for f in followings]
+  following_ids.append(user_id)
   maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
   subscriptions = Subscription.query \
     .filter(Subscription.user_id.in_(following_ids),
@@ -140,6 +141,7 @@ def get_following_subscriptions(user_id, maxtime, page_size):
 def get_following_recommendations(user_id, maxtime, page_size):
   followings = followings_dao.get_followings(user_id)
   following_ids = [f.followed_id for f in followings]
+  following_ids.append(user_id)
   maxdatetime = datetime.datetime.fromtimestamp(int(maxtime))
   recommendations = Recommendation.query \
     .filter(Recommendation.user_id.in_(following_ids),
