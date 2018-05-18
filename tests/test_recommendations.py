@@ -31,18 +31,26 @@ class RecommendationsTestCase(TestCase):
         filter(Recommendation.episode_id == episode_id1).first()
     self.assertIsNone(recommended)
 
-    self.user1.post('api/v1/recommendations/{}/'.format(episode_id1))
+    response = self.user1.post('api/v1/recommendations/{}/'.format(episode_id1))
     recommended = Recommendation.query.\
         filter(Recommendation.episode_id == episode_id1).first()
     self.assertEquals(recommended.episode_id, int(episode_id1))
     self.assertIsNone(recommended.blurb)
+    data = json.loads(response.data)['data']
+    self.assertEquals(data['recommendation']['episode']['title'],
+                      episode_title1)
+    self.assertIsNotNone(data['recommendation']['episode']['is_recommended'])
 
     bdata = json.dumps({'blurb': 'update'})
-    self.user1.post('api/v1/recommendations/{}/'
-                    .format(episode_id1), data=bdata)
+    response = self.user1.post('api/v1/recommendations/{}/'
+                               .format(episode_id1), data=bdata)
     recommended = Recommendation.query.\
         filter(Recommendation.episode_id == episode_id1).first()
     self.assertEquals(recommended.blurb, "update")
+    data = json.loads(response.data)['data']
+    self.assertEquals(data['recommendation']['episode']['title'],
+                      episode_title1)
+    self.assertIsNotNone(data['recommendation']['episode']['is_recommended'])
 
     bdata = json.dumps({'blurb': None})
     self.user1.post('api/v1/recommendations/{}/'
@@ -186,13 +194,19 @@ class RecommendationsTestCase(TestCase):
     data = json.loads(response.data)
     self.assertEquals(len(data['data']['recommendations']), 2)
 
-    self.user1.delete('api/v1/recommendations/{}/'.format(episode_id1))
+    response = self.user1.delete('api/v1/recommendations/{}/'
+                                 .format(episode_id1))
+    data = json.loads(response.data)['data']
+    self.assertEquals(data['recommendation']['episode']['title'],
+                      episode_title1)
+    self.assertIsNotNone(
+        data['recommendation']['episode']['is_recommended'])
     self.user1.delete('api/v1/recommendations/{}/'.format(episode_id2))
 
     response = self.user1.get('api/v1/recommendations/users/{}/'
                               .format(test_user_id))
-    data = json.loads(response.data)
-    self.assertEquals(len(data['data']['recommendations']), 0)
+    data = json.loads(response.data)['data']
+    self.assertEquals(len(data['recommendations']), 0)
 
     self.assertRaises(
         Exception,

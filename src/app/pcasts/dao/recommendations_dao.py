@@ -9,6 +9,7 @@ def create_or_update_recommendation(episode_id, user, blurb=None):
               Recommendation.user_id == user.id).first()
     if recommendation:
       recommendation.blurb = blurb
+      recommendation.episode = optional_episode
     else:
       recommendation = \
         Recommendation(episode_id=episode_id, user_id=user.id, blurb=blurb)
@@ -24,6 +25,7 @@ def delete_recommendation(episode_id, user):
           Recommendation.user_id == user.id).first()
   if optional_recommendation:
     episode = episodes_dao.get_episode(episode_id, user.id)
+    episode.is_recommended = False
     optional_recommendation.episode = episode
     episode.recommendations_count -= 1
     return db_utils.delete_model(optional_recommendation)
