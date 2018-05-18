@@ -43,19 +43,20 @@ class FeedTestCase(TestCase):
       .create_or_update_recommendation(episode1.id, self.user2.user)
     time.sleep(1)
     recommendations_dao.\
-      create_or_update_recommendation(episode2.id, self.user2.user)
+      create_or_update_recommendation(episode2.id, self.user1.user)
     time.sleep(1)
     subscriptions_dao.create_subscription(self.user2.uid, '1211520413')
     subscriptions_dao.create_subscription(self.user1.uid, '1211520413')
     shares_dao.create_share(self.user2.uid, self.user1.uid, episode1.id)
 
     maxtime = int(time.time())
-    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=6'
+    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=7'
                                   .format(maxtime)).data
     response = json.loads(raw_response)
-    self.assertEqual(len(response['data']['feed']), 6)
+    self.assertEqual(len(response['data']['feed']), 7)
     self.assertEqual([item['context'] for item in response['data']['feed']],
                      [FeedContexts.SHARED_EPISODE,
+                      FeedContexts.FOLLOWING_SUBSCRIPTION,
                       FeedContexts.FOLLOWING_SUBSCRIPTION,
                       FeedContexts.FOLLOWING_RECOMMENDATION,
                       FeedContexts.FOLLOWING_RECOMMENDATION,
@@ -65,9 +66,11 @@ class FeedTestCase(TestCase):
       self.assertEqual(type(item['time']), int)
       self.assertTrue(item['time'] <= maxtime)
       if item['context'] == FeedContexts.FOLLOWING_SUBSCRIPTION:
-        self.assertTrue(item['context_supplier']['is_following'])
+        self.assertTrue(item['context_supplier']['is_following']
+                        or item['context_supplier']['id'] == self.user1.uid)
       elif item['context'] == FeedContexts.FOLLOWING_RECOMMENDATION:
-        self.assertTrue(item['context_supplier']['is_following'])
+        self.assertTrue(item['context_supplier']['is_following']
+                        or item['context_supplier']['id'] == self.user1.uid)
         self.assertFalse(item['content']['series']['is_subscribed'])
       elif item['context'] == FeedContexts.NEW_SUBSCRIBED_EPISODE:
         self.assertTrue(item['context_supplier']['is_subscribed'])
@@ -78,16 +81,18 @@ class FeedTestCase(TestCase):
     # Ensure that is_subscribed updates
     subscriptions_dao.create_subscription(self.user1.uid, episode1.series_id)
 
-    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=6'
+    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=7'
                                   .format(maxtime)).data
     response = json.loads(raw_response)
     for item in response['data']['feed']:
       self.assertEqual(type(item['time']), int)
       self.assertTrue(item['time'] <= maxtime)
       if item['context'] == FeedContexts.FOLLOWING_SUBSCRIPTION:
-        self.assertTrue(item['context_supplier']['is_following'])
+        self.assertTrue(item['context_supplier']['is_following']
+                        or item['context_supplier']['id'] == self.user1.uid)
       elif item['context'] == FeedContexts.FOLLOWING_RECOMMENDATION:
-        self.assertTrue(item['context_supplier']['is_following'])
+        self.assertTrue(item['context_supplier']['is_following']
+                        or item['context_supplier']['id'] == self.user1.uid)
         self.assertTrue(item['content']['series']['is_subscribed'])
       elif item['context'] == FeedContexts.NEW_SUBSCRIBED_EPISODE:
         self.assertTrue(item['context_supplier']['is_subscribed'])
@@ -99,9 +104,10 @@ class FeedTestCase(TestCase):
     subscribed_ep = episodes_dao.get_episodes_by_series('1211520413', \
         0, 3, self.user1.uid)[0]
     bookmarks_dao.create_bookmark(subscribed_ep.id, self.user1.user)
-    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=6'
+    raw_response = self.user1.get('api/v1/feed/?maxtime={}&page_size=7'
                                   .format(maxtime)).data
     response = json.loads(raw_response)
 
-    self.assertTrue(response['data']['feed'][4]['content']['is_bookmarked'])
-    self.assertFalse(response['data']['feed'][5]['content']['is_bookmarked'])
+    first = response['data']['feed'][5]['content']['is_bookmarked']
+    second = response['data']['feed'][6]['content']['is_bookmarked']
+    self.assertTrue((first or second) and not (first and second))
