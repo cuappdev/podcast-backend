@@ -13,6 +13,7 @@ def create_or_update_recommendation(episode_id, user, blurb=None):
     else:
       recommendation = \
         Recommendation(episode_id=episode_id, user_id=user.id, blurb=blurb)
+      optional_episode.is_recommended = True
       recommendation.episode = optional_episode
       optional_episode.recommendations_count += 1
     return db_utils.commit_model(recommendation)

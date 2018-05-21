@@ -39,7 +39,7 @@ class RecommendationsTestCase(TestCase):
     data = json.loads(response.data)['data']
     self.assertEquals(data['recommendation']['episode']['title'],
                       episode_title1)
-    self.assertIsNotNone(data['recommendation']['episode']['is_recommended'])
+    self.assertTrue(data['recommendation']['episode']['is_recommended'])
 
     bdata = json.dumps({'blurb': 'update'})
     response = self.user1.post('api/v1/recommendations/{}/'
