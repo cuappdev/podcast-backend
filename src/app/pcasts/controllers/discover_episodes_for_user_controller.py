@@ -1,4 +1,5 @@
 from . import *
+import os
 
 class DiscoverEpisodesForUserController(AppDevController):
 
@@ -13,5 +14,7 @@ class DiscoverEpisodesForUserController(AppDevController):
     user_id = kwargs.get('user').id
     offset = request.args['offset']
     max_num = request.args['max']
+    os.makedirs("/home/vagrant/podcast-backend/cp1")
     episodes = discover_dao.get_episodes_for_user(user_id, offset, max_num)
+    os.makedirs("/home/vagrant/podcast-backend/cp2")
     return {'episodes': [episode_schema.dump(e).data for e in episodes]}

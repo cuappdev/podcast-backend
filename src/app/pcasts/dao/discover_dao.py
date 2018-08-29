@@ -71,8 +71,10 @@ def get_series_for_user(user_id, offset, max_num):
 
 def get_episodes_for_user(user_id, offset, max_num):
   if config.ML_ENABLED:
+    os.makedirs("/home/vagrant/podcast-backend/cp3")
     response = request_podcast_ml('/api/v1/episodes/user/?offset={}&max={}'
                                   .format(offset, max_num))
+    os.makedirs("/home/vagrant/podcast-backend/cp4")
     return episodes_dao.get_episodes(response['data']['episode_ids'], user_id)
   else:
     return episodes_dao.get_top_episodes_by_recommenders(offset, max_num, user_id)

@@ -1,4 +1,5 @@
 from . import *
+import os
 
 def populate_episode(episode, user_id):
   episode.is_recommended = is_recommended_by_user(episode.id, user_id)
@@ -9,8 +10,10 @@ def get_episodes(episode_ids, user_id):
   if not episode_ids:
     return []
   episodes = Episode.query.filter(Episode.id.in_(episode_ids)).all()
+  os.makedirs("/home/vagrant/podcast-backend/cp10")
   for e in episodes:
     populate_episode(e, user_id)
+  os.makedirs("/home/vagrant/podcast-backend/cp11")
   return episodes
 
 def get_episode(episode_id, user_id):
@@ -92,6 +95,7 @@ def search_episode(search_name, offset, max_search, user_id):
 
 # Second ordering by id to resolve ties showing up at different offsets
 def get_top_episodes_by_recommenders(offset, max_search, user_id):
+  os.makedirs("/home/vagrant/podcast-backend/cp6")
   found_episode_ids = [
       tup[0] for tup in
       Episode.query.\
@@ -102,7 +106,9 @@ def get_top_episodes_by_recommenders(offset, max_search, user_id):
       limit(max_search).\
       all()
   ]
+  os.makedirs("/home/vagrant/podcast-backend/cp7")
   found_episodes = get_episodes(found_episode_ids, user_id)
+  os.makedirs("/home/vagrant/podcast-backend/cp8")
   return order_by_ids(found_episode_ids, found_episodes)
 
 def get_series_ids_from_episodes(episode_ids):
