@@ -7,8 +7,8 @@ class Series(Base):
 
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.Text)
-  country = db.Column(db.String(255))
-  author = db.Column(db.String(255))
+  country = db.Column(db.String(190))
+  author = db.Column(db.String(190))
   image_url_lg = db.Column(db.Text)
   image_url_sm = db.Column(db.Text)
   feed_url = db.Column(db.Text, nullable=False)
