@@ -5,15 +5,15 @@ class User(Base):
   __tablename__ = 'users'
 
   id = db.Column(db.Integer, primary_key=True)
-  google_id = db.Column(db.String(255), unique=True)
-  facebook_id = db.Column(db.String(255), unique=True)
-  email = db.Column(db.String(255), nullable=False)
-  first_name = db.Column(db.String(255))
-  last_name = db.Column(db.String(255))
-  image_url = db.Column(db.String(1500)) # Might have long image URL
+  google_id = db.Column(db.String(190), unique=True)
+  facebook_id = db.Column(db.String(190), unique=True)
+  email = db.Column(db.String(190), nullable=False)
+  first_name = db.Column(db.String(190))
+  last_name = db.Column(db.String(190))
+  image_url = db.Column(db.String(190)) # Might have long image URL
   followers_count = db.Column(db.Integer, nullable=False)
   followings_count = db.Column(db.Integer, nullable=False)
-  username = db.Column(db.String(255), nullable=False, unique=True)
+  username = db.Column(db.String(190), nullable=False, unique=True)
 
   def __init__(self, **kwargs):
     assert kwargs.get('facebook_id') is not None or\

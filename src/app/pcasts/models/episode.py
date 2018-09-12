@@ -10,7 +10,7 @@ class Episode(Base):
   author = db.Column(db.Text)
   summary = db.Column(MEDIUMTEXT)
   pub_date = db.Column(db.DateTime, default=db.func.current_timestamp())
-  duration = db.Column(db.String(255))
+  duration = db.Column(db.String(190))
   real_duration_written = db.Column(db.Boolean, nullable=False)
   audio_url = db.Column(db.Text)
   tags = db.Column(db.Text) # semicolon-separated

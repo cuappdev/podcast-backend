@@ -7,9 +7,9 @@ class Session(Base):
   __tablename__ = 'sessions'
 
   id = db.Column(db.Integer, primary_key=True)
-  session_token = db.Column(db.String(255), unique=True, nullable=False)
+  session_token = db.Column(db.String(190), unique=True, nullable=False)
   expires_at = db.Column(db.DateTime, nullable=False)
-  update_token = db.Column(db.String(255), unique=True, nullable=False)
+  update_token = db.Column(db.String(190), unique=True, nullable=False)
   is_active = db.Column(db.Boolean, nullable=False)
 
   user_id = \

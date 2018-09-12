@@ -41,7 +41,7 @@ def get_episodes_for_topic(topic_id, user_id, offset, max_search):
           filter((Series.topic_id.op('&')(topic_id)) == topic_id).\
           filter(Episode.series_id == Series.id).\
           order_by(Episode.recommendations_count.desc()).\
-          order_by(Episode.id).\
+          order_by(Episode.id.desc()).\
           offset(offset).\
           limit(max_search).\
           all()
@@ -51,7 +51,7 @@ def get_episodes_for_topic(topic_id, user_id, offset, max_search):
           filter((Series.subtopic_id.op('&')(subtopic_id)) == subtopic_id).\
           filter(Episode.series_id == Series.id).\
           order_by(Episode.recommendations_count.desc()).\
-          order_by(Episode.id).\
+          order_by(Episode.id.desc()).\
           offset(offset).\
           limit(max_search).\
           all()

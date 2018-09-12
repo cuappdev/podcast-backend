@@ -97,7 +97,7 @@ def get_top_episodes_by_recommenders(offset, max_search, user_id):
       Episode.query.\
       with_entities(Episode.id, Episode.recommendations_count).\
       order_by(Episode.recommendations_count.desc()).\
-      order_by(Episode.id).\
+      order_by(Episode.id.desc()).\
       offset(offset).\
       limit(max_search).\
       all()
